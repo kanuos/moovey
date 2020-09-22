@@ -1,0 +1,23 @@
+{
+  "name": "moovey",
+  "version": "1.0.0",
+  "description": "An Express web app to write movie reviews using EJS templates",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js"
+  },
+  "keywords": [
+    "express",
+    "ejs",
+    "nosql"
+  ],
+  "author": "sounak mukherjee",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.1.5",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}

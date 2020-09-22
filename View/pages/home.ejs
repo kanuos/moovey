@@ -1,0 +1,21 @@
+<%- include('../partials/base') -%>
+<%- include('../partials/navbar') -%>
+
+<div class="container">
+    <header class="my-3">
+        <h1>
+            Hello from header
+        </h1>
+    </header>
+    <main>
+        <% if(users.length > 0) { %>
+            <% users.forEach(user => { %>
+                <h2>
+                    <%= user.name%>
+                </h2>
+            <% }) %>
+        <% } %>
+    </main>
+</div>
+
+<%- include('../partials/footer') -%>

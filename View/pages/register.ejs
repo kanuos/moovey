@@ -1,0 +1,18 @@
+<%- include('../partials/base') -%>
+<%- include('../partials/navbar') -%>
+
+<form action="/register" method="POST">
+    <div class="input-group">
+        <input id="name" type="text" class="form-control">
+        <label for="name">Name</label>
+    </div>
+    <div class="input-group">
+        <input id="password" type="password" class="form-control">
+        <label for="password">Password</label>
+    </div>
+    <div class="center-align">
+        <button class="btn-primary btn-lg">Register</button>
+    </div>
+</form>
+
+<%- include('../partials/footer') -%>

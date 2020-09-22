@@ -1,0 +1,28 @@
+<%- include('../partials/base') -%>
+<%- include('../partials/navbar') -%>
+
+<form action="/login" method="POST">
+    <div class="input-group">
+        <input 
+            id="name" 
+            type="text" 
+            name="name"
+            class="form-control">
+        <label for="name">Name</label>
+    </div>
+    <div class="input-group">
+        <input 
+            id="password" 
+            type="password" 
+            name="password"
+            class="form-control">
+        <label for="password">Password</label>
+    </div>
+    <div class="center-align">
+        <button 
+            type="submit"
+            class="btn-primary btn-lg">Login</button>
+    </div>
+</form>
+
+<%- include('../partials/footer') -%>

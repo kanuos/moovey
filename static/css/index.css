@@ -1,0 +1,19 @@
+*, *::after, *::before {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+main {
+    min-height: 100vh;
+}
+
+
+footer {
+    background-color: black;
+    color: white;
+    height: 15rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
