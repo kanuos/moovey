@@ -1,18 +1,63 @@
-<%- include('../partials/base') -%>
-<%- include('../partials/navbar') -%>
+<%- include('../partials/base')%>
+<%- include('../partials/navbar', {current : "/register"})%>
 
-<form action="/register" method="POST">
-    <div class="input-group">
-        <input id="name" type="text" class="form-control">
-        <label for="name">Name</label>
-    </div>
-    <div class="input-group">
-        <input id="password" type="password" class="form-control">
-        <label for="password">Password</label>
-    </div>
-    <div class="center-align">
-        <button class="btn-primary btn-lg">Register</button>
-    </div>
-</form>
 
-<%- include('../partials/footer') -%>
+	<main class="no-header-main">
+		<form action="" class="account-form" autocomplete="off">
+			<h2 class="form-heading">
+				Register
+			</h2>
+			<span class="message">
+				Lorem ipsum dolor sit amet.
+			</span>
+			<section>
+				<div class="input-group">
+					<input 
+						min="1" 
+						type="text" 
+						name="name"
+						placeholder="your name" 
+						id="name">
+					<label for="name">your name</label>
+				</div>
+				<div class="input-group">
+					<input 
+						min="1" 
+						type="text" 
+						name="location"
+						placeholder="your location" 
+						id="location">
+					<label for="location">your location</label>
+				</div>
+				<div class="input-group">
+					<input 
+						min="1" 
+						type="email" 
+						name="email"
+						placeholder="your email" 
+						id="email">
+					<label for="email">your email</label>
+				</div>
+				<div class="input-group">
+					<input 
+						min="1"
+						type="password" 
+						name="password" 
+						placeholder="your password" 
+						id="password">
+					<label for="password">your password</label>
+				</div>
+			</section>
+			<div class="input-group">
+				<button type='submit'>Submit</button>
+			</div>
+			<div class="input-group">
+				<p>
+					Already have an account? 
+					<a href="/login.html">
+						Login Now
+					</a>
+				</p>
+			</div>
+		</form>
+	</main>

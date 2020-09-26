@@ -1,28 +1,45 @@
-<%- include('../partials/base') -%>
-<%- include('../partials/navbar') -%>
+<%- include('../partials/base')%>
+<%- include('../partials/navbar', {current : "/login"})%>
 
-<form action="/login" method="POST">
-    <div class="input-group">
-        <input 
-            id="name" 
-            type="text" 
-            name="name"
-            class="form-control">
-        <label for="name">Name</label>
-    </div>
-    <div class="input-group">
-        <input 
-            id="password" 
-            type="password" 
-            name="password"
-            class="form-control">
-        <label for="password">Password</label>
-    </div>
-    <div class="center-align">
-        <button 
-            type="submit"
-            class="btn-primary btn-lg">Login</button>
-    </div>
-</form>
-
-<%- include('../partials/footer') -%>
+	<main class="no-header-main">
+		<form action="" class="account-form" autocomplete="off">
+			<h2 class="form-heading">
+				Login
+			</h2>
+			<span class="message">
+				Lorem ipsum dolor sit amet.
+			</span>
+			<section>
+				<div class="input-group">
+					<input 
+						min="1" 
+						type="email" 
+						name="email"
+						placeholder="your email" 
+						id="email">
+					<label for="email">your email</label>
+				</div>
+				<div class="input-group">
+					<input 
+						min="1"
+						type="password" 
+						name="password" 
+						placeholder="your password" 
+						id="password">
+					<label for="password">your password</label>
+				</div>
+			</section>
+			<div class="input-group">
+				<button type='submit'>Submit</button>
+			</div>
+			<div class="input-group">
+				<p>
+					Don't have an account? 
+					<a href="/register.html">
+						Register Now
+					</a>
+				</p>
+			</div>
+		</form>
+	</main>
+	

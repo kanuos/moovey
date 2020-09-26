@@ -1,28 +1,50 @@
-<nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Moovey</a>
-    
-    <button 
-        class="navbar-toggler" 
-        type="button" 
-        data-toggle="collapse" 
-        data-target="#navbarText" 
-        aria-controls="navbarText" 
-        aria-expanded="false" 
-        aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    
-    <div class="collapse navbar-collapse" id="navbarText">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <a class="nav-link" href="/">Home</span></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/login">Login</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/register">Register</a>
-        </li>
-      </ul>
-    </div>
-  </nav>
+<nav class="navbar">
+  <a href="/" class="nav-link">
+    <h1 class="nav-brand">
+      Moovey
+    </h1>
+  </a>
+  <button class="nav-toggler">&equiv;</button>
+  <div class="nav-list-menu">
+    <h1 class="nav-brand">
+      Moovey
+    </h1>
+    <button class="close-list">&times;</button>
+    <ul class="nav-list">
+      <li class="nav-item">
+        <a href="/" 
+          class="<%= current==='/' ? 'nav-link active-link' : 'nav-link' %>">
+          home
+        </a>
+      </li>
+      <li class="nav-item">
+        <a 
+          href="" 
+          class= "<%= current === '/articles' ? 'nav-link active-link' : 'nav-link' %>" >
+          articles
+        </a>
+      </li>
+      <li class="nav-item">
+        <a 
+          href="" 
+          class= "<%= current === '/authors' ? 'nav-link active-link' : 'nav-link' %>">
+          authors
+        </a>
+      </li>
+      <li class="nav-item">
+        <a 
+          href="/login" 
+          class= "<%= current === '/login' ? 'nav-link active-link' : 'nav-link' %>">
+          login
+        </a>
+      </li>
+      <li class="nav-item">
+        <a 
+          href="/register" 
+          class= "<%= current==='/register' ? 'nav-link active-link' : 'nav-link'%>">
+          register
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>
