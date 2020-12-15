@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const URL = `http://www.omdbapi.com/?apikey=7ff5fa05&`
+const URL = `http://www.omdbapi.com/?apikey=${process.env.MOVIE_API_KEY}&`
 
 
 

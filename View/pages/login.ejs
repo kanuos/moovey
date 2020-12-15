@@ -1,45 +1,58 @@
-<%- include('../partials/base')%>
-<%- include('../partials/navbar', {current : "/login"})%>
-
-	<main class="no-header-main">
-		<form action="" class="account-form" autocomplete="off">
-			<h2 class="form-heading">
-				Login
-			</h2>
-			<span class="message">
-				Lorem ipsum dolor sit amet.
-			</span>
-			<section>
-				<div class="input-group">
-					<input 
-						min="1" 
-						type="email" 
-						name="email"
-						placeholder="your email" 
-						id="email">
-					<label for="email">your email</label>
-				</div>
-				<div class="input-group">
-					<input 
-						min="1"
-						type="password" 
-						name="password" 
-						placeholder="your password" 
-						id="password">
-					<label for="password">your password</label>
-				</div>
-			</section>
-			<div class="input-group">
-				<button type='submit'>Submit</button>
-			</div>
-			<div class="input-group">
-				<p>
-					Don't have an account? 
-					<a href="/register.html">
-						Register Now
-					</a>
-				</p>
-			</div>
-		</form>
-	</main>
-	
+<%- include('../partials/head') %>
+<body>
+    <main class="account-page">
+        <h2 class="page-header">
+            moovey
+        </h2>
+        
+        <form class="account-form" id="login" autocomplete="off">
+            <section class="account-form-msg">
+                <span>
+                    Registered successfully! log in to continue
+                </span>
+                <button type="button" onclick="hideMsg()">
+                    &times;
+                </button>
+            </section>
+            <section class="account-form-body">
+                <h1 class="form-header">
+                    Sign In
+                </h1>
+                <section class="account-form-group">
+                    <input 
+                        autocomplete="chrome-off"
+                        class="account-form-control"
+                        id="email"
+                        name="email"
+                        type="email">
+                    <label for="email" class="account-form-label">
+                        Email
+                    </label>
+                    <small class="field-error" id="email-error">
+                    </small>
+                </section>                
+                <section class="account-form-group">
+                    <input 
+                        autocomplete="chrome-off"
+                        class="account-form-control"
+                        id="password"
+                        name="password"
+                        type="password">
+                    <label for="password" class="account-form-label">
+                        Password
+                    </label>
+                    <small class="field-error" id="password-error">
+                    </small>
+                </section>                
+                <div class="row">
+                    <button type="reset">Reset Fields</button>
+                    <button type="submit">Submit</button>
+                </div>      
+                <p class="form-link-text">
+                    Don't have an account? Click <a href="/register" class="page-link">here</a> to register.
+                </p>          
+            </section>
+        </form>
+    </main>
+</body>
+</html>
