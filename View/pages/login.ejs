@@ -5,35 +5,39 @@
             moovey
         </h2>
         
-        <form class="account-form" id="login" autocomplete="off">
+        <form class="account-form" id="login" autocomplete="new-password">
+            <% if(redirect) {%>    
             <section class="account-form-msg">
-                <span>
+                <span id="form-msg">
                     Registered successfully! log in to continue
                 </span>
                 <button type="button" onclick="hideMsg()">
                     &times;
                 </button>
             </section>
+            <% } %>
             <section class="account-form-body">
                 <h1 class="form-header">
                     Sign In
                 </h1>
                 <section class="account-form-group">
                     <input 
-                        autocomplete="chrome-off"
+                        value=""
+                        autocomplete="new-password"
                         class="account-form-control"
                         id="email"
                         name="email"
                         type="email">
-                    <label for="email" class="account-form-label">
-                        Email
-                    </label>
-                    <small class="field-error" id="email-error">
-                    </small>
-                </section>                
-                <section class="account-form-group">
-                    <input 
-                        autocomplete="chrome-off"
+                        <label for="email" class="account-form-label">
+                            Email
+                        </label>
+                        <small class="field-error" id="email-error">
+                        </small>
+                    </section>                
+                    <section class="account-form-group">
+                        <input
+                        value=""
+                        autocomplete="new-password" 
                         class="account-form-control"
                         id="password"
                         name="password"

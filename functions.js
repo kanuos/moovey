@@ -24,8 +24,19 @@ const getFullImage = imageURL => {
     return imageURL;
 }
 
+const minimumLength = (input="", minLength = 6) => {
+    return input.length >= minLength
+}
+
+const validEmail = (input) => {
+    const regexp = new RegExp("^[a-zA-Z0-9.!#$%&'*+=?^_`{|}~-]+@[a-zA-Z0-9-]+\....?.?.?$");
+    return regexp.test(input);
+}
+
 
 module.exports = {
     getMovieTitles, 
     getFullImage,
+    minimumLength,
+    validEmail,
 }

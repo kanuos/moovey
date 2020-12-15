@@ -15,7 +15,9 @@ app.use(express.json());
 app.use(express.urlencoded({extended : false}));
 app.use(favicon(path.join(__dirname, "static", "assets", "favicon.png")))
 
+
 // MIDDLEWARES
+require("./_Database")
 
 
 // ROUTE MIDDLEWARES

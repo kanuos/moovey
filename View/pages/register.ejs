@@ -5,10 +5,9 @@
             moovey
         </h2>
         
-        <form class="account-form" id="register">
-            <section class="account-form-msg">
-                <span>
-                    Registered successfully! log in to continue
+        <form class="account-form" id="register" autocomplete="new-password">
+            <section class="account-form-msg" >
+                <span id="form-msg">
                 </span>
                 <button type="button" onclick="hideMsg()">
                     &times;
@@ -20,7 +19,7 @@
                 </h1>
                 <section class="account-form-group">
                     <input 
-                        autocomplete="off"
+                        autocomplete="new-password"
                         class="account-form-control"
                         id="name"
                         name="name"
@@ -33,7 +32,7 @@
                 </section>                
                 <section class="account-form-group">
                     <input 
-                        autocomplete="off"
+                        autocomplete="new-password"
                         class="account-form-control"
                         id="email"
                         name="email"
@@ -46,7 +45,7 @@
                 </section>                
                 <section class="account-form-group">
                     <input 
-                        autocomplete="off"
+                        autocomplete="new-password"
                         class="account-form-control"
                         id="password"
                         name="password"
@@ -59,15 +58,15 @@
                 </section>                
                 <section class="account-form-group">
                     <input 
-                        autocomplete="off"
+                        autocomplete="new-password"
                         class="account-form-control"
                         id="password2"
-                        name="password"
+                        name="password2"
                         type="password">
                     <label for="password2" class="account-form-label">
                         Confirm Password
                     </label>
-                    <small class="field-error" id="password-confirm-error">
+                    <small class="field-error" id="password2-error">
                     </small>
                 </section>
                 <div class="row">

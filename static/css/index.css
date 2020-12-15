@@ -612,6 +612,7 @@ aside.profile-header {
 
 .account-form-msg {
     position: absolute;
+    z-index: 5;
     top: 0;
     left: 0;
     right: 0;
@@ -622,6 +623,10 @@ aside.profile-header {
     justify-content: space-between;
     cursor: default;
     transition: all .4s ease;
+    transform: translateY(-100%);
+}
+#login > .account-form-msg {
+    transform: translateY(0);
 }
 .account-form-msg > * {
     color: var(--bg);
@@ -650,6 +655,7 @@ aside.profile-header {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    transform: translateY(0);
 }
 
 .form-header {
@@ -697,6 +703,7 @@ aside.profile-header {
     text-align: center;
     padding: .5rem;
     font-size: 1.25rem;
+    font-weight: bolder;
     text-transform: capitalize;
     color: var(--primary);
     visibility: hidden;

@@ -2,3 +2,4 @@ node_modules
 plans.txt
 .env
 package-lock.json
+DDL.sql
