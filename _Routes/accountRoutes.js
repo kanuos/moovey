@@ -31,7 +31,7 @@ const {redirectToLogin, preventLoginRoute} = require("../sessionMiddleware")
 // ACCESS   :   PRIVATE
 // METHODS  :   [POST]
 
-accoutRoutes.get("/logout", redirectToLogin, (req, res) => res.json("logout"))
+accoutRoutes.get("/logout", redirectToLogin, (req, res) => handleLogOut(req, res))
 
 
 

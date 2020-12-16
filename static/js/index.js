@@ -13,7 +13,7 @@ function hideMsg() {
 const loginForm = document.getElementById("login");
 const registerForm = document.getElementById("register");
 
-loginForm && (loginForm.onsubmit = e => {
+loginForm && (loginForm.onsubmit = async e => {
     e.preventDefault();
     const payload = validateFields(loginForm)
     if(payload){
@@ -25,7 +25,12 @@ loginForm && (loginForm.onsubmit = e => {
             body : JSON.stringify(payload),
             redirect : "follow"
         })
-        .then(() => console.log("success"))
+        .then(data => data.json())
+        .then(({success, redirectTo}) => {
+            if(success){
+                window.location.href = redirectTo
+            }
+        })
         .catch(console.log)
     }
 })
