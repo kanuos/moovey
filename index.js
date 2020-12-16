@@ -1,6 +1,7 @@
 // SERVER SETTINGS
 require("dotenv").config();
 const express = require('express');
+const session = require("express-session");
 const path = require('path');
 const app = express();
 const favicon = require("serve-favicon");
@@ -17,11 +18,23 @@ app.use(favicon(path.join(__dirname, "static", "assets", "favicon.png")))
 
 
 // MIDDLEWARES
-require("./_Database")
-
+require("./_Database")  // database connection
+app.use(session({
+    name : process.env.SESSION_NAME,
+    secret : process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie : {
+        httpOnly: true,
+        maxAge : 1000 * 60 * 5,
+        sameSite : true,
+    }
+    // store
+}))
 
 // ROUTE MIDDLEWARES
 app.use('/', require('./_Routes/accountRoutes'))
+app.use('/blogs', require('./_Routes/blogRoutes'))
 
 
 app.listen(8000, ()=> console.log("Server running on port 8000"));

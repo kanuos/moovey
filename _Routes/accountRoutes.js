@@ -1,5 +1,7 @@
 const accoutRoutes = require('express').Router();
 const {generateLoginForm, generateRegisterForm, submitLoginForm, submitRegisterForm, handleLogOut} = require("../_Controller/accountController")
+
+const {redirectToLogin, preventLoginRoute} = require("../sessionMiddleware")
 /**
  * ROUTES = /login, /register, /logout, /profile
  */
@@ -9,9 +11,9 @@ const {generateLoginForm, generateRegisterForm, submitLoginForm, submitRegisterF
 // ACCESS   :   PUBLIC
 // METHODS  :   [POST, GET]
 
- accoutRoutes.get("/login", (req, res) => generateLoginForm(req, res))
+ accoutRoutes.get("/login", preventLoginRoute, (req, res) => generateLoginForm(req, res))
 
- accoutRoutes.post("/login", (req, res) => submitLoginForm(req, res))
+ accoutRoutes.post("/login", preventLoginRoute, (req, res) => submitLoginForm(req, res))
 
 
 // REGISTER ROUTES
@@ -19,9 +21,9 @@ const {generateLoginForm, generateRegisterForm, submitLoginForm, submitRegisterF
 // ACCESS   :   PUBLIC
 // METHODS  :   [POST, GET]
 
- accoutRoutes.get("/register", (req, res) => generateRegisterForm(req, res))
+ accoutRoutes.get("/register", preventLoginRoute, (req, res) => generateRegisterForm(req, res))
  
- accoutRoutes.post("/register", (req, res) => submitRegisterForm(req, res))
+ accoutRoutes.post("/register", preventLoginRoute, (req, res) => submitRegisterForm(req, res))
 
 
  // REGISTER ROUTES
@@ -29,7 +31,7 @@ const {generateLoginForm, generateRegisterForm, submitLoginForm, submitRegisterF
 // ACCESS   :   PRIVATE
 // METHODS  :   [POST]
 
-accoutRoutes.post("/logout", (req, res) => handleLogOut(req, res))
+accoutRoutes.get("/logout", redirectToLogin, (req, res) => res.json("logout"))
 
 
 
