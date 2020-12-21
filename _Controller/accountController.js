@@ -3,9 +3,7 @@ const pool = require("../_Database")
 const bcrypt = require("bcryptjs");
 
 exports.generateLoginForm = function (req, res){
-    let {redirect} = req.query
-
-    console.log(req.query);
+    let {redirect} = req.query;
     return res.render("pages/login", {title : "Join Now", redirect})
 }
 
@@ -43,7 +41,6 @@ exports.submitLoginForm = async function(req, res) {
         }
 
         const existingUser = rows[0];
-        console.log(existingUser);
 
         // validate password by comparing with the hash
 
@@ -51,9 +48,10 @@ exports.submitLoginForm = async function(req, res) {
 
         if(isValidPassword){
             req.session.uid = existingUser.uid;
+            req.session.userName = existingUser.name.split(" ")[0];
             return res.status(200).json({
                 success : true,
-                redirectTo : "/blogs"
+                redirectTo : "/dashboard"
             })
         }
         return res.status(400).json({

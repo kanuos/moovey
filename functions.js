@@ -33,10 +33,18 @@ const validEmail = (input) => {
     return regexp.test(input);
 }
 
+const titleCase = input => {
+    const words = input.split(" ");
+    return words.map(word => {
+        return word[0].toUpperCase() + word.slice(1,word.length)     
+    }).join(" ")
+}
+
 
 module.exports = {
     getMovieTitles, 
     getFullImage,
     minimumLength,
     validEmail,
+    titleCase
 }
