@@ -12,21 +12,30 @@ const pool = new Pool({
 
 
 pool.connect()
-    .then(async () => {
+    .then(() => {
         console.log(`Database Server running at port ${process.env.DB_PORT}`)
-        try {
-            await pool.query(`CREATE TABLE IF NOT EXISTS users (
-                uid BIGSERIAL NOT NULL PRIMARY KEY,
-                name VARCHAR(150) NOT NULL,
-                email VARCHAR(150) NOT NULL UNIQUE,
-                password VARCHAR(100) NOT NULL
-            );`)
-        }
-        catch(err){
-            console.log(err);
-        }
-
+        pool.query(`CREATE TABLE IF NOT EXISTS users (
+            uid BIGSERIAL NOT NULL PRIMARY KEY,
+            name VARCHAR(150) NOT NULL,
+            email VARCHAR(150) NOT NULL UNIQUE,
+            password VARCHAR(100) NOT NULL
+        )`)
+    })    
+    .then(() => {
+        console.log(`Connected to users`)
+        pool.query(`CREATE TABLE IF NOT EXISTS movies (
+            imdbID VARCHAR(10) NOT NULL PRIMARY KEY,
+            title TEXT NOT NULL,
+            plot TEXT NOT NULL,
+            imdbRating REAL NOT NULL,
+            actors TEXT NOT NULL,
+            genre TEXT NOT NULL,
+            released TEXT NOT NULL,
+            director TEXT NOT NULL,
+            poster TEXT NOT NULL
+        )`)
     })
+    .then(() => console.log("Connected to movies"))
     .catch((err)=> {
         console.log("Couldn't connect to DB server")
         console.log(err);

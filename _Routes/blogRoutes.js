@@ -7,10 +7,10 @@ const {getUserDashboard, movieSearch} = require("../_Controller/blogController")
 
 
 blogRoute.get("/",  (req, res) => {
-    return res.json("all blogs")
+    return res.render("pages/landing", {title: "Your personal movie universe"})
 })
 
-blogRoute.get("/dashboard", redirectToLogin, (req, res) => getUserDashboard(req, res))
+// blogRoute.get("/dashboard", redirectToLogin, (req, res) => getUserDashboard(req, res))
 
 blogRoute.get("/search", redirectToLogin, (req, res) => movieSearch(req, res))
 

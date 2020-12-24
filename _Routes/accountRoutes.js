@@ -26,13 +26,12 @@ const {redirectToLogin, preventLoginRoute} = require("../sessionMiddleware")
  accoutRoutes.post("/register", preventLoginRoute, (req, res) => submitRegisterForm(req, res))
 
 
- // REGISTER ROUTES
+ // LOGOUT ROUTES
 // URL      :   /logout
 // ACCESS   :   PRIVATE
 // METHODS  :   [POST]
 
 accoutRoutes.get("/logout", redirectToLogin, (req, res) => handleLogOut(req, res))
-
 
 
 

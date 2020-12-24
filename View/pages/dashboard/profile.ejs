@@ -1,0 +1,29 @@
+<%- include('../../partials/head')%>
+<body class="flex relative min-h-screen w-full bg-gray-200">
+    <%- include('../../partials/aside')%>
+    <main class="w-full h-screen md:w-4/5 p-2">
+        <div class="flex justify-start items-center">
+            <span id="drawer-toggler" class="cursor-pointer font-extrabold text-4xl mr-1">
+                <svg class="w-6 h-6 hover:text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16"></path></svg>
+            </span>
+            <%- include('../../partials/brand')%>
+        </div>
+        <p>
+            profile page
+        </p>
+    </main>
+
+    <script>
+        const appDrawer = document.getElementById("dashboard-menu");
+        const drawerToggler = document.getElementById("drawer-toggler");
+        const closeDrawer = document.getElementById("close-drawer");
+
+        drawerToggler.onclick = function() {
+            appDrawer.classList.remove("-translate-x-full");
+        }
+        closeDrawer.onclick = function() {
+            appDrawer.classList.add("-translate-x-full");
+        }
+    </script>
+</body>
+</html>

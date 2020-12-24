@@ -35,6 +35,6 @@ app.use(session({
 // ROUTE MIDDLEWARES
 app.use('/', require('./_Routes/blogRoutes'))
 app.use('/', require('./_Routes/accountRoutes'))
-
+app.use('/dashboard', require('./_Routes/dashboardRoutes'))
 
 app.listen(8000, ()=> console.log("Server running on port 8000"));
