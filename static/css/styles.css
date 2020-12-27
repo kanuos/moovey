@@ -31268,6 +31268,45 @@ html {
   content: none;
 }
 
+video {
+  filter: brightness(50%);
+  z-index: -5;
+}
+
+.loader {
+  -webkit-animation: ping linear infinite;
+          animation: ping linear infinite;
+}
+
+@keyframes ping {
+  0% {
+    transform: scale(1);
+  }
+
+  80% {
+    transform: scale(.75);
+  }
+}
+
+.loader:nth-child(1) {
+  -webkit-animation-duration: .3s;
+          animation-duration: .3s;
+}
+
+.loader:nth-child(2) {
+  -webkit-animation-duration: .5s;
+          animation-duration: .5s;
+}
+
+.loader:nth-child(3) {
+  -webkit-animation-duration: .9s;
+          animation-duration: .9s;
+}
+
+.ql-toolbar {
+  width: 100%;
+}
+
 @media (min-width: 640px){
   .sm\:container{
     width: 100%;

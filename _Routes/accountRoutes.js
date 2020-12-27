@@ -3,8 +3,16 @@ const {generateLoginForm, generateRegisterForm, submitLoginForm, submitRegisterF
 
 const {redirectToLogin, preventLoginRoute} = require("../sessionMiddleware")
 /**
- * ROUTES = /login, /register, /logout, /profile
+ * ROUTES = /, /login, /register, /logout, /profile
  */
+
+// LOGIN ROUTES
+// URL      :   /login
+// ACCESS   :   PUBLIC
+// METHODS  :   [POST, GET]
+
+ accoutRoutes.get("/", (req, res) => res.render("pages/landing", {title: "hola!"}))
+
 
 // LOGIN ROUTES
 // URL      :   /login
