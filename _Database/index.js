@@ -26,12 +26,12 @@ pool.connect()
         pool.query(`CREATE TABLE IF NOT EXISTS movies (
             imdbID VARCHAR(10) NOT NULL PRIMARY KEY,
             title TEXT NOT NULL,
-            plot TEXT NOT NULL,
-            imdbRating REAL NOT NULL,
-            actors TEXT NOT NULL,
-            genre TEXT NOT NULL,
-            released TEXT NOT NULL,
-            director TEXT NOT NULL,
+            plot TEXT ,
+            imdbRating REAL,
+            actors TEXT,
+            genre TEXT,
+            released TEXT,
+            director TEXT,
             poster TEXT NOT NULL
         )`)
     })

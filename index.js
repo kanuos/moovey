@@ -13,7 +13,7 @@ app.set('views', './View');
 app.use('/static',express.static(path.join(__dirname, 'static')));
 app.disable('x-powered-by');
 app.use(express.json());
-app.use(express.urlencoded({extended : false}));
+app.use(express.urlencoded({extended : true}));
 app.use(favicon(path.join(__dirname, "static", "assets", "favicon.png")))
 
 

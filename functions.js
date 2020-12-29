@@ -40,11 +40,21 @@ const titleCase = input => {
     }).join(" ")
 }
 
+const slugify = string => {
+    return string.trim().split(" ").join("+");
+}
+
+const reformatMovieURL = url => {
+    url = url.replace("._V1_SX300", '');
+    return url;
+}
 
 module.exports = {
     getMovieTitles, 
     getFullImage,
     minimumLength,
     validEmail,
-    titleCase
+    titleCase,
+    slugify,
+    reformatMovieURL
 }

@@ -1,16 +1,46 @@
 <%- include('../partials/head') %>
 
 <body>
-    <main>
-        <h1>
-            Step 1: Search movie
-        </h1>
-        <form action="/blogs/search" method="POST" id="search">
-            <input type="text" placeholder="search movie">
-            <button type="submit">
-                Search Movie
-            </button>
-        </form>
+    <main class="h-screen w-screen relative flex justify-center items-center">
+        <video muted loop autoplay class="object-cover object-left absolute top-0 left-0 h-full w-full md:object-center">
+            <source src="/static/assets/video.mp4" type="video/mp4">
+            </source>
+        </video>
+        <section class="bg-gray-50 w-4/5 max-w-prose mx-auto p-4 rounded-md">
+            <form method="POST" id="step-1">
+                <h1 class="font-title text-gray-600 text-center font-extralight capitalize">
+                    <span class="text-red-600">Step 1:</span> Search movie
+                </h1>
+                <span id="search-error" class="my-2 text-xs text-center block text-red-600 capitalize font-bold">
+                </span>
+                <input 
+                class="block text-center border-2 border-gray-400 w-full mx-auto mt-2 outline-none rounded-md focus:border-gray-600 focus:outline-none p-1 font-semibold"
+                    name="searchKeyword"
+                    type="text" 
+                    placeholder="Search Movie...">
+                <button 
+                    type="submit" 
+                    class="rounded-sm block w-max py-1 px-3 font-semibold capitalize mx-auto mt-4 mb-2 bg-gray-700 text-gray-300 outline-none focus:outline-none hover:text-gray-200 shadow-md hover:shadow-lg transition-all text-sm">
+                    Submit
+                </button>
+            </form>
+            <form action="/blogs" method="POST" id="step-2" class="hidden">
+                <h1>
+                    Step 2: Write review
+                </h1>
+                <input type="text" placeholder="review title">
+                <ul class="flex">
+                    <li onclick="rate(1)">&starf;</li>
+                    <li onclick="rate(2)">&starf;</li>
+                    <li onclick="rate(3)">&starf;</li>
+                    <li onclick="rate(4)">&starf;</li>
+                    <li onclick="rate(5)">&starf;</li>
+                </ul>
+                <button type="submit">
+                    Search Movie
+                </button>
+            </form>
+        </section>
 
     </main>
 

@@ -128,3 +128,48 @@ const allInputs = document.querySelectorAll(".account-form-control")
 allInputs.forEach(input => {
     input.addEventListener('keyup',() => activeInputAndLabel(input))
 })
+
+
+// search movie and write review section
+const searchMovieForm = document.getElementById("step-1");
+const searchFormMessage = document.getElementById("search-error");
+
+if(searchMovieForm) {
+    searchMovieForm.onsubmit = async e => {
+        e.preventDefault();
+        const searchKeyword = document.querySelector("input[name='searchKeyword']");
+        if(searchKeyword.value.trim().length > 0){
+            searchFormMessage.classList.remove("hidden");
+            searchFormMessage.innerHTML =  `<div class="flex justify-center items center my-4">
+                <span class="loader block mx-1 transition  h-5 w-5 rounded-full bg-gray-400"></span>
+                <span class="loader block mx-1 transition  h-5 w-5 rounded-full bg-gray-500"></span>
+                <span class="loader block mx-1 transition h-5 w-5 rounded-full bg-gray-600"></span>
+            </div>`;
+            try {
+                const serverResponse = await fetch("/blogs/search", {
+                    method : 'POST', 
+                    headers : {
+                        'Content-Type': 'Application/JSON'
+                    },
+                    body : JSON.stringify({
+                        keyword : searchKeyword.value.trim()
+                    })
+                });
+                const data = await serverResponse.json();
+                console.log(data);
+                searchFormMessage.innerHTML = '';
+            }
+            catch(err){
+                console.log(err);
+            }
+        }
+        else {
+            searchFormMessage.classList.remove("hidden");
+            searchFormMessage.innerHTML = `Search keyword cannot be empty`;
+            setTimeout(()=> {
+                searchFormMessage.classList.add("hidden");
+            }, 2000)
+        }
+    searchKeyword.value = '';
+    }
+}
