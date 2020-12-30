@@ -38,8 +38,8 @@ exports.getBlogCreateForm = function (req, res) {
 async function searchMovieInDB(keyword) {
     try {
         const {rows} = 
-        await pool.query("SELECT * FROM movies WHERE title LIKE '$1'", [keyword]);
-        console.log(rows);
+        await pool.query("SELECT * FROM movies WHERE LOWER(title) LIKE $1", 
+        [`%${keyword.toLowerCase()}%`]);
         return rows;
     }
     catch(err){
@@ -73,7 +73,7 @@ async function storeMovieToDB(items){
         })
     }
     catch(err){
-        console.log('store to db error');
+        return res.status(403).json({message : "store to db error", err})
     }
 }
 
@@ -85,8 +85,7 @@ exports.searchMovie = async function(req, res) {
             return res.status(400).json({message: "Keyword cannot be empty"})
         }
         // check the database first
-        const rows = searchMovieInDB(keyword);
-        console.table(rows);
+        const rows = await searchMovieInDB(keyword);
         if(rows.length > 0) {
             return res.status(200).json({
                 rows,
@@ -96,6 +95,6 @@ exports.searchMovie = async function(req, res) {
         return res.status(200).json({data : await searchMovieFromAPI(keyword), dbMode: false})
     }   
     catch(err){
-        console.log(err);
+        return res.status(500).json({message: "Something went wrong", err})
     }
 }
