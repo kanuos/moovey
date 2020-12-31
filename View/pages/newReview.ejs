@@ -6,8 +6,8 @@
             <source src="/static/assets/video.mp4" type="video/mp4">
             </source>
         </video>
-        <section class="bg-gray-50 w-4/5 max-w-prose mx-auto p-4 rounded-md">
-            <form method="POST" id="step-1">
+        <section class="bg-gray-50 w-4/5 max-w-3xl mx-auto p-4 rounded-md">
+            <form method="POST" id="step-1" class="block max-w-prose mx-auto">
                 <h1 class="font-title text-gray-600 text-center font-extralight capitalize">
                     <span class="text-red-600">Step 1:</span> Search movie
                 </h1>
@@ -16,6 +16,7 @@
                 <input 
                 class="block text-center border-2 border-gray-400 w-full mx-auto mt-2 outline-none rounded-md focus:border-gray-600 focus:outline-none p-1 font-semibold"
                     name="searchKeyword"
+                    autocomplete="off"
                     type="text" 
                     placeholder="Search Movie...">
                 <button 
@@ -24,26 +25,39 @@
                     Submit
                 </button>
             </form>
-            <div class="my-4 grid-cols-1 md:grid-cols-2">
+            <div class="hidden w-full">
                 <h1 class="font-title text-gray-600 text-center font-extralight text-sm capitalize">
                     <span class="text-red-600">Step 2:</span> Pick the movie you want to review
                 </h1>
-                <section id="movie-search-result"></section>
+                <section id="movie-search-result" class="mx-auto w-full grid my-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3"></section>
             </div>
             <form action="/blogs" method="POST" id="step-2" class="hidden">
-                <h1>
-                    Step 2: Write review
+                <section id="selectedMovie"></section>
+                <h1 class="font-title text-gray-600 text-center font-extralight capitalize">
+                    <span class="text-red-600">Step 3:</span> Write review
                 </h1>
-                <input type="text" placeholder="review title">
-                <ul class="flex">
-                    <li onclick="rate(1)">&starf;</li>
-                    <li onclick="rate(2)">&starf;</li>
-                    <li onclick="rate(3)">&starf;</li>
-                    <li onclick="rate(4)">&starf;</li>
-                    <li onclick="rate(5)">&starf;</li>
-                </ul>
-                <button type="submit">
-                    Search Movie
+                <section class="w-11/12 mx-auto mt-4 flex flex-col-reverse">
+                    <input 
+                        autocomplete="off"
+                        type="text" 
+                        name="title" 
+                        id="title"
+                        class="px-1 block text-center w-full outline-none border-2 border-gray-300 rounded-xl focus:outline-none focus:border-gray-500 transition-all font-semibold"
+                    >
+                    <label for="title" class="block text-center mb-2 text-sm font-semibold text-gray-400 capitalize">
+                        Review title/heading
+                    </label>
+                </section>
+                <section class="w-11/12 mx-auto mt-4 flex flex-col-reverse">
+                    <input type="hidden" name="rating" id="reviewRating">
+                    <ul class="flex justify-center items-center" id="displayStars">
+                    </ul>
+                    <label for="title" class="block text-center mb-2 text-sm font-semibold text-gray-400 capitalize">
+                        Review title/heading
+                    </label>
+                </section>
+                <button type="submit" class="block w-max mx-auto my-3 bg-gray-700 text-gray-100 px-4 py-1 capitalize">
+                    submit post
                 </button>
             </form>
         </section>

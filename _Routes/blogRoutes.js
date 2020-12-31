@@ -13,7 +13,7 @@ blogRoute.get("/",  (req, res) => {
 
 blogRoute.post("/",  (req, res) => {
     // return res.render("pages/landing", {title: "Your personal movie universe"})
-    return res.json("write new blog")
+    return res.json({msg: "write new blog", req})
 })
 
 blogRoute.get("/new",  (req, res) => getBlogCreateForm(req, res))

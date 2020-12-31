@@ -2,6 +2,7 @@ const fn = require("../functions");
 const pool = require("../_Database");
 const axios = require('axios');
 
+
 // return all the blogs 
 // public view
 exports.getAllBlogs = function (req, res) {
@@ -39,7 +40,7 @@ async function searchMovieInDB(keyword) {
     try {
         const {rows} = 
         await pool.query("SELECT * FROM movies WHERE LOWER(title) LIKE $1", 
-        [`%${keyword.toLowerCase()}%`]);
+        [`%${fn.dbLikeQueryString(keyword)}%`]);
         return rows;
     }
     catch(err){
@@ -54,6 +55,9 @@ async function searchMovieFromAPI(keyword) {
             url : `http://www.omdbapi.com/?apikey=${process.env.MOVIE_API_KEY}&s=${fn.slugify(keyword)}`
         })
         const {data} = response;
+        if (data.Error){
+            return [];
+        }
         storeMovieToDB(data.Search);
         return data.Search;
     }
@@ -62,31 +66,45 @@ async function searchMovieFromAPI(keyword) {
     }
 }
 
-async function getMovieDetailFromAPI(imdbID){
+exports.getMovieDetailFromAPI = async function(req, res){
     try {
+        const {imdbid} = req.body;
+        if(!imdbid.trim().length > 0) {
+            return res.status(403).json({
+                data : [],
+                error : true
+            })
+        }
         const {data} = await axios({
             method : 'GET',
-            url : `http://www.omdbapi.com/?apikey=${process.env.MOVIE_API_KEY}&t=${imdbID}`
+            url : `http://www.omdbapi.com/?apikey=${process.env.MOVIE_API_KEY}&i=${imdbid}`
         })
-        return data;
-        /*
-        update movies table for imdbid with ↓
-            plot TEXT NOT NULL,
-            imdbRating REAL NOT NULL,
-            actors TEXT NOT NULL,
-            genre TEXT NOT NULL,
-            released TEXT NOT NULL,
-            director TEXT NOT NULL,
-        */
+        // if data is not empty update the movies db with imdbid
+        if (data.hasOwnProperty('Plot') && data.hasOwnProperty('imdbRating')){
+            const {rows} = await pool.query(`UPDATE movies SET 
+            plot = $1, imdbRating = $2, actors = $3, genre = $4, released = $5,
+            director = $6 WHERE imdbID = $7 RETURNING *`, 
+            [
+                data.Plot,data.imdbRating, JSON.stringify(data.Actors), 
+                JSON.stringify(data.Genre), JSON.stringify(data.Released),
+                JSON.stringify(data.Director), imdbid
+            ])
+            return res.status(200).json({
+                data: rows[0],
+                error: false
+            });
+        }
     }
     catch(err){
         console.log('get movie detail error');
         console.log(err);
         console.log('get movie detail error');
+        return res.status(400).json(err)
     }
 }
 
 async function storeMovieToDB(items){
+    console.log(items);
     try {
         items.forEach(async ({Poster,Title,imdbID}) => {
             const {rows} = await pool.query("SELECT * FROM movies WHERE imdbID = $1", [imdbID]);
@@ -97,7 +115,7 @@ async function storeMovieToDB(items){
         })
     }
     catch(err){
-        return res.status(403).json({message : "store to db error", err})
+        console.log("store to db error ",err);
     }
 }
 

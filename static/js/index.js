@@ -134,17 +134,45 @@ allInputs.forEach(input => {
 const searchMovieForm = document.getElementById("step-1");
 const searchFormMessage = document.getElementById("search-error");
 const movieSearchResult = document.getElementById("movie-search-result")
+const noImageURL = `https://cannabisbydesignphysicians.com/wp-content/themes/apexclinic/images/no-image/No-Image-Found-400x264.png`;
 
 function setDefaultImage () {
-    const noImageURL = `https://cannabisbydesignphysicians.com/wp-content/themes/apexclinic/images/no-image/No-Image-Found-400x264.png`;
-    this.error = null;
+    console.log("setting up default image on eror");
+    this.onerror = null;
     this.src = noImageURL;
-    console.log(this, 'image Error');
+}
+
+async function selectMovie(imdbid){
+    try {
+        // request for movies table fill with imdbid search
+        const response = await fetch('/dashboard/updateMovie', {
+            method : 'POST', 
+            body : JSON.stringify({
+                imdbid
+            }),
+            headers : {
+                'Content-Type' : 'Application/json'
+            }
+        });
+        const data = await response.json();
+        console.log(data);
+        if(!data.error){
+            // on success hide form step 1
+            // show form step 2
+        }
+        else {
+            // show error message
+        }
+    }
+    catch(err){
+
+    }
 }
 
 if(searchMovieForm) {
     searchMovieForm.onsubmit = async e => {
         e.preventDefault();
+        movieSearchResult.innerHTML = "";
         const searchKeyword = document.querySelector("input[name='searchKeyword']");
         if(searchKeyword.value.trim().length > 0){
             searchFormMessage.classList.remove("hidden");
@@ -163,31 +191,43 @@ if(searchMovieForm) {
                         keyword : searchKeyword.value.trim()
                     })
                 });
-                const {dbMode, data} = await serverResponse.json();
+                const responseData = await serverResponse.json();
+                const {data, dbMode} = responseData;
+                console.log(data);
                 let innerHTMLString = ''
-                data.forEach(datum => {
-                    innerHTMLString += `<article  
-                    class="m-2 mx-auto block w-44 overflow-hidden rounded-md bg-gray-100 shadow-md transform hover:scale-105 hover:shadow-xl transition-all">
-                    <img
-                        onerror = "setDefaultImage()"
-                        src=${datum.poster} 
-                        class="object-cover" 
-                        alt="${datum.title} poster"/>
-                    <section class="flex items-center flex-col justify-around">
-                        <strong class="capitalize block p-2 text-gray-500 font-semibold text-sm text-center">
-                            ${datum.title}
-                        </strong>
-                    </section>
-                </article>`
-                });
-                searchFormMessage.innerHTML = '';
-                if(innerHTMLString.trim().length > 0){
-                    movieSearchResult.innerHTML = innerHTMLString.trim();
-                    movieSearchResult.classList.remove("hidden");
-                    movieSearchResult.classList.add("grid");
+                if(data && data.length > 0) {
+                    data.forEach(datum => {
+                        let img = ''
+                        if(datum.poster === 'N/A' || datum.Poster === 'N/A') {
+                            img = noImageURL;
+                        } 
+                        innerHTMLString += `<article  
+                        onclick="selectMovie('${datum.imdbid}')"
+                        class="m-2 mx-auto block w-44 overflow-hidden rounded-md bg-gray-100 shadow-md transform hover:scale-105 hover:shadow-xl transition-all cursor-pointer">
+                        <img
+                            onerror = "setDefaultImage()"
+                            src="${img.length > 0 ? img : (datum.Poster || datum.poster)}" 
+                            class="object-cover" 
+                            alt="${datum.title || datum.Title} poster"/>
+                        <section class="flex items-center flex-col justify-around">
+                            <strong class="capitalize block p-2 text-gray-500 font-semibold text-sm text-center">
+                                ${datum.title || datum.Title}
+                            </strong>
+                        </section>
+                    </article>`
+                    });
+                    searchFormMessage.innerHTML = '';
+                    if(innerHTMLString.trim().length > 0){
+                        movieSearchResult.innerHTML = innerHTMLString.trim();
+                        movieSearchResult.parentElement.classList.remove("hidden");
+                        movieSearchResult.parentElement.classList.add("grid");
+                    }
                 }
-                if(dbMode){
-                    console.log("show the search more btn");
+                else {
+                    searchFormMessage.innerHTML = 'No Movie with title found';
+                    setTimeout(() => {
+                        searchFormMessage.innerHTML = '';
+                    }, 3000)
                 }
             }
             catch(err){
@@ -202,5 +242,29 @@ if(searchMovieForm) {
             }, 2000)
         }
     searchKeyword.value = '';
+    }
+}
+
+
+
+
+//  star rating functionality
+window.onload = rate(3)
+function rate(rating){
+    const ratingElement = document.getElementById('reviewRating');
+    const displayStars =  document.getElementById('displayStars');
+    const MAX_RATING = 5;
+
+    if(!isNaN(rating) && ratingElement){
+        ratingElement.value = Number(rating);
+        displayStars.innerHTML = ''
+        let ratingHTMLString = '';
+        for(let i =1; i <= Number(rating); i++){
+            ratingHTMLString += `<li class="text-red-600 text-2xl" onclick="rate(${i})">&starf;</li>`
+        }
+        for(let i =rating + 1 ; i <= MAX_RATING ; i++){
+            ratingHTMLString += `<li class="text-gray-600 text-2xl" onclick="rate(${i})">&starf;</li>`
+        }
+        displayStars.innerHTML = ratingHTMLString
     }
 }

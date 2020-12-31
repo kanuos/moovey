@@ -44,6 +44,10 @@ const slugify = string => {
     return string.trim().split(" ").join("+");
 }
 
+const dbLikeQueryString = string => {
+    return string.toLowerCase().trim().split(" ").join("%");
+}
+
 const reformatMovieURL = url => {
     url = url.replace("._V1_SX300", '');
     return url;
@@ -56,5 +60,6 @@ module.exports = {
     validEmail,
     titleCase,
     slugify,
-    reformatMovieURL
+    reformatMovieURL,
+    dbLikeQueryString
 }

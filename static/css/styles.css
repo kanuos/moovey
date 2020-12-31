@@ -31210,6 +31210,7 @@ html {
 /*  account form section */
 
 #nameID:focus + label, 
+#title:focus + label, 
 #emailID:focus + label, 
 #passwordID:focus + label {
   color: #374151 !important;
