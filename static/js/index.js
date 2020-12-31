@@ -133,6 +133,14 @@ allInputs.forEach(input => {
 // search movie and write review section
 const searchMovieForm = document.getElementById("step-1");
 const searchFormMessage = document.getElementById("search-error");
+const movieSearchResult = document.getElementById("movie-search-result")
+
+function setDefaultImage () {
+    const noImageURL = `https://cannabisbydesignphysicians.com/wp-content/themes/apexclinic/images/no-image/No-Image-Found-400x264.png`;
+    this.error = null;
+    this.src = noImageURL;
+    console.log(this, 'image Error');
+}
 
 if(searchMovieForm) {
     searchMovieForm.onsubmit = async e => {
@@ -155,9 +163,32 @@ if(searchMovieForm) {
                         keyword : searchKeyword.value.trim()
                     })
                 });
-                const data = await serverResponse.json();
-                console.log(data);
+                const {dbMode, data} = await serverResponse.json();
+                let innerHTMLString = ''
+                data.forEach(datum => {
+                    innerHTMLString += `<article  
+                    class="m-2 mx-auto block w-44 overflow-hidden rounded-md bg-gray-100 shadow-md transform hover:scale-105 hover:shadow-xl transition-all">
+                    <img
+                        onerror = "setDefaultImage()"
+                        src=${datum.poster} 
+                        class="object-cover" 
+                        alt="${datum.title} poster"/>
+                    <section class="flex items-center flex-col justify-around">
+                        <strong class="capitalize block p-2 text-gray-500 font-semibold text-sm text-center">
+                            ${datum.title}
+                        </strong>
+                    </section>
+                </article>`
+                });
                 searchFormMessage.innerHTML = '';
+                if(innerHTMLString.trim().length > 0){
+                    movieSearchResult.innerHTML = innerHTMLString.trim();
+                    movieSearchResult.classList.remove("hidden");
+                    movieSearchResult.classList.add("grid");
+                }
+                if(dbMode){
+                    console.log("show the search more btn");
+                }
             }
             catch(err){
                 console.log(err);

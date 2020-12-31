@@ -55,10 +55,34 @@ async function searchMovieFromAPI(keyword) {
         })
         const {data} = response;
         storeMovieToDB(data.Search);
-        return data;
+        return data.Search;
     }
     catch(err){
         console.log(err);
+    }
+}
+
+async function getMovieDetailFromAPI(imdbID){
+    try {
+        const {data} = await axios({
+            method : 'GET',
+            url : `http://www.omdbapi.com/?apikey=${process.env.MOVIE_API_KEY}&t=${imdbID}`
+        })
+        return data;
+        /*
+        update movies table for imdbid with ↓
+            plot TEXT NOT NULL,
+            imdbRating REAL NOT NULL,
+            actors TEXT NOT NULL,
+            genre TEXT NOT NULL,
+            released TEXT NOT NULL,
+            director TEXT NOT NULL,
+        */
+    }
+    catch(err){
+        console.log('get movie detail error');
+        console.log(err);
+        console.log('get movie detail error');
     }
 }
 
@@ -68,7 +92,7 @@ async function storeMovieToDB(items){
             const {rows} = await pool.query("SELECT * FROM movies WHERE imdbID = $1", [imdbID]);
             if(rows.length === 0){
                 await pool.query("INSERT INTO movies (imdbID, title, poster) VALUES ($1,$2,$3)", 
-                [imdbID,Title.toLowerCase() ,fn.reformatMovieURL(Poster)])
+                [imdbID,Title.toLowerCase() ,Poster])
             }
         })
     }
@@ -88,7 +112,7 @@ exports.searchMovie = async function(req, res) {
         const rows = await searchMovieInDB(keyword);
         if(rows.length > 0) {
             return res.status(200).json({
-                rows,
+                data : rows,
                 dbMode : true
             })
         }

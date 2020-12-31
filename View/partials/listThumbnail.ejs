@@ -1,15 +1,14 @@
-<article class="bg-gray-50 p-4 shadow-inner rounded-md flex justify-between">   
-    <img
-        class="rounded-full h-16 w-16 object-cover shadow-xl"
-        src="<%= profile %>" 
-        alt="">
-    <div class="flex flex-col ml-4">
-        <strong class="text-gray-500 text-sm font-bold">
+<div class="flex flex-col">
+    <div 
+        class="bg-gray-50 my-2 w-full max-w-prose border-l-8 border-red-500 text-center p-4 flex flex-col justify-start items-start shadow-md rounded-md mx-auto">
+        <strong class="text-gray-600 font-title font-extralight capitalize text-base">
             <%= title %>
         </strong>
-        <a href="<%= url %>" 
-            class="block capitalize w-max mt-1 text-xs text-gray-500 hover:text-red-600 hover:underline">
-            see more
+        <em class="text-gray-500 capitalize text-sm">
+            by <%= user %>
+        </em>
+        <a href="/dashboard/list/<%= id %>" class="mt-2 capitalize text-sm text-gray-600 hover:underline hover:text-red-700">
+            read more
         </a>
     </div>
-</article>
+</div>

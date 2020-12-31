@@ -1,7 +1,7 @@
 <%- include('../partials/head') %>
 
 <body>
-    <main class="h-screen w-screen relative flex justify-center items-center">
+    <main class="min-h-screen w-full relative flex justify-center items-center p-4">
         <video muted loop autoplay class="object-cover object-left absolute top-0 left-0 h-full w-full md:object-center">
             <source src="/static/assets/video.mp4" type="video/mp4">
             </source>
@@ -24,6 +24,12 @@
                     Submit
                 </button>
             </form>
+            <div class="my-4 grid-cols-1 md:grid-cols-2">
+                <h1 class="font-title text-gray-600 text-center font-extralight text-sm capitalize">
+                    <span class="text-red-600">Step 2:</span> Pick the movie you want to review
+                </h1>
+                <section id="movie-search-result"></section>
+            </div>
             <form action="/blogs" method="POST" id="step-2" class="hidden">
                 <h1>
                     Step 2: Write review

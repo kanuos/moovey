@@ -10,20 +10,17 @@ const pool = new Pool({
     host : DB_HOST,
 });
 
-
-pool.connect()
-    .then(() => {
-        console.log(`Database Server running at port ${process.env.DB_PORT}`)
-        pool.query(`CREATE TABLE IF NOT EXISTS users (
+module.exports = (async function createTables() {
+    try {
+        await pool.connect();
+        await pool.query(`CREATE TABLE IF NOT EXISTS users (
             uid BIGSERIAL NOT NULL PRIMARY KEY,
             name VARCHAR(150) NOT NULL,
             email VARCHAR(150) NOT NULL UNIQUE,
             password VARCHAR(100) NOT NULL
-        )`)
-    })    
-    .then(() => {
-        console.log(`Connected to users`)
-        pool.query(`CREATE TABLE IF NOT EXISTS movies (
+        )`);
+        console.log("users table created");
+        await pool.query(`CREATE TABLE IF NOT EXISTS movies (
             imdbID VARCHAR(10) NOT NULL PRIMARY KEY,
             title TEXT NOT NULL,
             plot TEXT ,
@@ -33,14 +30,26 @@ pool.connect()
             released TEXT,
             director TEXT,
             poster TEXT NOT NULL
-        )`)
-    })
-    .then(() => console.log("Connected to movies"))
-    .catch((err)=> {
-        console.log("Couldn't connect to DB server")
+        )`);
+        console.log("movies table created");
+        await pool.query(`CREATE TABLE IF NOT EXISTS list_meta (
+            list_id BIGSERIAL NOT NULL PRIMARY KEY,
+            title TEXT NOT NULL,
+            author INT NOT NULL REFERENCES  users(uid)
+            )`)
+        console.log("list_meta table created");
+        await pool.query(`CREATE TABLE IF NOT EXISTS list_item (
+            id BIGSERIAL NOT NULL PRIMARY KEY,
+            l_id INT NOT NULL REFERENCES list_meta(list_id),
+            movie VARCHAR(10) NOT NULL REFERENCES movies(imdbID)
+            )`)
+        console.log("list item table created");
+        // return pool;
+    }
+    catch(err){
+        console.log("DB table creation error");
         console.log(err);
-        console.log("------------------------------")
-    });
-    
+        console.log("DB table creation error");
+    }
+})();
 
-module.exports = pool;
