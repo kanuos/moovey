@@ -2,15 +2,6 @@ const {minimumLength, validEmail} = require("../functions");
 const pool = require("../_Database")
 const bcrypt = require("bcryptjs");
 
-exports.generateLoginForm = function (req, res){
-    let {redirect} = req.query;
-    return res.render("pages/login", {title : "Join Now", redirect})
-}
-
-exports.generateRegisterForm = function (req, res){
-    return res.render("pages/register", {title : "Create your FREE account"})
-}
-
 exports.submitLoginForm = async function(req, res) {
     try {
         let {email, password} = req.body;
@@ -130,4 +121,15 @@ exports.handleLogOut = function(req, res) {
     res.session.destroy();
     res.clearCookie(process.env.SESSION_NAME)
     return res.redirect("/login")
+}
+
+exports.reviewerList = async function(req, res) {
+    // try {
+
+    // }
+    // catch(err) {
+
+    // }
+    // generate all the users and return
+    return res.render("pages/user_list", {title : ''});
 }

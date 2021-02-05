@@ -6,7 +6,13 @@ module.exports = {
     extend: {
       fontFamily : {
         'title' : ['Anton'],
-        'base' : ['Raleway']
+        'base' : ['Raleway'],
+      },
+      colors : {
+        dark : '#3B3F59',
+        primary : '#4DDEB3',
+        secondary : '#18A9BD',
+        light : '#EBEBEB'
       }
     },
   },

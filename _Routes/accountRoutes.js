@@ -1,36 +1,34 @@
 const accoutRoutes = require('express').Router();
-const {generateLoginForm, generateRegisterForm, submitLoginForm, submitRegisterForm, handleLogOut} = require("../_Controller/accountController")
+const {reviewerList, submitLoginForm, submitRegisterForm, handleLogOut} = require("../_Controller/accountController")
 
 const {redirectToLogin, preventLoginRoute} = require("../sessionMiddleware")
 /**
  * ROUTES = /, /login, /register, /logout, /profile
  */
 
-// LOGIN ROUTES
+// LANDING ROUTES
 // URL      :   /login
 // ACCESS   :   PUBLIC
-// METHODS  :   [POST, GET]
+// METHODS  :   [GET]
 
- accoutRoutes.get("/", (req, res) => res.render("pages/landing", {title: "hola!"}))
-
-
-// LOGIN ROUTES
-// URL      :   /login
-// ACCESS   :   PUBLIC
-// METHODS  :   [POST, GET]
-
- accoutRoutes.get("/login", preventLoginRoute, (req, res) => generateLoginForm(req, res))
-
- accoutRoutes.post("/login", preventLoginRoute, (req, res) => submitLoginForm(req, res))
-
-
-// REGISTER ROUTES
-// URL      :   /register
-// ACCESS   :   PUBLIC
-// METHODS  :   [POST, GET]
-
- accoutRoutes.get("/register", preventLoginRoute, (req, res) => generateRegisterForm(req, res))
+ accoutRoutes.get("/", (req, res) => res.render("pages/landing", {title: "Welcome to your personal movie blog"}))
  
+ 
+ // LOGIN ROUTES
+ // URL      :   /login
+ // ACCESS   :   PUBLIC
+ // METHODS  :   [POST, GET]
+ 
+ accoutRoutes.get("/login", preventLoginRoute, (req, res) => res.render("pages/landing", {title: "Login"}))
+ accoutRoutes.post("/login", preventLoginRoute, (req, res) => submitLoginForm(req, res))
+ 
+ 
+ // REGISTER ROUTES
+ // URL      :   /register
+ // ACCESS   :   PUBLIC
+ // METHODS  :   [POST, GET]
+ 
+ accoutRoutes.get("/register", preventLoginRoute, (req, res) => res.render("pages/landing", {title: "Register"}))
  accoutRoutes.post("/register", preventLoginRoute, (req, res) => submitRegisterForm(req, res))
 
 
@@ -40,6 +38,16 @@ const {redirectToLogin, preventLoginRoute} = require("../sessionMiddleware")
 // METHODS  :   [POST]
 
 accoutRoutes.get("/logout", redirectToLogin, (req, res) => handleLogOut(req, res))
+
+
+ // USERS LIST ROUTES
+// URL      :   /reviewers
+// ACCESS   :   PUBLIC
+// METHODS  :   [GET]
+
+accoutRoutes.get("/reviewers", (req, res) => reviewerList(req, res))
+
+
 
 
 

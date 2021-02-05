@@ -4,7 +4,7 @@
   "description": "An Express web app to write movie reviews using EJS templates",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon index.js",
+    "dev": "npm run build:css && nodemon index.js",
     "build:css": "tailwindcss build ./static/css/tailwind.css -o ./static/css/styles.css"
   },
   "keywords": [
