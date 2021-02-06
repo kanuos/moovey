@@ -3,15 +3,14 @@ exports.redirectToLogin = function(req, res, next) {
         next();
     }
     else {
-        return res.redirect("/login")
+        return res.redirect("/?redirect=True")
     }
 }
 
 exports.preventLoginRoute = function (req, res, next){
-    if(req.session.uid){
-        return res.redirect("/blogs")
+    const sId = req.session?.uid
+    if(sId){
+        return res.redirect("/dashboard")
     }
-    else {
-        next();
-    }
+    next();
 }

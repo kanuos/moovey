@@ -16,7 +16,12 @@ pool.connect()
             uid BIGSERIAL NOT NULL PRIMARY KEY,
             name VARCHAR(150) NOT NULL,
             email VARCHAR(150) NOT NULL UNIQUE,
-            password VARCHAR(100) NOT NULL
+            password VARCHAR(100) NOT NULL,
+            dob DATE,
+            country VARCHAR(200),
+            bio TEXT,
+            picture TEXT,
+            default_pic TEXT DEFAULT 'https://i.ibb.co/TRM37z9/image-not-found.png'
         )`);
     })
     .then(function() {
@@ -41,17 +46,17 @@ pool.connect()
             author INT NOT NULL REFERENCES  users(uid)
             )`)
         })
-    .then(function() {
-        console.log("list_meta table created");
-        pool.query(`CREATE TABLE IF NOT EXISTS list_item (
-            id BIGSERIAL NOT NULL PRIMARY KEY,
-            l_id INT NOT NULL REFERENCES list_meta(list_id),
-            movie VARCHAR(10) NOT NULL REFERENCES movies(imdbID)
-            )`)
-        })
-    .then(function() {
-            console.log("list item table created")    
-    })
+    // .then(function() {
+    //     console.log("list_meta table created");
+    //     pool.query(`CREATE TABLE IF NOT EXISTS list_item (
+    //         id BIGSERIAL NOT NULL PRIMARY KEY,
+    //         l_id INT NOT NULL REFERENCES list_meta(list_id),
+    //         movie VARCHAR(10) NOT NULL REFERENCES movies(imdbID)
+    //         )`)
+    //     })
+    // .then(function() {
+    //         console.log("list item table created")    
+    // })
     .catch(err => {
         console.log("DB table creation error");
         console.log(err);

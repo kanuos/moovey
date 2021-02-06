@@ -50,6 +50,10 @@ function toggleMode() {
 }
 
 window.onload = () => {
+    const showLogin = window.location.search?.split('=')[1]?.toLowerCase();
+    if(showLogin) {
+        openAccountModal();
+    }
     let activeLandingSection = 0;
     const timer = setInterval(() => {
         activeLandingSection++;
@@ -63,31 +67,56 @@ window.onload = () => {
 
 // account forms using ajax
 
+function errorMessage(DOMElement, message) {
+    DOMElement.innerText = message;
+    const msg = setTimeout(()=> {
+        DOMElement.innerText = ''
+    }, 3000);
+    return () => clearTimeout(msg)
+}
+
+// Login Form
 loginForm?.addEventListener('submit', async e => {
     e.preventDefault();
     const formData = new FormData(loginForm);
-    console.log("login with data");
     const loginData = {}
     for(let [k,v] of formData.entries()){
         if(v.trim().length === 0) {
             let error = `${k} cannot be empty`;
-            loginError.innerText = error;
-            const msg = setTimeout(()=> {
-                loginError.innerText = ''
-            }, 3000);
-            return () => clearTimeout(msg)
+            errorMessage(loginError, error)
         }
         loginData[k] = v
     }
+    try {
+        let serverResponse = await fetch("/login", {
+            method : "POST",
+            headers : {
+                'Content-Type' : 'application/json'
+            },
+            redirect: 'follow',
+            body : JSON.stringify(loginData)
+        });
+        serverResponse = await serverResponse.json();
+        if(serverResponse.error) {
+            errorMessage(loginError, serverResponse.errorMsg)
+            return
+        }
+        if(serverResponse.redirected){
+            window.location.href = serverResponse.url
+        }
+    }
+    catch(err) {
+        console.log(err, "login err");
+    }
     // send data to server and act accordingly
 
-    console.log(loginData);
 })
 
+
+// Register Form
 registerForm?.addEventListener('submit', async e => {
     e.preventDefault();
     const formData = new FormData(registerForm);
-    console.log("register with data");
     const registerData = {}
     for(let [k,v] of formData.entries()){
         if(v.trim().length === 0) {
@@ -102,8 +131,39 @@ registerForm?.addEventListener('submit', async e => {
     }
     // send data to server and act accordingly
 
-    console.log(registerData);
+    try {
+        let serverResponse = await fetch("/register", {
+            method : "POST",
+            headers : {
+                'Content-Type' : 'application/json'
+            },
+            body : JSON.stringify(registerData)
+        })
+        serverResponse = await serverResponse.json();
+        if(serverResponse.error) {
+            errorMessage(registerError, serverResponse.errorMsg)
+            return
+        }
+        if(serverResponse.redirected){
+            window.location.href = serverResponse.url
+        }
+    }
+    catch(err) {
+        console.log(err, "reg err");
+    }
+
 })
 
 
 // END OF LANDING AND ACCOUNT SECTION
+
+// START OF NAVBAR
+const mainNavbarToggler = document.querySelector('#navToggler');
+const navList = document.querySelector('#navList');
+
+mainNavbarToggler?.addEventListener('click', () => {
+    navList.classList.toggle("-translate-x-full");
+    navList.classList.toggle("translate-x-0");
+})
+
+// END OF NAVBAR

@@ -2,6 +2,10 @@ const {minimumLength, validEmail} = require("../functions");
 const pool = require("../_Database")
 const bcrypt = require("bcryptjs");
 
+exports.renderDisplayRoute = async function(req, res) {
+    return res.render("pages/landing", {title: "Welcome to your personal movie blog"})
+}
+
 exports.submitLoginForm = async function(req, res) {
     try {
         let {email, password} = req.body;
@@ -11,13 +15,15 @@ exports.submitLoginForm = async function(req, res) {
         if(!minimumLength(password, 6)){
             const error = "Password must be at least six characters long"
             return res.status(403).json({
-                error, field : "password"
+                error : true,
+                errorMsg : error
             })
         }
         if(!validEmail(email)){
             const error = "Invalid email format."
             return res.status(403).json({
-                error, field : "email"
+                error : true, 
+                errorMsg : error
             })
         }
 
@@ -26,8 +32,8 @@ exports.submitLoginForm = async function(req, res) {
 
         if(rows.length === 0){
             return res.status(404).json({
-                error: "User with credentials doesn't exist.",
-                field: "form"
+                errorMsg: "User with credentials doesn't exist.",
+                error: true,
             })
         }
 
@@ -41,12 +47,13 @@ exports.submitLoginForm = async function(req, res) {
             req.session.uid = existingUser.uid;
             req.session.userName = existingUser.name.split(" ")[0];
             return res.status(200).json({
-                success : true,
-                redirectTo : "/dashboard"
+                error : false,
+                url : "/dashboard",
+                redirected : true
             })
         }
         return res.status(400).json({
-            success : false,
+            error : true,
             redirectTo : null
         })
     }
@@ -66,25 +73,29 @@ exports.submitRegisterForm = async function(req, res) {
         if(!minimumLength(name, 2)){
             const error = "Name must be at least two characters long"
             return res.status(403).json({
-                error, field : "name"
+                error : true,
+                errorMsg : error
             })
         }
         if(!validEmail(email)){
             const error = "Invalid email format."
             return res.status(403).json({
-                error, field : "email"
+                error : true, 
+                errorMsg : error
             })
         }
         if(!minimumLength(password, 6)){
             const error = "Password must be at least six characters long."
             return res.status(403).json({
-                error, field : "password"
+                error : true, 
+                errorMsg : error
             })
         }
         if(password.length >= 20){
             const error = "Password should not more than twenty characters long."
             return res.status(403).json({
-                error, field : "password"
+                error : true,
+                errorMsg : error
             })
         }
         
@@ -94,7 +105,8 @@ exports.submitRegisterForm = async function(req, res) {
         if(rows.length > 0){
             const error = "Email already taken. Try again with different email ID."
             return res.status(403).json({
-                error, field : "form"
+                error : true, 
+                errorMsg : error
             })
         }
 
@@ -105,10 +117,10 @@ exports.submitRegisterForm = async function(req, res) {
         
         // insert user to DB
 
-        await pool.query("INSERT INTO users (name, email, password) VALUES ($1, $2, $3)", [name,email, hashedPassword]);
-     
+        await pool.query("INSERT INTO users (name, email, password) VALUES ($1, $2, $3)", [name,email, hashedPassword]);     
         return res.json({
-            url : "/login?redirect=True",
+            error: false,
+            url : "/?redirect=True",
             redirected : true,
         })
     }
@@ -118,9 +130,28 @@ exports.submitRegisterForm = async function(req, res) {
 }
 
 exports.handleLogOut = function(req, res) {
-    res.session.destroy();
+    req.session.destroy();
     res.clearCookie(process.env.SESSION_NAME)
-    return res.redirect("/login")
+    return res.redirect("/")
+}
+
+exports.showMyProfile = async function(req, res) {
+    try {
+        const {rows} = await pool.query(`SELECT * FROM users WHERE uid = $1`, [req.session.uid]);
+        return res.render("pages/my_profile", {title : `${req.session.userName}'s Profile`, profile: rows[0]})
+    }
+    catch(er){
+
+    }
+}
+
+exports.showEditProfilePage = function(req, res) {
+    return res.render("pages/edit_profile", {title : `Edit ${req.session.userName}'s Profile`, name: req.session.userName})
+}
+
+exports.submitEditProfile = function(req, res) {
+    console.log(req.files, req.body, req.session);
+    return res.redirect("/")
 }
 
 exports.reviewerList = async function(req, res) {
