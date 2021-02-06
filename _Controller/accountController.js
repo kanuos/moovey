@@ -54,6 +54,7 @@ exports.submitLoginForm = async function(req, res) {
         }
         return res.status(400).json({
             error : true,
+            errorMsg : 'Login credentials invalid',
             redirectTo : null
         })
     }
@@ -145,8 +146,14 @@ exports.showMyProfile = async function(req, res) {
     }
 }
 
-exports.showEditProfilePage = function(req, res) {
-    return res.render("pages/edit_profile", {title : `Edit ${req.session.userName}'s Profile`, name: req.session.userName})
+exports.showEditProfilePage = async function(req, res) {
+    try {
+        const {rows} = await pool.query(`SELECT * FROM users WHERE uid = $1`, [req.session.uid]);
+        return res.render("pages/edit_profile", {title : `${req.session.userName}'s Profile`, profile: rows[0]})
+    }
+    catch(er){
+
+    }
 }
 
 exports.submitEditProfile = function(req, res) {

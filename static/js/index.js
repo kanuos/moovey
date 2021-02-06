@@ -162,8 +162,19 @@ const mainNavbarToggler = document.querySelector('#navToggler');
 const navList = document.querySelector('#navList');
 
 mainNavbarToggler?.addEventListener('click', () => {
-    navList.classList.toggle("-translate-x-full");
-    navList.classList.toggle("translate-x-0");
+    navList.classList.toggle("flex");
+    navList.classList.toggle("hidden");
 })
+
+window.addEventListener('load', () => {
+    if(window.innerWidth > 768) {
+        navList.classList.remove("flex");
+        navList.classList.add("hidden");
+    }
+    else {
+        navList.classList.add("hidden");
+    }
+})
+
 
 // END OF NAVBAR
