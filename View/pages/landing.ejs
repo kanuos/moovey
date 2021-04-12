@@ -1,148 +1,263 @@
 <%- include('../partials/head') %>
 
-<body class="min-h-screen relative">
-    <main class="h-screen w-full relative flex flex-col items-center justify-between py-10">
-        <article class="h-full overflow-hidden justify-between">
-            <section class="active landing h-full flex flex-col items-center justify-center">
-                <%- include('../partials/brand') %>
-                <span class="text-light text-lg capitalize mb-4 italic block text-center">
-                    a place for cinephiles
-                </span>
-                <button 
-                    onclick="openAccountModal()"
-                    class="text-lg uppercase mt-4 px-8 py-2 font-semibold outline-none focus:outline-none border-2 border-dark hover:text-dark hover:bg-light hover:border-light hover:shadow-xl transition-all duration-200 transform hover:-translate-y-1.5">
-                    join now
-                </button>
-            </section>
-            <section class="landing h-full flex flex-col justify-center">
-                <h1 class="text-light flex flex-col items-center text-2xl">
-                    <span class="capitalize shadow-md p-3 m-1 w-min rounded-sm bg-dark">
-                        a
-                    </span>
-                    <span class="capitalize shadow-md p-3 m-1 w-min rounded-sm bg-dark">
-                        place
-                    </span>
-                    <span class="capitalize shadow-md p-3 m-1 w-min rounded-sm bg-dark">
-                        for
-                    </span>
-                    <span class="capitalize shadow-md p-3 m-1 w-min rounded-sm bg-dark">
-                        cinephiles
-                    </span>
-                </h1>
-                <a href="/" 
-                    class="text-lg uppercase mt-4 px-8 py-2 font-semibold outline-none focus:outline-none border-2 border-dark hover:text-dark hover:bg-light hover:border-light hover:shadow-xl transition-all duration-200 transform hover:-translate-y-1.5">
-                    see reviewers
-                </a>
-            </section>
-            <section class="landing h-full flex flex-col justify-center">
-                <blockquote class="text-lg capitalize italic my-2 p-4 rounded-sm shadow-lg bg-dark text-primary">
-                    let's watch and promote good movies.. together!
-                </blockquote>
-                <h1 class="text-light flex flex-col items-center text-2xl">
-                    <span class="capitalize shadow-md p-3 m-1 w-min rounded-sm bg-dark">
-                        watch 
-                    </span>
-                    <span class="capitalize shadow-md p-3 m-1 w-min rounded-sm bg-dark">
-                        good
-                    </span>
-                    <span class="capitalize shadow-md p-3 m-1 w-min rounded-sm bg-dark">
-                        movies
-                    </span>
-                </h1>
-                <button 
-                    class="w-max mx-auto text-lg uppercase mt-4 px-8 py-2 font-semibold outline-none focus:outline-none border-2 border-dark hover:text-dark hover:bg-light hover:border-light hover:shadow-xl transition-all duration-200 transform hover:-translate-y-1.5">
-                    read reviews
-                </button>
-            </section>
-        </article>
-        <div class="flex items-center justify-center">
-            <button onclick="selectLanding(0)" class="landing-nav h-3 w-3 rounded-full my-3 mx-1.5 bg-dark block outline-none focus:outline-none"></button>
-            <button onclick="selectLanding(1)" class="landing-nav h-3 w-3 rounded-full my-3 mx-1.5 bg-light block outline-none focus:outline-none"></button>
-            <button onclick="selectLanding(2)" class="landing-nav h-3 w-3 rounded-full my-3 mx-1.5 bg-light block outline-none focus:outline-none"></button>
-        </div>
-    </main>
-    
-    <section id="account" class="hidden fixed items-center justify-center top-0 left-0 h-screen w-full bg-dark">
-        <button onclick="closeAccountModal()" class="absolute top-6 right-6 text-4xl text-secondary outline-none focus:outline-none hover:text-primary">
+<style>
+    #login > form > ul > li, #register > form > ul >li {
+        animation: effect 5s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+        pointer-events: none;
+    }
+    @keyframes effect {
+        from {
+            opacity: 0.125;
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+            transform: translateY(75%) rotate(35deg);
+        }
+        to {
+            opacity: 0;
+            clip-path: circle();
+            transform: translateY(-1000%) rotate(85deg);
+        }
+    }
+    #login > form > ul > li:nth-child(1), #register > form > ul >li:nth-child(1) {
+        animation-duration: 2s;
+    }
+    #login > form > ul > li:nth-child(2), #register > form > ul >li:nth-child(2) {
+        animation-duration: 5s;
+    }
+    #login > form > ul > li:nth-child(3), #register > form > ul >li:nth-child(3) {
+        animation-duration: 3s;
+    }
+    #login > form > ul > li:nth-child(4), #register > form > ul >li:nth-child(4) {
+        animation-duration: 8s;
+    }
+</style>
+
+
+<body class="relative font-regular min-h-screen overflow-x-hidden">
+<video 
+    preload="auto"
+    oncontextmenu="return false" 
+    class="pointer-events-none fixed top-0 left-0 h-screen w-screen object-cover opacity-10" 
+    autoplay 
+    muted 
+    loop>
+    <source src="/static/assets/video.mp4" type="video/mp4">
+</video>
+
+<section id="login" class="modal top-0 left-0 fixed h-screen w-full z-30 bg-black transform transition-all scale-0 items-center justify-center flex">
+    <form action="/login" method="POST" class="bg-gray-50 text-pink-600 h-2/3 w-4/5 max-w-xl rounded-md grid grid-rows-5 overflow-hidden relative">
+        <button type="button" onclick="toggleModal()" class="modalControl absolute top-2 right-4 text-2xl outline-none focus:outline-none hover:scale-125 hover:rotate-90 origin-center transform transition-all" type="button">
             &times;
         </button>
-        <article id="loginMode" class="rounded-md bg-gradient-to-b from-primary to-secondary flex flex-col items-center h-3/5 w-4/5 max-w-md justify-start px-4 py-8 overflow-hidden relative">
-            <strong class="text-3xl uppercase font-light">
-                Log In
-            </strong>
-            <form class="z-10 w-5/6" id="loginForm" autocomplete="new_password">
-                <span class="block text-center capitalize text-dark text-sm font-bold font-base" id="loginError"></span>
-                <div class="flex flex-col items-center">
+
+        <section class="row-start-1 row-end-6 p-3 grid grid-flow-row">
+            <div class="flex flex-col justify-center items-center">
+                <strong class="text-center text-3xl font-light tracking-widest uppercase font-special block w-full mx-auto">
+                    login
+                </strong>
+                <span class="capitalize text-xs my-1 font-semibold">Lorem ipsum, dolor sit amet consectetur</span>
+            </div>
+            <div class="flex flex-col justify-start my-auto">
+                <div class="flex flex-col w-11/12 mx-auto">
+                    <label for="new_name" class="block text-xs text-gray-500 capitalize">email <small class="text-pink-600 text-xs">*</small></label>
                     <input 
-                        class="my-2 w-full block p-2 rounded-md text-center transform transition-all focus:scale-x-110 outline-none focus:outline-none focus:shadow-lg font-semibold text-dark"
-                        type="text" 
-                        name="email"
-                        placeholder="Email">
+                        type="email" 
+                        name="email" 
+                        placeholder="what's your email?"
+                        autocomplete="off"
+                        value=""
+                        class="p-2 shadow-md focus:scale-x-110 transform focus:shadow-lg outline-none focus:outline-none w-full block my-2 placeholder-gray-400 focus:placeholder-gray-500 text-gray-700 rounded-sm capitalize text-sm tracking-tight transition-all" 
+                        autocomplete="additional-name">
+                </div>
+                <div class="flex flex-col w-11/12 mx-auto">
+                    <label for="new_name" class="block text-xs text-gray-500 capitalize">password <small class="text-pink-600 text-xs">*</small></label>
                     <input 
-                        class="my-2 w-full block p-2 rounded-md text-center transform transition-all focus:scale-x-110 outline-none focus:outline-none focus:shadow-lg font-semibold text-dark"
                         type="password" 
-                        name="password"
-                        placeholder="Password">
+                        name="password" 
+                        placeholder="your password"
+                        autocomplete="off"
+                        value=""
+                        class="p-2 shadow-md focus:scale-x-110 transform focus:shadow-lg outline-none focus:outline-none w-full block my-2 placeholder-gray-400 focus:placeholder-gray-500 text-gray-700 rounded-sm capitalize text-sm tracking-tight transition-all" 
+                        autocomplete="off">
                 </div>
-                <div class="flex justify-center items-center mt-6">
-                    <button type="submit" class="bg-dark font-semibold text-light outline-none focus:outline-none px-6 py-2 rounded-sm hover:text-dark hover:bg-light hover:shadow-lg transition-all duration-500">
-                        Submit
-                    </button>
+            </div>
+        </section>
+        <div class="flex flex-col items-center justify-around w-3/5 mx-auto row-start-6 row-end-7">
+            <button type="submit" class="py-2 px-6 text-sm uppercase rounded-sm text-gray-300 hover:text-white bg-black transform transition-all hover:-translate-y-1 hover:scale-105 hover:shadow-lg tracking-widest my-3 outline-none focus:outline-none">login</button>
+            <small class="text-gray-500 capitalize text-xs mb-1">New user? create account <button type="button" onclick="switchModalMode()" class="text-pink-600 border-b border-current outline-none focus:outline-none">now</button></small>
+            <small class="text-gray-500 capitalize text-xs">forgot password? click <a href="/forgot" class="text-pink-600 border-b border-current">here</a></small>
+            
+        </div>
+        <ul class="flex items-center w-full justify-around">
+            <li class="h-10 w-10 bg-pink-600"></li>
+            <li class="h-10 w-10 bg-pink-600"></li>
+            <li class="h-10 w-10 bg-pink-600"></li>
+            <li class="h-10 w-10 bg-pink-600"></li>
+            <li class="h-10 w-10 bg-pink-600"></li>
+        </ul>
+    </form>
+</section>
+
+<section id="register" class="modal top-0 left-0 fixed h-screen w-full z-30 bg-black transform transition-all scale-0 items-center justify-center flex">
+    <form action="/login" method="POST" class="bg-gray-50 text-pink-600 h-2/3 w-4/5 max-w-xl rounded-md grid grid-rows-5 overflow-hidden relative">
+        <button type="button" onclick="toggleModal()" class="modalControl absolute top-2 right-4 text-2xl outline-none focus:outline-none hover:scale-125 hover:rotate-90 origin-center transform transition-all" type="button">
+            &times;
+        </button>
+
+        <section class="row-start-1 row-end-6 p-3 grid grid-flow-row">
+            <div class="flex flex-col justify-center items-center">
+                <strong class="text-center text-3xl font-light tracking-widest uppercase font-special block w-full mx-auto">
+                    register
+                </strong>
+                <span class="capitalize text-xs my-1 font-semibold">Lorem ipsum, dolor sit amet consectetur</span>
+            </div>
+            <div class="flex flex-col justify-start my-auto">
+                <div class="flex flex-col w-11/12 mx-auto">
+                    <label for="name" class="block text-xs text-gray-500 capitalize">name <small class="text-pink-600 text-xs">*</small></label>
+                    <input 
+                        type="text" 
+                        name="name" 
+                        placeholder="what's your name?"
+                        autocomplete="off"
+                        value=""
+                        class="p-2 shadow-md focus:scale-x-110 transform focus:shadow-lg outline-none focus:outline-none w-full block my-2 placeholder-gray-400 focus:placeholder-gray-500 text-gray-700 rounded-sm capitalize text-sm tracking-tight transition-all" 
+                        autocomplete="additional-name">
                 </div>
-                <span class="flex items-center justify-center my-4 mx-auto">
-                    New User? <button type="button" onclick="toggleMode()" class="pl-0.5 inline-block outline-none focus:outline-none border-b-2 border-transparent hover:border-current hover:shadow-lg">Register Now</button>
+                <div class="flex flex-col w-11/12 mx-auto">
+                    <label for="new_name" class="block text-xs text-gray-500 capitalize">email <small class="text-pink-600 text-xs">*</small></label>
+                    <input 
+                        type="email" 
+                        name="email" 
+                        placeholder="what's your email?"
+                        autocomplete="off"
+                        value=""
+                        class="p-2 shadow-md focus:scale-x-110 transform focus:shadow-lg outline-none focus:outline-none w-full block my-2 placeholder-gray-400 focus:placeholder-gray-500 text-gray-700 rounded-sm capitalize text-sm tracking-tight transition-all" 
+                        autocomplete="additional-name">
+                </div>
+                <div class="flex flex-col w-11/12 mx-auto">
+                    <label for="new_name" class="block text-xs text-gray-500 capitalize">password <small class="text-pink-600 text-xs">*</small></label>
+                    <input 
+                        type="password" 
+                        name="password" 
+                        placeholder="your password"
+                        autocomplete="off"
+                        value=""
+                        class="p-2 shadow-md focus:scale-x-110 transform focus:shadow-lg outline-none focus:outline-none w-full block my-2 placeholder-gray-400 focus:placeholder-gray-500 text-gray-700 rounded-sm capitalize text-sm tracking-tight transition-all" 
+                        autocomplete="off">
+                </div>
+            </div>
+        </section>
+        <div class="flex flex-col items-center justify-around w-3/5 mx-auto row-start-6 row-end-7">
+            <button type="submit" class="py-2 px-6 text-sm uppercase rounded-sm text-gray-300 hover:text-white bg-black transform transition-all hover:-translate-y-1 hover:scale-105 hover:shadow-lg tracking-widest my-3 outline-none focus:outline-none">login</button>
+            <small class="text-gray-500 capitalize text-xs mb-1">already have an account? click <button type="button" onclick="switchModalMode()" class="text-pink-600 border-b border-current outline-none focus:outline-none">here</button></small>
+            
+        </div>
+        <ul class="flex items-center w-full justify-around">
+            <li class="h-10 w-10 bg-pink-600"></li>
+            <li class="h-10 w-10 bg-pink-600"></li>
+            <li class="h-10 w-10 bg-pink-600"></li>
+            <li class="h-10 w-10 bg-pink-600"></li>
+            <li class="h-10 w-10 bg-pink-600"></li>
+        </ul>
+    </form>
+</section>
+
+<%- include('../partials/navbar') %>
+
+
+<header class="h-screen bg-gradient-to-b from-pink-600 to-gray-800 flex flex-col items-center justify-center pb-8">
+    <section class="flex flex-1 flex-col mx-auto justify-center items-start w-5/6 max-w-md md:items-center">
+        <div class="flex flex-col items-start">
+            <h1 class="font-special text-4xl lowercase font-light text-white">
+                <span>moovey</span>
+                <div class="inline-flex animate-spin origin-center w-5 justify-between">
+                    <small class="inline-block animate-pulse">•</small>
+                    <small class="inline-block animate-pulse">•</small>
+                </div>
+            </h1>
+            <span class="text-gray-200 mt-1 text-sm font-special tracking-wide font-light capitalize italic md:text-base">
+                a place for cinephiles
+            </span>
+            <p class="text-xs text-gray-300 my-4 md:text-sm">
+                Join the network of reviewers from all over the world. Read reviews about good movies of all languages, genres etc before watching it. Write a review after watching a movie. Recommend and promote good movies to other people.  
+            </p>
+            <button type="button" onclick="toggleModal('log')" class="block font-special group-hover:text-white transition-all rounded-sm transform hover:-translate-y-px hover:scale-110 text-sm uppercase bg-black text-gray-300 z-10 py-2 px-8 outline-none focus:outline-none">log in</button>
+        </div>
+    </section>
+
+    <a href="#main" class="text-sm rounded capitalize font-semibold text-white animate-bounce outline-none focus:outline-none flex items-center">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 17l-4 4m0 0l-4-4m4 4V3"></path></svg>
+    </a>
+</header>
+
+<main id="main" class="w-full min-h-screen justify-center p-4 items-center flex-col">
+    <section class="w-11/12 mx-auto max-w-3xl">
+        
+        <article class="carousel my-6 border-b p-2">
+            <h2 class="font-special capitalize tracking-wider text-pink-600 font-light text-xl my-4 flex items-center justify-start md:text-2xl">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <span class="mx-1">
+                    about moovey
                 </span>
-            </form>
-            <ul class="flex w-full justify-around absolute bottom-8 pointer-events-none z-0">
-                <li class="animation-shape bg-light h-12 w-12 opacity-20"></li>
-                <li class="animation-shape bg-light h-8 w-8 opacity-20"></li>
-                <li class="animation-shape bg-light h-10 w-02 opacity-20"></li>
-                <li class="animation-shape bg-light h-14 w-14 opacity-20"></li>
-                <li class="animation-shape bg-light h-10 w-10 opacity-20"></li>
-            </ul>
+            </h2>
+            <blockquote class="mb-2 text-black w-full">
+                <div class="flex flex-col items-start">
+                    <img src="/static/assets/lq.svg" alt="left font-special quote mark" class="h-4 w-4 inline-block">
+                    <span class="italic text-sm my-2.5 inline-block">I have a very simple definition of a good movie: a good movie makes you forget you're watching a movie
+                </div>
+                <h3 class="capitalize text-sm">&mdash; michael cimino</h3>
+            </blockquote>
+            <p class="text-sm text-gray-500 transform duration-300 transition-all text-left capitalize md:text-base">
+                there are over 500,000 movies in existence. it simply isn't possible to watch all the movies ever made. with moovey you can decide whether to watch a movie or not. search a movie by title. read the reviewes without the spoilers. decide for yourself whether it is worth your time or not. read reviews and write reviewes to recommend and promote good movies from across the world.  
+            </p>
         </article>
-        <article id="registerMode" class="hidden rounded-md bg-gradient-to-b from-primary to-secondary flex-col items-center h-3/5 w-4/5 max-w-md justify-start px-4 py-8 overflow-hidden relative">
-            <strong class="text-3xl uppercase font-light">
-                register
-            </strong>
-            <form class="z-10 w-5/6" id="registerForm" autocomplete="new_password">
-                <span class="block text-center capitalize text-dark text-sm font-bold font-base" id="registerError"></span>
-                <div class="flex flex-col items-center">
-                    <input 
-                        class="my-2 w-full block p-2 rounded-md text-center transform transition-all focus:scale-x-110 outline-none focus:outline-none focus:shadow-lg font-semibold text-dark"
-                        type="text" 
-                        name="name"
-                        placeholder="Name">
-                    <input 
-                        class="my-2 w-full block p-2 rounded-md text-center transform transition-all focus:scale-x-110 outline-none focus:outline-none focus:shadow-lg font-semibold text-dark"
-                        type="text" 
-                        name="email"
-                        placeholder="Email">
-                    <input 
-                        class="my-2 w-full block p-2 rounded-md text-center transform transition-all focus:scale-x-110 outline-none focus:outline-none focus:shadow-lg font-semibold text-dark"
-                        type="password" 
-                        name="password"
-                        placeholder="Password">
-                </div>
-                <div class="flex justify-center items-center mt-6">
-                    <button type="submit" class="bg-dark font-semibold text-light outline-none focus:outline-none px-6 py-2 rounded-sm hover:text-dark hover:bg-light hover:shadow-lg transition-all duration-500">
-                        Submit
-                    </button>
-                </div>
-                <span class="flex items-center justify-center my-4 mx-auto">
-                    Existing User? <button type="button" onclick="toggleMode()" class="pl-0.5 inline-block outline-none focus:outline-none border-b-2 border-transparent hover:border-current hover:shadow-lg">Login Now</button>
+
+        <article class="carousel my-6 border-b p-2">
+            <h2 class="font-special capitalize tracking-wider text-pink-600 font-light text-xl text-right my-4 flex items-center justify-end md:text-2xl">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                <span class="mx-1">
+                    read and write reviews
                 </span>
-            </form>
-            <ul class="flex w-full justify-around absolute bottom-8 pointer-events-none z-0">
-                <li class="animation-shape bg-light h-15 w-15 opacity-20"></li>
-                <li class="animation-shape bg-light h-16 w-16 opacity-20"></li>
-                <li class="animation-shape bg-light h-12 w-12 opacity-20"></li>
-                <li class="animation-shape bg-light h-14 w-14 opacity-20"></li>
-                <li class="animation-shape bg-light h-10 w-10 opacity-20"></li>
-            </ul>
+            </h2>
+            <p class="text-sm text-gray-500 transform duration-300 transition-all text-right capitalize md:text-base">
+                moovey provides you a platform to write reviews of a huge array of movies. read other reviewers' reviews. rate other reviewers' reviews. be it movies, anime, web shows, tv series, documentaries, we've got you. before committing to watch a movie, read the review. once you watch a movie, review it. be the best reviewer by accurately reviewing good cinema.
+            </p>
+            <a href="/reviews" class="carouselLink duration-1000 text-pink-700 text-sm border-b border-transparent hover:border-current hover:shadow-md hover:scale-x-110 transform transition-all my-2 mx-auto block w-max text-center font-special capitalize">our reviews</a>
+        </article>
+        <article class="carousel my-6 border-b p-2">
+            <h2 class="font-special capitalize tracking-wider text-pink-600 font-light text-xl text-left my-4 flex items-center justify-start md:text-2xl">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                <span class="mx-1">
+                    moovey lists
+                </span>
+            </h2>
+            <p class="text-sm text-gray-500 transform duration-300 transition-all text-left md:text-base capitalize">
+                start creating your own lists. be it your all time favorite movies, worst movies you ever watched, top 10 movies on the world wars, best animes to watch.. you get the gist. create as many lists as you want. for you and for others. moovey believes that best way to promote good cinema is by creating lists. 
+            </p>
+            <a href="/list" class="carouselLink duration-1000 text-pink-700 text-sm border-b border-transparent hover:border-current hover:shadow-md hover:scale-x-110 transform transition-all my-2 mx-auto block w-max text-center font-special capitalize">our lists</a>
+        </article>
+        <article class="carousel my-6 border-b p-2">
+            <h2 class="font-special capitalize tracking-wider text-pink-600 font-light text-xl text-left my-4 flex items-center justify-end md:text-2xl">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                <span class="mx-1">
+                    be a reviewer
+                </span>
+            </h2>
+            <p class="text-sm text-gray-500 transform duration-300 transition-all text-right md:text-base capitalize">
+                the more you write reviews and create lists the faster you become the top moovey reviewer. with every review you write you are helping fellow moovie user to watch good movies. let's unearth the hidden gems of cinema from across the world.
+            </p>
+            <a href="/reviewers" class="carouselLink duration-1000 text-pink-700 text-sm border-b border-transparent hover:border-current hover:shadow-md hover:scale-x-110 transform transition-all my-2 mx-auto block w-max text-center font-special capitalize">our reviewers</a>
         </article>
     </section>
-    <%- include('../partials/footer') %>
+    <div id="mainEnd" class="h-72 flex items-center justify-center transform duration-500 transition-all ease-in">
+        <div class="cta my-10 mx-auto flex flex-col items-center justify-center w-max relative group">
+            <div class="absolute bg-opacity-50 top-0 left-0 w-full h-full bg-gray-500 z-0 animate-ping group-hover:bg-pink-600"></div>
+            <button type="button" onclick="toggleModal('reg')" class="block font-special group-hover:text-white transition-all rounded-sm transform hover:-translate-y-px hover:scale-110 text-xl uppercase bg-black text-gray-300 z-10 py-4 px-10">join now</button>
+            <small class="text-xs text-gray-400 mt-1.5 capitalize">join now to be a reviewer</small>
+        </div>
+    </div>
+</main>
+<script src="/static/js/index.js"></script>
+<script src="/static/js/landing.js"></script>
 
+<%- include('../partials/footer') %>
 
-</body>
