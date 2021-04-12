@@ -1,11 +1,32 @@
 <%- include('../partials/head') %>
-<body class="h-screen grid grid-rows-4 w-full">
-    <section class="row-start-1 row-end-4 w-full flex flex-col items-center justify-center bg-light">
-        <%- include('../partials/brand') %>
-        <h1 class="text-3xl text-dark capitalize font-light md:text-5xl my-3">
-            404 | Page not found
-        </h1>
-        <a href="/" class="block text-center capitalize text-dark font-medium border-b-2 border-transparent hover:border-current">go to home</a>
-    </section>
-    <%- include('../partials/footer') %>
+<body class="relative font-regular h-screen">
+    <video 
+        oncontextmenu="return false" 
+        class="pointer-events-none fixed top-0 left-0 h-screen w-screen object-cover opacity-5" 
+        autoplay 
+        muted 
+        loop>
+        <source src="/static/assets/video.mp4" type="video/mp4">
+    </video>
+    <main class="w-4/5 h-full mx-auto max-w-md flex justify-center items-center flex-col">
+        <strong class="tracking-tighter border-2 py-0.5 px-1.5 border-current flex-shrink-0 font-light text-lg cursor-default text-gray-700 md:hover:text-pink-600 mb-8">
+            moovey••
+        </strong>
+        <div class="flex items-center justify-between w-max mb-2 border-b border-gray-300">
+            <strong class="font-special text-pink-600 text-2xl capitalize font-light">
+                error 404
+            </strong>
+            <samp class="mx-2">|</samp>
+            <small class="md:text-lg capitalize text-gray-500">
+                page not found
+            </small>
+        </div>
+        <p class="text-gray-500 text-sm text-center w-4/5 mx-auto font-light">
+            The page you are looking for doesn't exist. It may be deleted or removed. Sorry for the inconvenience.
+        </p>
+        <a href="/" class="block w-max mx-auto mt-8 text-sm capitalize border-b border-pink-600 md:border-transparent md:hover:border-pink-600 text-pink-600 md:text-gray-500 md:hover:text-pink-600">
+            click here to go home
+        </a>
+    </main>
 </body>
+</html>
