@@ -200,7 +200,6 @@ exports.reviewerList = async function(req, res) {
     }
 }
 
-
 exports.reviewerProfile = async function(req, res) {
     const {id} = req.params, loggedUser = req.session?.email;
     try {
