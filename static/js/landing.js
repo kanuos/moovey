@@ -1,10 +1,12 @@
 const carousels = document.querySelectorAll(".carousel")
 const carouselLinks = document.querySelectorAll(".carouselLink")
 const mainCTA = document.getElementById('mainEnd');
+const errorMsgs = document.querySelectorAll(".errorMsg");
 
 let isLoginMode = true, isModalOpen = false;
 const modals = document.querySelectorAll(".modal");
 
+// function to show or hide the register/login modal
 function toggleModal(modalType=undefined){
     isModalOpen = !isModalOpen;
     if (!isModalOpen){
@@ -15,6 +17,8 @@ function toggleModal(modalType=undefined){
     return
 }
 
+
+// function to toggle between register and login modal on the landing page
 function switchModalMode(){
     isLoginMode = !isLoginMode
     if (isLoginMode){
@@ -47,6 +51,24 @@ function showModal(modalType){
     modals[index]?.classList.add("scale-100")
 }
 
+
+// the error messages on the login/ register form
+// hide the messages if any after 3 seconds 
+const popUpMsg = setTimeout(() => {
+    errorMsgs?.forEach(errMsg => {
+        if (!errMsg?.classList.contains("hidden")) {
+            errMsg?.classList.add("hidden")
+        }    
+    })
+}, 3000)
+
+window.addEventListener("unload", () => {
+    clearTimeout(popUpMsg)
+})
+
+
+
+// the scroll animations start
 const landingParagraphObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         const pTag = Array.from(entry.target.children).find(el => el.nodeName === 'P');
@@ -79,8 +101,6 @@ const landingParagraphObserver = new IntersectionObserver((entries) => {
     threshold : .75,
 })   
 
-
-
 const landingBtnObserver = new IntersectionObserver((entries)=> {
     entries.forEach(entry => {
         if(!entry.isIntersecting) {
@@ -94,7 +114,6 @@ const landingBtnObserver = new IntersectionObserver((entries)=> {
 }, {
     threshold : .5,
 })
-
 
 const landingLinkObserver = new IntersectionObserver((entries)=> {
     entries.forEach(entry => {
@@ -113,3 +132,5 @@ const landingLinkObserver = new IntersectionObserver((entries)=> {
 carousels?.forEach(carousel => landingParagraphObserver.observe(carousel))
 carouselLinks?.forEach(link => landingLinkObserver.observe(link))
 landingBtnObserver.observe(mainCTA);
+
+// the scroll animations start

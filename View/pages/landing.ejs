@@ -43,7 +43,12 @@
     <source src="/static/assets/video.mp4" type="video/mp4">
 </video>
 
-<section id="login" class="modal top-0 left-0 fixed h-screen w-full z-30 bg-black transform transition-all scale-0 items-center justify-center flex">
+<section id="login" class="modal top-0 left-0 fixed h-screen w-full z-30 bg-black transform transition-all <% if (isLoginMode || redirect) { %> <%= 'scale-100' %> <% } else { %> <%= 'scale-0'%> <% } %> items-center justify-center flex">
+    <% if (redirect) {%>
+    <div class="absolute top-0 text-xs left-0 w-full p-2 text-center bg-pink-600 text-white">
+        <%= redirect %>
+    </div>
+    <% } %>
     <form action="/login" method="POST" class="bg-gray-50 text-pink-600 h-2/3 w-4/5 max-w-xl rounded-md grid grid-rows-5 overflow-hidden relative">
         <button type="button" onclick="toggleModal()" class="modalControl absolute top-2 right-4 text-2xl outline-none focus:outline-none hover:scale-125 hover:rotate-90 origin-center transform transition-all" type="button">
             &times;
@@ -54,7 +59,11 @@
                 <strong class="text-center text-3xl font-light tracking-widest uppercase font-special block w-full mx-auto">
                     login
                 </strong>
-                <span class="capitalize text-xs my-1 font-semibold">Lorem ipsum, dolor sit amet consectetur</span>
+                <% if(errorMsg && isLoginMode) {%>
+                <span class="errorMsg capitalize text-center block text-pink-600 text-xs my-1 font-semibold">
+                    <%= errorMsg %>
+                </span>
+                <% } %>
             </div>
             <div class="flex flex-col justify-start my-auto">
                 <div class="flex flex-col w-11/12 mx-auto">
@@ -65,7 +74,7 @@
                         placeholder="what's your email?"
                         autocomplete="off"
                         value=""
-                        class="p-2 shadow-md focus:scale-x-110 transform focus:shadow-lg outline-none focus:outline-none w-full block my-2 placeholder-gray-400 focus:placeholder-gray-500 text-gray-700 rounded-sm capitalize text-sm tracking-tight transition-all" 
+                        class="p-2 shadow-md focus:scale-x-110 transform focus:shadow-lg outline-none focus:outline-none w-full block my-2 placeholder-gray-400 focus:placeholder-gray-500 text-gray-700 rounded-sm text-sm tracking-tight transition-all" 
                         autocomplete="additional-name">
                 </div>
                 <div class="flex flex-col w-11/12 mx-auto">
@@ -97,8 +106,8 @@
     </form>
 </section>
 
-<section id="register" class="modal top-0 left-0 fixed h-screen w-full z-30 bg-black transform transition-all scale-0 items-center justify-center flex">
-    <form action="/login" method="POST" class="bg-gray-50 text-pink-600 h-2/3 w-4/5 max-w-xl rounded-md grid grid-rows-5 overflow-hidden relative">
+<section id="register" class="modal top-0 left-0 fixed h-screen w-full z-30 bg-black transform transition-all <% if (isRegisterMode) { %> <%= 'scale-100' %> <% } else { %> <%= 'scale-0'%> <% }%> items-center justify-center flex">
+    <form action="/register" method="POST" class="bg-gray-50 text-pink-600 h-2/3 w-4/5 max-w-xl rounded-md grid grid-rows-5 overflow-hidden relative">
         <button type="button" onclick="toggleModal()" class="modalControl absolute top-2 right-4 text-2xl outline-none focus:outline-none hover:scale-125 hover:rotate-90 origin-center transform transition-all" type="button">
             &times;
         </button>
@@ -108,7 +117,11 @@
                 <strong class="text-center text-3xl font-light tracking-widest uppercase font-special block w-full mx-auto">
                     register
                 </strong>
-                <span class="capitalize text-xs my-1 font-semibold">Lorem ipsum, dolor sit amet consectetur</span>
+            <% if(errorMsg && isRegisterMode) {%>
+                <span class="errorMsg capitalize text-center block text-pink-600 text-xs my-1 font-semibold">
+                    <%= errorMsg %>
+                </span>
+            <% } %>
             </div>
             <div class="flex flex-col justify-start my-auto">
                 <div class="flex flex-col w-11/12 mx-auto">
@@ -130,7 +143,7 @@
                         placeholder="what's your email?"
                         autocomplete="off"
                         value=""
-                        class="p-2 shadow-md focus:scale-x-110 transform focus:shadow-lg outline-none focus:outline-none w-full block my-2 placeholder-gray-400 focus:placeholder-gray-500 text-gray-700 rounded-sm capitalize text-sm tracking-tight transition-all" 
+                        class="p-2 shadow-md focus:scale-x-110 transform focus:shadow-lg outline-none focus:outline-none w-full block my-2 placeholder-gray-400 focus:placeholder-gray-500 text-gray-700 rounded-sm text-sm tracking-tight transition-all" 
                         autocomplete="additional-name">
                 </div>
                 <div class="flex flex-col w-11/12 mx-auto">
@@ -146,8 +159,8 @@
                 </div>
             </div>
         </section>
-        <div class="flex flex-col items-center justify-around w-3/5 mx-auto row-start-6 row-end-7">
-            <button type="submit" class="py-2 px-6 text-sm uppercase rounded-sm text-gray-300 hover:text-white bg-black transform transition-all hover:-translate-y-1 hover:scale-105 hover:shadow-lg tracking-widest my-3 outline-none focus:outline-none">login</button>
+        <div class="flex flex-col items-center justify-around w-4/5 mx-auto row-start-6 row-end-7">
+            <button type="submit" class="py-2 px-6 text-xs sm:text-sm uppercase rounded-sm text-gray-300 hover:text-white bg-black transform transition-all hover:-translate-y-1 hover:scale-105 hover:shadow-lg tracking-widest my-3 outline-none focus:outline-none">login</button>
             <small class="text-gray-500 capitalize text-xs mb-1">already have an account? click <button type="button" onclick="switchModalMode()" class="text-pink-600 border-b border-current outline-none focus:outline-none">here</button></small>
             
         </div>
@@ -221,7 +234,7 @@
             <p class="text-sm text-gray-500 transform duration-300 transition-all text-right capitalize md:text-base">
                 moovey provides you a platform to write reviews of a huge array of movies. read other reviewers' reviews. rate other reviewers' reviews. be it movies, anime, web shows, tv series, documentaries, we've got you. before committing to watch a movie, read the review. once you watch a movie, review it. be the best reviewer by accurately reviewing good cinema.
             </p>
-            <a href="/reviews" class="carouselLink duration-1000 text-pink-700 text-sm border-b border-transparent hover:border-current hover:shadow-md hover:scale-x-110 transform transition-all my-2 mx-auto block w-max text-center font-special capitalize">our reviews</a>
+            <a href="/moovey/blogs" class="carouselLink duration-1000 text-pink-700 text-sm border-b border-transparent hover:border-current hover:shadow-md hover:scale-x-110 transform transition-all my-2 mx-auto block w-max text-center font-special capitalize">our reviews</a>
         </article>
         <article class="carousel my-6 border-b p-2">
             <h2 class="font-special capitalize tracking-wider text-pink-600 font-light text-xl text-left my-4 flex items-center justify-start md:text-2xl">
@@ -233,7 +246,7 @@
             <p class="text-sm text-gray-500 transform duration-300 transition-all text-left md:text-base capitalize">
                 start creating your own lists. be it your all time favorite movies, worst movies you ever watched, top 10 movies on the world wars, best animes to watch.. you get the gist. create as many lists as you want. for you and for others. moovey believes that best way to promote good cinema is by creating lists. 
             </p>
-            <a href="/list" class="carouselLink duration-1000 text-pink-700 text-sm border-b border-transparent hover:border-current hover:shadow-md hover:scale-x-110 transform transition-all my-2 mx-auto block w-max text-center font-special capitalize">our lists</a>
+            <a href="/moovey/lists" class="carouselLink duration-1000 text-pink-700 text-sm border-b border-transparent hover:border-current hover:shadow-md hover:scale-x-110 transform transition-all my-2 mx-auto block w-max text-center font-special capitalize">our lists</a>
         </article>
         <article class="carousel my-6 border-b p-2">
             <h2 class="font-special capitalize tracking-wider text-pink-600 font-light text-xl text-left my-4 flex items-center justify-end md:text-2xl">

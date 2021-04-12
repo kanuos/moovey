@@ -1,5 +1,6 @@
 const accoutRoutes = require('express').Router();
 const {
+    reviewerProfile,
     reviewerList,
     renderDisplayRoute, 
     submitLoginForm, 
@@ -9,7 +10,7 @@ const {
     showEditProfilePage,
     submitEditProfile
     } = require("../_Controller/accountController")
-
+const imageMiddleware = require("../imageMiddleware");
 const {redirectToLogin, preventLoginRoute} = require("../sessionMiddleware")
 /**
  * ROUTES = /, /login, /register, /logout, /profile
@@ -54,11 +55,13 @@ accoutRoutes.get("/logout", redirectToLogin, handleLogOut)
 
 accoutRoutes.get("/reviewers", reviewerList)
 
+accoutRoutes.get("/reviewers/:id", reviewerProfile)
+
 accoutRoutes.get("/dashboard", redirectToLogin, showMyProfile)
 
 accoutRoutes.get("/edit-profile", redirectToLogin, showEditProfilePage)
 
-accoutRoutes.post("/edit-profile", redirectToLogin, submitEditProfile)
+accoutRoutes.post("/edit-profile", redirectToLogin, imageMiddleware, submitEditProfile)
 
 
 
