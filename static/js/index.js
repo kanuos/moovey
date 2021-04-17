@@ -16,24 +16,16 @@ navbarTogglers?.forEach((el, i) => el.addEventListener("click", () => {
     }
 }))
 
-// scroll nav effect
-const observer = new IntersectionObserver((entries, _observer)=> {
-    entries.forEach(entry => {
-        if(!entry.isIntersecting) {
-            nav?.classList.remove("bg-transparent", "text-white");
-            nav?.classList.add("bg-white", "text-black", "shadow-md");
-            navList?.classList.remove("md:text-white")
-            navList?.classList.add("md:text-black")
-        } 
-        else {
-            navList?.classList.add("md:text-white")
-            navList?.classList.remove("md:text-black")
-
-            nav?.classList.add("bg-transparent", "text-white");
-            nav?.classList.remove("bg-white", "text-black", "shadow-md");
+window.addEventListener("resize", () => {
+    if (window.innerWidth < 768) {
+        if (navList.classList.contains("-translate-y-0")){
+            document.documentElement.style.overflowY = "hidden";
+            return
         }
+        document.documentElement.style.overflowY = "auto";
+        return
+    } 
+    if (window.innerWidth >= 768) {
+        document.documentElement.style.overflowY = "auto";
     }
-)}, {threshold : 0.15, rootMargin: "0px 0px -5px 0px"})
-
-observer.observe(header)
-
+})

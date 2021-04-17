@@ -1,55 +1,66 @@
+// animation DOM
 const carousels = document.querySelectorAll(".carousel")
 const carouselLinks = document.querySelectorAll(".carouselLink")
 const mainCTA = document.getElementById('mainEnd');
+
+// form DOM
 const errorMsgs = document.querySelectorAll(".errorMsg");
+const accountModeTogglerBtns = document.querySelectorAll(".accountModeToggler");
+const accountModals = document.querySelectorAll(".accountModal");
+const accountModalBox = document.querySelector(".accountModalBox");
+const hideModal = document.querySelector(".hideModal");
 
-let isLoginMode = true, isModalOpen = false;
-const modals = document.querySelectorAll(".modal");
+const showLoginModal = document.querySelector(".showLoginModal");
+const showRegisterModal = document.querySelector(".showRegisterModal");
 
-// function to show or hide the register/login modal
-function toggleModal(modalType=undefined){
-    isModalOpen = !isModalOpen;
-    if (!isModalOpen){
-        hideModals();
-        return
-    }
-    modalType ?? modalType in ["reg", "log"] ? showModal(modalType) : showModal()
-    return
+accountModeTogglerBtns?.forEach(btn => {
+    btn.addEventListener('click', toggleModalType)
+})
+
+hideModal?.addEventListener("click", () => {
+    accountModalBox?.classList.add("scale-0")
+    accountModalBox?.classList.remove("scale-100")
+});
+
+function showModal(){
+    if(accountModalBox?.classList.contains("scale-0"))
+    accountModalBox?.classList.remove("scale-100")
+    accountModalBox?.classList.add("scale-100")
 }
 
-
-// function to toggle between register and login modal on the landing page
-function switchModalMode(){
-    isLoginMode = !isLoginMode
-    if (isLoginMode){
-        modals[0]?.classList.remove("scale-0")
-        modals[0]?.classList.add("scale-100")
-        modals[1]?.classList.add("scale-0")
-        modals[1]?.classList.remove("scale-100")
-    }
-    else {
-        modals[0]?.classList.add("scale-0")
-        modals[0]?.classList.remove("scale-100")
-        modals[1]?.classList.remove("scale-0")
-        modals[1]?.classList.add("scale-100")
-    }
-}
-
-function hideModals(){
-    modals.forEach(modal => {
-        if(modal?.classList.contains("scale-100")){
-            modal?.classList.remove("scale-100")
-            modal?.classList.add("scale-0")
-        }
+function toggleModalType() {
+    accountModals?.forEach(modal => {
+        modal.classList.toggle("scale-0")
+        modal.classList.toggle("scale-100")
+        modal.classList.toggle("pointer-events-none")
+        modal.classList.toggle("pointer-events-auto")
     })
 }
 
-function showModal(modalType){
-    let index = modalType == "log" ? 0 : 1;
-    hideModals();
-    modals[index]?.classList.remove("scale-0")
-    modals[index]?.classList.add("scale-100")
+function registerModal(){
+    showModal();
+    accountModals[0]?.classList.remove("scale-100", "pointer-events-auto")
+    accountModals[0]?.classList.add("scale-0", "pointer-events-none")
+    accountModals[1]?.classList.add("scale-100", "pointer-events-auto")
+    accountModals[1]?.classList.remove("scale-0", "pointer-events-none")
 }
+
+function loginModal(){
+    showModal(); 
+    accountModals[0]?.classList.add("scale-100", "pointer-events-auto")
+    accountModals[0]?.classList.remove("scale-0", "pointer-events-none")
+    accountModals[1]?.classList.remove("scale-100", "pointer-events-auto")
+    accountModals[1]?.classList.add("scale-0", "pointer-events-none")
+
+}
+
+// open the login modal
+showLoginModal?.addEventListener("click", loginModal)
+
+// open the register modal
+showRegisterModal?.addEventListener("click", registerModal)
+
+
 
 
 // the error messages on the login/ register form
@@ -129,8 +140,29 @@ const landingLinkObserver = new IntersectionObserver((entries)=> {
     threshold : 0,
 })
 
+
+// the scroll animations start
+const observer = new IntersectionObserver((entries, _observer)=> {
+    entries.forEach(entry => {
+        if(!entry.isIntersecting) {
+            nav?.classList.remove("bg-transparent", "text-white");
+            nav?.classList.add("bg-white", "text-black", "shadow-md");
+            navList?.classList.remove("md:text-white")
+            navList?.classList.add("md:text-black")
+        } 
+        else {
+            navList?.classList.add("md:text-white")
+            navList?.classList.remove("md:text-black")
+
+            nav?.classList.add("bg-transparent", "text-white");
+            nav?.classList.remove("bg-white", "text-black", "shadow-md");
+        }
+    }
+)}, {threshold : 0.15, rootMargin: "0px 0px -5px 0px"})
+
+
+
+observer.observe(header)
 carousels?.forEach(carousel => landingParagraphObserver.observe(carousel))
 carouselLinks?.forEach(link => landingLinkObserver.observe(link))
 landingBtnObserver.observe(mainCTA);
-
-// the scroll animations start

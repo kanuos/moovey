@@ -1,38 +1,6 @@
 <%- include('../partials/head') %>
 
-<style>
-    #login > form > ul > li, #register > form > ul >li {
-        animation: effect 5s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
-        pointer-events: none;
-    }
-    @keyframes effect {
-        from {
-            opacity: 0.125;
-            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-            transform: translateY(75%) rotate(35deg);
-        }
-        to {
-            opacity: 0;
-            clip-path: circle();
-            transform: translateY(-1000%) rotate(85deg);
-        }
-    }
-    #login > form > ul > li:nth-child(1), #register > form > ul >li:nth-child(1) {
-        animation-duration: 2s;
-    }
-    #login > form > ul > li:nth-child(2), #register > form > ul >li:nth-child(2) {
-        animation-duration: 5s;
-    }
-    #login > form > ul > li:nth-child(3), #register > form > ul >li:nth-child(3) {
-        animation-duration: 3s;
-    }
-    #login > form > ul > li:nth-child(4), #register > form > ul >li:nth-child(4) {
-        animation-duration: 8s;
-    }
-</style>
-
-
-<body class="relative font-regular min-h-screen overflow-x-hidden">
+<body class="relative h-full w-full font-regular min-h-screen overflow-x-hidden">
 <video 
     preload="auto"
     oncontextmenu="return false" 
@@ -43,141 +11,197 @@
     <source src="/static/assets/video.mp4" type="video/mp4">
 </video>
 
-<section id="login" class="modal top-0 left-0 fixed h-screen w-full z-30 bg-black transform transition-all <% if (isLoginMode || redirect) { %> <%= 'scale-100' %> <% } else { %> <%= 'scale-0'%> <% } %> items-center justify-center flex">
-    <% if (redirect) {%>
-    <div class="absolute top-0 text-xs left-0 w-full p-2 text-center bg-pink-600 text-white">
-        <%= redirect %>
-    </div>
+<section class="accountModalBox transform origin-center transition-all fixed top-0 left-0 h-screen w-full flex items-center justify-center bg-black z-30 
+
+    <% if(isRegisterMode || isLoginMode) { %> 
+        <%= 'scale-100' %> 
+    <% } else { %> 
+        <%= 'scale-0' %> 
     <% } %>
-    <form action="/login" method="POST" class="bg-gray-50 text-pink-600 h-2/3 w-4/5 max-w-xl rounded-md grid grid-rows-5 overflow-hidden relative">
-        <button type="button" onclick="toggleModal()" class="modalControl absolute top-2 right-4 text-2xl outline-none focus:outline-none hover:scale-125 hover:rotate-90 origin-center transform transition-all" type="button">
-            &times;
-        </button>
+    
+    ">
+    <% if(redirect) { %>
+    <span class="absolute top-0 left-0 w-full p-3 bg-gradient-to-r from-pink-600 to-purple-700 text-white text-sm font-special capitalize block text-center">
+        <%= redirect %>
+    </span>
+    <% } %>
 
-        <section class="row-start-1 row-end-6 p-3 grid grid-flow-row">
-            <div class="flex flex-col justify-center items-center">
-                <strong class="text-center text-3xl font-light tracking-widest uppercase font-special block w-full mx-auto">
-                    login
-                </strong>
-                <% if(errorMsg && isLoginMode) {%>
-                <span class="errorMsg capitalize text-center block text-pink-600 text-xs my-1 font-semibold">
-                    <%= errorMsg %>
-                </span>
-                <% } %>
-            </div>
-            <div class="flex flex-col justify-start my-auto">
-                <div class="flex flex-col w-11/12 mx-auto">
-                    <label for="new_name" class="block text-xs text-gray-500 capitalize">email <small class="text-pink-600 text-xs">*</small></label>
-                    <input 
-                        type="email" 
-                        name="email" 
-                        placeholder="what's your email?"
-                        autocomplete="off"
-                        value=""
-                        class="p-2 shadow-md focus:scale-x-110 transform focus:shadow-lg outline-none focus:outline-none w-full block my-2 placeholder-gray-400 focus:placeholder-gray-500 text-gray-700 rounded-sm text-sm tracking-tight transition-all" 
-                        autocomplete="additional-name">
-                </div>
-                <div class="flex flex-col w-11/12 mx-auto">
-                    <label for="new_name" class="block text-xs text-gray-500 capitalize">password <small class="text-pink-600 text-xs">*</small></label>
-                    <input 
-                        type="password" 
-                        name="password" 
-                        placeholder="your password"
-                        autocomplete="off"
-                        value=""
-                        class="p-2 shadow-md focus:scale-x-110 transform focus:shadow-lg outline-none focus:outline-none w-full block my-2 placeholder-gray-400 focus:placeholder-gray-500 text-gray-700 rounded-sm capitalize text-sm tracking-tight transition-all" 
-                        autocomplete="off">
-                </div>
-            </div>
-        </section>
-        <div class="flex flex-col items-center justify-around w-3/5 mx-auto row-start-6 row-end-7">
-            <button type="submit" class="py-2 px-6 text-sm uppercase rounded-sm text-gray-300 hover:text-white bg-black transform transition-all hover:-translate-y-1 hover:scale-105 hover:shadow-lg tracking-widest my-3 outline-none focus:outline-none">login</button>
-            <small class="text-gray-500 capitalize text-xs mb-1">New user? create account <button type="button" onclick="switchModalMode()" class="text-pink-600 border-b border-current outline-none focus:outline-none">now</button></small>
-            <small class="text-gray-500 capitalize text-xs">forgot password? click <a href="/forgot" class="text-pink-600 border-b border-current">here</a></small>
-            
+    <div class="flex items-start justify-center h-3/4 w-4/5 max-w-lg lg:max-w-4xl mx-auto overflow-hidden relative bg-gradient-to-br from-pink-600 to-purple-700 rounded">
+        <video autoplay loop muted preload="auto" class="absolute top-0 left-0 h-full w-full block object-cover opacity-5 pointer-events-none lg:hidden">
+            <source src="/static/assets/video.mp4" type="video/mp4">
+        </video>
+
+        <div class="flex z-50 items center w-full top-0 left-0 justify-end pr-4 pt-2 absolute">
+            <button type="button" class="hideModal text-3xl outline-none focus:outline-none hover:text-black">
+                &times;
+            </button>
         </div>
-        <ul class="flex items-center w-full justify-around">
-            <li class="h-10 w-10 bg-pink-600"></li>
-            <li class="h-10 w-10 bg-pink-600"></li>
-            <li class="h-10 w-10 bg-pink-600"></li>
-            <li class="h-10 w-10 bg-pink-600"></li>
-            <li class="h-10 w-10 bg-pink-600"></li>
-        </ul>
-    </form>
-</section>
 
-<section id="register" class="modal top-0 left-0 fixed h-screen w-full z-30 bg-black transform transition-all <% if (isRegisterMode) { %> <%= 'scale-100' %> <% } else { %> <%= 'scale-0'%> <% }%> items-center justify-center flex">
-    <form action="/register" method="POST" class="bg-gray-50 text-pink-600 h-2/3 w-4/5 max-w-xl rounded-md grid grid-rows-5 overflow-hidden relative">
-        <button type="button" onclick="toggleModal()" class="modalControl absolute top-2 right-4 text-2xl outline-none focus:outline-none hover:scale-125 hover:rotate-90 origin-center transform transition-all" type="button">
-            &times;
-        </button>
-
-        <section class="row-start-1 row-end-6 p-3 grid grid-flow-row">
-            <div class="flex flex-col justify-center items-center">
-                <strong class="text-center text-3xl font-light tracking-widest uppercase font-special block w-full mx-auto">
-                    register
-                </strong>
-            <% if(errorMsg && isRegisterMode) {%>
-                <span class="errorMsg capitalize text-center block text-pink-600 text-xs my-1 font-semibold">
-                    <%= errorMsg %>
-                </span>
-            <% } %>
-            </div>
-            <div class="flex flex-col justify-start my-auto">
-                <div class="flex flex-col w-11/12 mx-auto">
-                    <label for="name" class="block text-xs text-gray-500 capitalize">name <small class="text-pink-600 text-xs">*</small></label>
-                    <input 
-                        type="text" 
-                        name="name" 
-                        placeholder="what's your name?"
-                        autocomplete="off"
-                        value=""
-                        class="p-2 shadow-md focus:scale-x-110 transform focus:shadow-lg outline-none focus:outline-none w-full block my-2 placeholder-gray-400 focus:placeholder-gray-500 text-gray-700 rounded-sm capitalize text-sm tracking-tight transition-all" 
-                        autocomplete="additional-name">
+        <!-- login form -->
+        <section class="accountModal flex items-center z-40 absolute top-0 right-0 transform w-full h-full transition-all duration-500 text-white origin-center ease-out <% if (isLoginMode) {%> <%= 'scale-100 pointer-events-auto'%> <%} else { %><%= 'scale-0 pointer-events-none'%> <% } %>">
+            <section class="hidden lg:flex absolute top-0 left-0 w-1/2 h-full">
+                <video autoplay loop muted preload="auto" class="absolute top-0 left-0 h-full w-full block object-cover opacity-5 pointer-events-none">
+                    <source src="/static/assets/video.mp4" type="video/mp4">
+                </video>
+                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-full flex items-center justify-center text-white flex-col w-full">
+                    <strong class="tracking-tighter border-2 py-0.5 px-1.5 border-current flex-shrink-0 font-light text-lg cursor-pointer">
+                        moovey••
+                    </strong>
+                    
+                    <div class="flex items-center justify-center flex-col origin-center duration-500 transition-all">
+                        <span class="text-2xl capitalize font-light font-special my-4">
+                            dont have an account?
+                        </span>
+                        <button type="button" class="accountModeToggler capitalize inline-block outline-none focus:outline-none">create account now</button>
+                        <a href="/forgot-password" class=" my-1 capitalize inline-block outline-none focus:outline-none">
+                            forgot password
+                        </a>
+                    </div>
+                </div>        
+            </section>
+            <!-- form content -->
+            <form class="absolute top-0 right-0 z-40 w-full h-full mx-auto px-6 py-8 text-center flex flex-col justify-between lg:w-1/2 lg:bg-white lg:text-pink-600"
+                action="/login" 
+                method="POST" 
+                autocomplete="new-password">
+                <div class="flex-1 h-full flex flex-col items-center justify-start w-full">
+                    <h2 class="my-2 text-2xl tracking-wide w-max mx-auto pb-1 uppercase font-special">
+                        login
+                    </h2>
+                    <% if(isLoginMode && errorMsg) { %>
+                    <small class="text-xs text-center block mx-auto mb-2 text-black tracking-wider font-semibold capitalize transform transition-all -translate-y-ull opacity-100 pointer-events-none bg-gray-50 p-1.5 shadow-lg">
+                        <!-- error message if any -->
+                        <%= errorMsg %>
+                    </small>
+                    <% } %>
+                    <div class="flex flex-1  flex-col items-center justify-start w-full mt-4">
+                        <section class="flex flex-col-reverse items-start w-full justify-center">
+                            <input 
+                                type="text" 
+                                name="loginEmail" 
+                                id="loginEmail" 
+                                placeholder="Your email ID"
+                                autocomplete="username"
+                                class="w-full block p-1.5 rounded-sm shadow-lg bg-purple-300 bg-opacity-30 my-2 transform focus:outline-none outline-none focus:scale-x-105 focus:shadow-lg transition-all text-sm text-gray-50 opacity-60 focus:opacity-100 placeholder-gray-300 font-light lg:bg-transparent lg:shadow-none lg:border-b-2 lg:border-gray-400 lg:focus:border-pink-600 lg:focus:scale-x-100 lg:focus:shadow-none lg:focus:placeholder-pink-600 lg:text-gray-700 lg:placeholder-gray-600">
+                            <label for="loginEmail" class="text-xs lg:text-gray-600 text-gray-50 tracking-wider uppercase">Email</label>
+                        </section>
+                        <section class="flex flex-col-reverse items-start w-full justify-center my-2">
+                            <input 
+                                type="password" 
+                                name="loginPassword" 
+                                id="loginPassword" 
+                                placeholder="Your password"
+                                autocomplete="current-password"
+                                class="w-full block p-1.5 rounded-sm shadow-lg bg-purple-300 bg-opacity-30 my-2 transform focus:outline-none outline-none focus:scale-x-105 focus:shadow-lg transition-all text-sm text-gray-50 opacity-60 focus:opacity-100 placeholder-gray-300 font-light lg:bg-transparent lg:shadow-none lg:border-b-2 lg:border-gray-400 lg:focus:border-pink-600 lg:focus:scale-x-100 lg:focus:shadow-none lg:focus:placeholder-pink-600 lg:text-gray-700 lg:placeholder-gray-600">
+                            <label for="loginPassword" class="text-xs lg:text-gray-600 text-gray-50 tracking-wider uppercase">password</label>
+                        </section>
+                    </div>
                 </div>
-                <div class="flex flex-col w-11/12 mx-auto">
-                    <label for="new_name" class="block text-xs text-gray-500 capitalize">email <small class="text-pink-600 text-xs">*</small></label>
-                    <input 
-                        type="email" 
-                        name="email" 
-                        placeholder="what's your email?"
-                        autocomplete="off"
-                        value=""
-                        class="p-2 shadow-md focus:scale-x-110 transform focus:shadow-lg outline-none focus:outline-none w-full block my-2 placeholder-gray-400 focus:placeholder-gray-500 text-gray-700 rounded-sm text-sm tracking-tight transition-all" 
-                        autocomplete="additional-name">
+                <div class="flex flex-col items-center">
+                    <button type="submit" class="outline-none focus:outline-none px-6 py-2 bg-black text-gray-300 text-sm uppercase hover:shadow-lg transform transition-all hov:-translate-y-px hover:scale-110 my-4 rounded-sm">
+                        login
+                    </button>
+                    <a href="/forgot-password" class="capitalize mb-0.5 text-xs text-gray-200 lg:text-gray-500 block outline-none focus:outline-none lg:hidden">
+                        forgot password?
+                    </a>
+                    <span class="text-xs text-gray-200 lg:text-gray-500 block lg:hidden">
+                        New user?
+                        <button type="button" class="accountModeToggler capitalize inline-block outline-none focus:outline-none">
+                            click here
+                        </button>
+                    </span>
                 </div>
-                <div class="flex flex-col w-11/12 mx-auto">
-                    <label for="new_name" class="block text-xs text-gray-500 capitalize">password <small class="text-pink-600 text-xs">*</small></label>
-                    <input 
-                        type="password" 
-                        name="password" 
-                        placeholder="your password"
-                        autocomplete="off"
-                        value=""
-                        class="p-2 shadow-md focus:scale-x-110 transform focus:shadow-lg outline-none focus:outline-none w-full block my-2 placeholder-gray-400 focus:placeholder-gray-500 text-gray-700 rounded-sm capitalize text-sm tracking-tight transition-all" 
-                        autocomplete="off">
-                </div>
-            </div>
+            </form>
         </section>
-        <div class="flex flex-col items-center justify-around w-4/5 mx-auto row-start-6 row-end-7">
-            <button type="submit" class="py-2 px-6 text-xs sm:text-sm uppercase rounded-sm text-gray-300 hover:text-white bg-black transform transition-all hover:-translate-y-1 hover:scale-105 hover:shadow-lg tracking-widest my-3 outline-none focus:outline-none">login</button>
-            <small class="text-gray-500 capitalize text-xs mb-1">already have an account? click <button type="button" onclick="switchModalMode()" class="text-pink-600 border-b border-current outline-none focus:outline-none">here</button></small>
-            
-        </div>
-        <ul class="flex items-center w-full justify-around">
-            <li class="h-10 w-10 bg-pink-600"></li>
-            <li class="h-10 w-10 bg-pink-600"></li>
-            <li class="h-10 w-10 bg-pink-600"></li>
-            <li class="h-10 w-10 bg-pink-600"></li>
-            <li class="h-10 w-10 bg-pink-600"></li>
-        </ul>
-    </form>
+
+        <!-- register form -->
+        <section class="accountModal flex items-center z-40 absolute top-0 left-0 transform w-full h-full transition-all duration-500 text-white origin-centerease-out <% if (isRegisterMode) {%> <%= 'scale-100 pointer-events-auto'%> <%} else { %><%= 'scale-0 pointer-events-none'%> <% } %>">
+            <section class="hidden lg:flex absolute top-0 right-0 w-1/2 h-full">
+                <video autoplay loop muted preload="auto" class="absolute top-0 right-0 h-full w-full block object-cover opacity-5 pointer-events-none">
+                    <source src="/static/assets/video.mp4" type="video/mp4">
+                </video>
+                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-full flex items-center justify-center text-white flex-col w-full">
+                    <strong class="tracking-tighter border-2 py-0.5 px-1.5 border-current flex-shrink-0 font-light text-lg cursor-pointer">
+                        moovey••
+                    </strong>
+                    
+                    <div class="flex items-center justify-center flex-col origin-center duration-500 transition-all">
+                        <span class="text-2xl capitalize font-light font-special my-4">
+                            already have an account?
+                        </span>
+                        <button type="button" class="accountModeToggler capitalize inline-block outline-none focus:outline-none">login now</button>
+                    </div>
+                </div>        
+            </section>
+            <!-- form content -->
+            <form 
+                action="/register" 
+                method="POST" 
+                autocomplete="new-password"
+                class="absolute top-0 left-0 z-40 w-full h-full mx-auto px-6 py-8 text-center flex flex-col justify-between lg:w-1/2 lg:bg-white lg:text-pink-600">
+                <div class="flex-1 h-full flex flex-col items-center justify-start w-full">
+                    <h2 class="my-2 text-2xl tracking-wide w-max mx-auto pb-1 uppercase font-special">
+                        register
+                    </h2>
+                    <% if(isRegisterMode && errorMsg) { %>
+                    <small class="text-xs text-center block mx-auto mb-2 text-black tracking-wider font-semibold capitalize transform transition-all -translate-y-ull opacity-100 pointer-events-none bg-gray-50 p-1.5 shadow-lg">
+                        <!-- error message if any -->
+                        <%= errorMsg %>
+                    </small>
+                    <% } %>
+                    <div class="flex flex-1  flex-col items-center justify-start w-full mt-4">
+                        <section class="flex flex-col-reverse items-start w-full justify-center">
+                            <input 
+                                type="text" 
+                                name="registerName" 
+                                id="name" 
+                                placeholder="Your name"
+                                class="w-full block p-1.5 rounded-sm shadow-lg bg-purple-300 bg-opacity-30 my-2 transform focus:outline-none outline-none focus:scale-x-105 focus:shadow-lg transition-all text-sm text-gray-50 opacity-60 focus:opacity-100 placeholder-gray-300 font-light lg:bg-transparent lg:shadow-none lg:border-b-2 lg:border-gray-400 lg:focus:border-pink-600 lg:focus:scale-x-100 lg:focus:shadow-none lg:focus:placeholder-pink-600 lg:text-gray-700 lg:placeholder-gray-600">
+                            <label for="name" class="text-xs lg:text-gray-600 text-gray-50 tracking-wider uppercase">Name</label>
+                        </section>
+                        <section class="flex flex-col-reverse items-start w-full justify-center">
+                            <input 
+                                type="text" 
+                                name="registerEmail" 
+                                id="email" 
+                                placeholder="Your email ID"
+                                autocomplete="username"
+                                class="w-full block p-1.5 rounded-sm shadow-lg bg-purple-300 bg-opacity-30 my-2 transform focus:outline-none outline-none focus:scale-x-105 focus:shadow-lg transition-all text-sm text-gray-50 opacity-60 focus:opacity-100 placeholder-gray-300 font-light lg:bg-transparent lg:shadow-none lg:border-b-2 lg:border-gray-400 lg:focus:border-pink-600 lg:focus:scale-x-100 lg:focus:shadow-none lg:focus:placeholder-pink-600 lg:text-gray-700 lg:placeholder-gray-600">
+                            <label for="email" class="text-xs lg:text-gray-600 text-gray-50 tracking-wider uppercase">Email</label>
+                        </section>
+                        <section class="flex flex-col-reverse items-start w-full justify-center my-2">
+                            <input 
+                                type="password" 
+                                name="registerPassword" 
+                                id="password" 
+                                placeholder="Your password"
+                                autocomplete="new-password"
+                                class="w-full block p-1.5 rounded-sm shadow-lg bg-purple-300 bg-opacity-30 my-2 transform focus:outline-none outline-none focus:scale-x-105 focus:shadow-lg transition-all text-sm text-gray-50 opacity-60 focus:opacity-100 placeholder-gray-300 font-light lg:bg-transparent lg:shadow-none lg:border-b-2 lg:border-gray-400 lg:focus:border-pink-600 lg:focus:scale-x-100 lg:focus:shadow-none lg:focus:placeholder-pink-600 lg:text-gray-700 lg:placeholder-gray-600">
+                            <label for="password" class="text-xs lg:text-gray-600 text-gray-50 tracking-wider uppercase">password</label>
+                        </section>
+                    </div>
+                </div>
+                <div class="flex flex-col items-center">
+                    <button type="submit" class="outline-none focus:outline-none px-6 py-2 bg-black text-gray-300 text-sm uppercase hover:shadow-lg transform transition-all hov:-translate-y-px hover:scale-110 my-4 rounded-sm">
+                        register
+                    </button>
+                    <span class="text-xs capitalize text-gray-200 lg:text-gray-500 block lg:hidden">
+                        Existing user?
+                        <button type="button" class="accountModeToggler inline-block outline-none focus:outline-none">
+                            click here
+                        </button>
+                    </span>
+                </div>
+            </form>
+        </section>
+
+    </div>
 </section>
 
 <%- include('../partials/navbar') %>
 
 
-<header class="h-screen bg-gradient-to-b from-pink-600 to-gray-800 flex flex-col items-center justify-center pb-8">
+<header class="h-screen bg-gradient-to-r from-pink-600 to-purple-700 flex flex-col items-center justify-center pb-8">
     <section class="flex flex-1 flex-col mx-auto justify-center items-start w-5/6 max-w-md md:items-center">
         <div class="flex flex-col items-start">
             <h1 class="font-special text-4xl lowercase font-light text-white">
@@ -193,12 +217,13 @@
             <p class="text-xs text-gray-300 my-4 md:text-sm">
                 Join the network of reviewers from all over the world. Read reviews about good movies of all languages, genres etc before watching it. Write a review after watching a movie. Recommend and promote good movies to other people.  
             </p>
-            <button type="button" onclick="toggleModal('log')" class="block font-special group-hover:text-white transition-all rounded-sm transform hover:-translate-y-px hover:scale-110 text-sm uppercase bg-black text-gray-300 z-10 py-2 px-8 outline-none focus:outline-none">log in</button>
+            <button type="button" class="showLoginModal block font-special group-hover:text-white transition-all rounded-sm transform hover:-translate-y-px hover:scale-110 text-sm uppercase bg-black text-gray-300 z-10 py-2 px-8 outline-none focus:outline-none">log in</button>
         </div>
     </section>
 
     <a href="#main" class="text-sm rounded capitalize font-semibold text-white animate-bounce outline-none focus:outline-none flex items-center">
         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 17l-4 4m0 0l-4-4m4 4V3"></path></svg>
+        <span class="hidden">next</span>
     </a>
 </header>
 
@@ -264,13 +289,13 @@
     <div id="mainEnd" class="h-72 flex items-center justify-center transform duration-500 transition-all ease-in">
         <div class="cta my-10 mx-auto flex flex-col items-center justify-center w-max relative group">
             <div class="absolute bg-opacity-50 top-0 left-0 w-full h-full bg-gray-500 z-0 animate-ping group-hover:bg-pink-600"></div>
-            <button type="button" onclick="toggleModal('reg')" class="block font-special group-hover:text-white transition-all rounded-sm transform hover:-translate-y-px hover:scale-110 text-xl uppercase bg-black text-gray-300 z-10 py-4 px-10">join now</button>
+            <button type="button" class="showRegisterModal block font-special group-hover:text-white transition-all rounded-sm transform hover:-translate-y-px hover:scale-110 text-xl uppercase bg-black text-gray-300 z-10 py-4 px-10">join now</button>
             <small class="text-xs text-gray-400 mt-1.5 capitalize">join now to be a reviewer</small>
         </div>
     </div>
 </main>
+
 <script src="/static/js/index.js"></script>
 <script src="/static/js/landing.js"></script>
-
 <%- include('../partials/footer') %>
 

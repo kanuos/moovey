@@ -24,8 +24,8 @@ exports.renderDisplayRoute = async function(req, res) {
 
 exports.submitLoginForm = async function(req, res) {
     try {
-        let {email, password} = req.body;
-        email = email.trim(), password = password.trim();
+        let {loginEmail, loginPassword} = req.body;
+        const email = loginEmail.trim(), password = loginPassword.trim();
         
         // valid email
         if(!minimumLength(email, 6))
@@ -59,7 +59,8 @@ exports.submitLoginForm = async function(req, res) {
 
         req.session.uid = existingUser.uid;
         req.session.email = existingUser.email;
-        req.session.userName = existingUser.name.split(" ")[0];        
+        req.session.userName = existingUser.name.split(" ")[0];  
+        console.log("Redirect")      
         return res.redirect(301, "/dashboard")
             
     }
@@ -78,8 +79,8 @@ exports.submitLoginForm = async function(req, res) {
 exports.submitRegisterForm = async function(req, res) {
     console.log(req.body);
     try {
-        let {name, email, password} = req.body;
-        name = name.trim(), email = email.trim(), password = password.trim();
+        let {registerName, registerEmail, registerPassword} = req.body;
+        const name = registerName.trim(), email = registerEmail.trim(), password = registerPassword.trim();
         
         // check whether valid req.body
         if(!minimumLength(name, 2))
