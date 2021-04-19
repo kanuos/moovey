@@ -13,6 +13,9 @@ const hideModal = document.querySelector(".hideModal");
 const showLoginModal = document.querySelector(".showLoginModal");
 const showRegisterModal = document.querySelector(".showRegisterModal");
 
+// show hide password DOM
+const showHidePassword = document.querySelectorAll(".showHidePassword");
+
 accountModeTogglerBtns?.forEach(btn => {
     btn.addEventListener('click', toggleModalType)
 })
@@ -60,6 +63,24 @@ showLoginModal?.addEventListener("click", loginModal)
 // open the register modal
 showRegisterModal?.addEventListener("click", registerModal)
 
+
+// show or hide password functionality
+showHidePassword?.forEach(el => el.addEventListener("click",() => showHidePasswordFn(el)));
+
+function showHidePasswordFn(e){
+    const selectedBtnType = e.dataset.target
+    const btn = Array.from(showHidePassword).find(el => el.dataset.target === selectedBtnType)
+    // change icon
+    Array.from(btn?.children).forEach(svg => {
+        svg.classList.toggle("hidden")
+        svg.classList.toggle("block")
+    })
+    // // change the input[password] to/from input[text]
+    const passwordField = btn?.previousElementSibling.previousElementSibling
+    if (passwordField) {
+        passwordField.getAttribute("type") === "password" ? passwordField.setAttribute("type", "text") : passwordField.setAttribute("type", "password")
+    }
+}
 
 
 
