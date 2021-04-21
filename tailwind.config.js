@@ -5,8 +5,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily : {
-        'title' : ['Anton'],
-        'base' : ['Raleway'],
+        'title' : ['Quicksand'],
+        'regular' : ['Poppins'],
       },
       colors : {
         dark : '#3B3F59',

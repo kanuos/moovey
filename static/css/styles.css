@@ -11597,11 +11597,11 @@ video {
 }
 
 .font-title{
-  font-family: Anton;
+  font-family: Quicksand;
 }
 
-.font-base{
-  font-family: Raleway;
+.font-regular{
+  font-family: Poppins;
 }
 
 .font-thin{
@@ -31888,7 +31888,7 @@ html {
 /* Scrollbar styles */
 
 body::-webkit-scrollbar {
-  width: .75rem;
+  width: .5rem;
 }
 
 body::-webkit-scrollbar-track {
@@ -31896,171 +31896,187 @@ body::-webkit-scrollbar-track {
 }
 
 body::-webkit-scrollbar-thumb {
-  background-color: #3B3F59;
+  background-color: black;
 }
 
 /* Main Section */
 
-main {
-  background-image: linear-gradient(to bottom, rgba(10, 177, 127, 0.75),rgba(24, 170, 189, 0.877)), url(/static/assets/hero.jpg);
-  background-size: cover;
-  background-position: center;
+/* main {
+    background-image: linear-gradient(to bottom, rgba(77, 222, 179, 0.75),rgba(24, 170, 189, 0.877)), url(/static/assets/hero.jpg);
+    background-size: cover;
+    background-position: center;
 }
-
 .gradient-bg {
-  background-image: linear-gradient(to bottom, rgba(10, 177, 127, 0.95),rgba(24, 170, 189, 0.877)), url(/static/assets/basic.jpg);
-  background-size: cover;
-  background-position: center;
+    background-image: linear-gradient(to bottom, rgba(77, 222, 179, 0.95),rgba(24, 170, 189, 0.877)), url(/static/assets/basic.jpg);
+    background-size: cover;
+    background-position: center;
 }
 
 @media screen and (min-width: 768px) {
-  main {
-    background-image: 
+    main {
+        background-image: 
             linear-gradient(30deg,
                 rgba(10, 177, 127, 0.75),
                 rgba(24, 170, 189, 0.877) 60%,
                 rgba(255,255,255, 0.8) 60%), 
             url(/static/assets/hero.jpg);
-  }
+    }
 }
 
 .landing, #account {
-  transform-origin: center;
-  -webkit-animation: fadeIn .5s ease;
-          animation: fadeIn .5s ease;
+    transform-origin: center;
+    animation: fadeIn .5s ease;
 }
-
-@-webkit-keyframes fadeIn {
-  0% {
-    opacity: 0.5;
-    transform: scale(0);
-  }
-
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
 @keyframes fadeIn {
-  0% {
-    opacity: 0.5;
-    transform: scale(0);
-  }
-
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
+    0% {
+        opacity: 0.5;
+        transform: scale(0);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 .animation-shape {
-  -webkit-animation: shape 5s linear infinite;
-          animation: shape 5s linear infinite;
+    animation: shape 5s linear infinite;
 }
-
 .animation-shape:nth-child(1) {
-  -webkit-animation-duration: 1s;
-          animation-duration: 1s;
+    animation-duration: 1s;
 }
-
 .animation-shape:nth-child(2) {
-  -webkit-animation-duration: 2s;
-          animation-duration: 2s;
+    animation-duration: 2s;
 }
-
 .animation-shape:nth-child(3) {
-  -webkit-animation-duration: 3s;
-          animation-duration: 3s;
+    animation-duration: 3s;
 }
-
 .animation-shape:nth-child(4) {
-  -webkit-animation-duration: 4s;
-          animation-duration: 4s;
+    animation-duration: 4s;
 }
-
 .animation-shape:nth-child(5) {
-  -webkit-animation-duration: 5s;
-          animation-duration: 5s;
-}
-
-@-webkit-keyframes shape {
-  0% {
-    transform: scale(.5) translateY(100%);
-  }
-
-  50% {
-    -webkit-clip-path: polygon(50% 0, 100% 100%,0 100% );
-            clip-path: polygon(50% 0, 100% 100%,0 100% );
-    transform: scale(1) translateY(-200%);
-  }
-
-  100% {
-    -webkit-clip-path: circle();
-            clip-path: circle();
-    transform: scale(2)  translateY(-700%);
-  }
+    animation-duration: 5s;
 }
 
 @keyframes shape {
-  0% {
-    transform: scale(.5) translateY(100%);
-  }
+    0% {
+        transform: scale(.5) translateY(100%);
+    }
+    50% {
+        clip-path: polygon(50% 0, 100% 100%,0 100% );
+        transform: scale(1) translateY(-200%);
+    }
+    100% {
+        clip-path: circle();
+        transform: scale(2)  translateY(-700%);
+    }
+} */
 
-  50% {
-    -webkit-clip-path: polygon(50% 0, 100% 100%,0 100% );
-            clip-path: polygon(50% 0, 100% 100%,0 100% );
-    transform: scale(1) translateY(-200%);
-  }
+/* user card start */
 
-  100% {
-    -webkit-clip-path: circle();
-            clip-path: circle();
-    transform: scale(2)  translateY(-700%);
-  }
+/* .user-card {
+    background: rgb(59,63,89);
+    height: 60vh;
+    width: 20rem;
+    margin: auto;
+    display: grid;
+    border-radius: .25rem;
+    grid-template-rows: repeat(5, 1fr);
+    grid-template-rows: 1fr;
+    overflow: hidden;
+    transition: all .5s ease;
+    filter: drop-shadow(0 .5px .5rem rgba(0,0,0,.25));
 }
-
-/* user list style start */
-
-.user-card {
-  height: 50vh;
-  min-height: 25rem;
-  width: 60vw;
-  max-width: 20rem;
+.user-card:hover {
+    filter: drop-shadow(0 .5px .5rem rgba(0,0,0,.5));
 }
-
 .user-card > img {
-  filter: grayscale(100%);
+    grid-row: 1/-1;
+    grid-column: 1/-1;
+    display: block;
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+    z-index: 2;
 }
-
-.user-card:hover > img {
-  filter: grayscale(0%);
+.user-card > section {
+    grid-row: 5/-1;
+    grid-column: 1/-1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+    transition: none;
 }
+@media screen and (min-width: 768px) {
+    .user-card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        backface-visibility: hidden;
+    }
+    .user-card > img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        filter: grayscale(100%);
+    }
+    .user-card > section {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        transform-origin: bottom;
+        transform: translateY(-100%);
+        transition: all .5s ease;
+    }
+    .user-card:hover > img {
+        filter: grayscale(0%) blur(2px);
+        z-index: 1;
+    }
+    .user-card:hover > section {
+        top: 0;
+        z-index: 2;
+        bottom: unset;
+        transform: translateY(0%); 
+    }
+} */
 
-.user-card > strong {
-  z-index: 2;
+/* user card end */
+
+/* user profile page start */
+
+/* #fullImg {
+    background-color: rgba(59, 63, 89,.95);
 }
-
-.user-card:hover > strong > span {
-  transition: all .2s linear;
-  background-color: #3B3F59;
-  -webkit-box-decoration-break: clone;
-          box-decoration-break: clone;
-  line-height: 4.5rem;
+.profile-body {
+    background-image: linear-gradient(rgba(24, 169, 189, .95),rgba(77, 222, 179, .9)),url(../assets/basic.jpg);
+    background-size: contain;
+    background-repeat: repeat;
 }
-
-.profile-card-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+.profile-header {
+    background-image: linear-gradient(160deg, rgba(24, 169, 189, .95),rgba(77, 222, 179, .9) 45%, rgba(235,235,235,.97) 45%),url(/static/assets/basic.jpg);
+    background-size: contain;
+    background-repeat: repeat;
+    overflow: hidden;
+    height: 70vh;
 }
-
 @media screen and (min-width:768px) {
-  .user-card > img {
-    filter: brightness(80%) grayscale(100%);
-  }
+    .profile-header {
+        background-image: linear-gradient(90deg, rgba(59, 63, 89,.75) 25%,rgba(77, 222, 179, .9) 25%, rgba(24, 169, 189, .95) 75%, rgba(59, 63, 89,.75) 75%),url(/static/assets/basic.jpg);
+        background-size: contain;
+        background-repeat: repeat;
+        overflow: hidden;
+        height: 100vh;
+    }
 }
+@media screen and (min-width:1024px) {
+    .profile-header {
+        height: 100%;
+        background-image: none;
+    }
+} */
 
-/* user list style end */
+/* user profile page end */
 
 @media (min-width: 640px){
   .sm\:container{
@@ -43112,11 +43128,11 @@ main {
   }
 
   .sm\:font-title{
-    font-family: Anton;
+    font-family: Quicksand;
   }
 
-  .sm\:font-base{
-    font-family: Raleway;
+  .sm\:font-regular{
+    font-family: Poppins;
   }
 
   .sm\:font-thin{
@@ -74368,11 +74384,11 @@ main {
   }
 
   .md\:font-title{
-    font-family: Anton;
+    font-family: Quicksand;
   }
 
-  .md\:font-base{
-    font-family: Raleway;
+  .md\:font-regular{
+    font-family: Poppins;
   }
 
   .md\:font-thin{
@@ -105624,11 +105640,11 @@ main {
   }
 
   .lg\:font-title{
-    font-family: Anton;
+    font-family: Quicksand;
   }
 
-  .lg\:font-base{
-    font-family: Raleway;
+  .lg\:font-regular{
+    font-family: Poppins;
   }
 
   .lg\:font-thin{
@@ -136880,11 +136896,11 @@ main {
   }
 
   .xl\:font-title{
-    font-family: Anton;
+    font-family: Quicksand;
   }
 
-  .xl\:font-base{
-    font-family: Raleway;
+  .xl\:font-regular{
+    font-family: Poppins;
   }
 
   .xl\:font-thin{
@@ -168136,11 +168152,11 @@ main {
   }
 
   .\32xl\:font-title{
-    font-family: Anton;
+    font-family: Quicksand;
   }
 
-  .\32xl\:font-base{
-    font-family: Raleway;
+  .\32xl\:font-regular{
+    font-family: Poppins;
   }
 
   .\32xl\:font-thin{
