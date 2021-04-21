@@ -1,0 +1,270 @@
+<%- include('../partials/head')%>
+
+ <body class="min-h-screen font-regular relative bg-white">
+    <%- include('../partials/navbar') %>
+    <!-- header section -->
+     <header class="h-screen relative p-4 flex flex-col items-center justify-center bg-gradient-to-br from-white to-gray-50 md:bg-none lg:mx-12">
+         <video autoplay muted loop
+             class="hidden md:block h-full w-full object-cover absolute top-0 left-0 opacity-10 lg:opacity-30">
+                 <source src="/static/assets/video.mp4" type="video/mp4"/><
+         </video>
+         <section class="flex flex-col justify-center items-center transform lg:-translate-y-2.5 lg:bg-white lg:z-10 lg:p-4 lg:grid lg:grid-cols-2 max-w-5xl lg:grid-rows-6 lg:h-3/4 lg:gap-x-3 lg:shadow-xl lg:rounded-md">
+             
+             <h1 class="flex flex-col items-center justify-center lg:col-start-2 lg:text-center lg:row-start-1 lg:row-end-2 mb-0.5">
+                 <span class="text-2xl font-special capitalize text-gray-600 md:text-gray-800">
+                     <%= profile.name %>
+                 </span>
+                 <% if(profile.showProfile) { %>
+                 <small class="text-sm text-gray-400">
+                     <%= profile.email %>
+                 </small>
+                 <% } %>
+             </h1>
+ 
+             <figure class="block h-44 w-44 md:h-48 md:w-48 object-cover shadow-xl p-1.5 bg-white rounded-full overflow-hidden my-3 lg:rounded-none lg:h-full lg:w-full lg:col-start-1 lg:col-end-2 lg:row-span-full lg:my-0 lg:p-2.5">
+                 <img
+                     class="block h-full w-full object-cover rounded-full transition-transform duration-300 transform hover:scale-125 cursor-pointer lg:rounded-none lg:transform-none" 
+                     src="https://images.pexels.com/photos/1701626/pexels-photo-1701626.jpeg" 
+                     alt="jeniffer bridgerton">
+             </figure>
+             
+             <div class="flex items-center text-gray-400 md:text-gray-700 justify-center lg:row-start-1 lg:row-end-3 lg:col-start-2">
+                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                 <small class="uppercase ml-1">
+                    <% if(profile.location) {%>
+                       <%= profile.location %>
+                    <% } else { %>
+                        <small class="capitalize text-sm ml-1 text-gray-400">
+                            no location available
+                        </small>
+                    <% } %>    
+                 </small>
+             </div>
+
+             <p class="text-gray-500 font-light text-center italic my-2 lg:my-0 break-words max-w-3xl md:text-gray-700 lg:col-start-2 lg:row-start-2 lg:row-end-5 lg:w-5/6 lg:mx-auto">
+                <% if(profile.bio) {%> 
+                    <%= profile.bio %>
+                <% } else {%>
+                    <small class="capitalize text-gray-400">
+                        no bio available
+                    </small>
+                <% } %>
+             </p>
+ 
+             <div class="flex items-center justify-center flex-col text-gray-600 md:text-gray-700 my-4 lg:my-0 lg:col-start-2">
+                 <span class="uppercase font-bold text-xs lg:text-sm">
+                     joined on
+                 </span>
+                 <small class="capitalize text-xs lg:text-sm">
+                     <%= profile.date_joined.date %><sup><%= profile.date_joined.suffix %></sup> <%= profile.date_joined.month %>, <%= profile.date_joined.year %>
+                 </small>
+             </div>
+ 
+             <ul class="flex items-center lg:col-start-2 lg:justify-center">
+                 <li class="m-1 p-2 md:border-2 border-transparent bg-gray-700 text-gray-300 hover:text-white rounded-full transform hover:scale-125 transition-all cursor-pointer">
+                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                 </li>
+                 <li class="m-1 p-2 md:border-2 border-transparent bg-gray-700 text-gray-300 hover:text-white rounded-full transform hover:scale-125 transition-all cursor-pointer">
+                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                 </li>
+                 <li class="m-1 p-2 md:border-2 border-transparent bg-gray-700 text-gray-300 hover:text-white rounded-full transform hover:scale-125 transition-all cursor-pointer">
+                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path></svg>
+                 </li>
+             </ul>
+            </section>
+            <% if(profile.showProfile) { %>
+               <a href="/create-new" class="bg-black flex items-center mt-10 md:mt-2 px-4 py-2 rounded hover:shadow-lg text-gray-300 hover:text-white outline-none focus:outline-none w-max mx-auto max-w-xs transform hover:scale-105 transition-all hover:-translate-y-px">
+                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                   <span class="capitalize text-xs ml-1">
+                       write content
+                   </span>
+               </a>
+               <% } %>
+     </header>
+     
+     <!-- tab selector -->
+     <ul class="flex items-center justify-center mt-10 lg:my-20">
+         <li class="sectionSelector cursor-pointer hover:text-gray-500 px-3 text-gray-400 uppercase text-sm">articles</li>
+         <li class="sectionSelector cursor-pointer hover:text-gray-500 px-3 text-gray-400 uppercase text-sm">recommendations</li>
+         <li class="sectionSelector cursor-pointer hover:text-gray-500 px-3 text-gray-400 uppercase text-sm">my lists</li>
+     </ul>
+ 
+     <!-- main section -->
+     <div class="min-h-screen pt-12 lg:pt-0 flex flex-col lg:flex-row lg:mx-12 lg:my-8">
+         <main class="tabSection w-full flex flex-col items-center p-4 justify-start h-1/2 min-h-screen bg-white">
+             <h2 class="capitalize font-light text-4xl text-pink-600 font-special">
+                 articles
+             </h2>
+             <p class="leading-relaxed text-gray-500 font-light my-2 italic mb-2 pb-2 border-b-2">
+                 Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quae, nobis!
+             </p>
+             <section class="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4">
+                 <article class="relative w-11/12 max-w-md mx-auto my-3 text-gray-600 shadow-lg bg-gray-50">
+                     <img
+                         class="h-80 w-full block object-cover" 
+                         src="https://1.bp.blogspot.com/-4qZb2Au-cbY/Xg8k4K4YKkI/AAAAAAAABYw/E_Cjbmq2eFc3qGPa-TSbTeQkxvy4iwixgCNcBGAsYHQ/s1600/liana-mikah-709546-unsplash-1170x730.jpg" alt="">
+                     <div class="flex flex-col items-center justify-center bg-gray-700 text-white absolute w-min py-1 px-3 -top-2 -left-2 shadow-md">
+                         <span class="font-semibold">
+                             04
+                         </span>
+                         <small class="uppercase text-xs">
+                             mar
+                         </small>
+                     </div>
+                     <strong class="block text-center text-xl text-gray-500 font-light font-special capitalize my-4 break-words px-2">
+                         Lorem ipsum dolor sit amet consectetur adipisicing.
+                     </strong>
+                     <span class="block uppercase text-center px-2 tracking-wider">
+                         a lukewarm movie experience... 
+                     </span>
+                     <p class="leading-relaxed my-2 text-center text-sm px-2">
+                         Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptatum labore velit distinctio error assumenda? Quis voluptate sed molestiae itaque, magni expedita impedit molestias quisquam natus!
+                     </p>
+                     <a href="#" class="text-center uppercase block w-max my-6 mx-auto text-gray-400 hover:text-gray-900 text-sm tracking-wide">
+                         keep reading...
+                     </a>
+                 </article>
+             </section>
+         </main>
+         <main class="tabSection w-full flex flex-col items-center p-4 justify-start h-1/2 min-h-screen bg-white">
+             <h2 class="capitalize font-light text-4xl text-pink-600 font-special">
+                 recommendations
+             </h2>
+             <p class="leading-relaxed text-gray-500 font-light my-2 italic mb-2 pb-2 border-b-2">
+                 Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quae, nobis!
+             </p>
+             <section class="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4">
+                 <article class="relative my-4 mx-auto shadow-xl hover:scale-105 hover:shadow-2xl transform transition-all flex-shrink-0">
+                     <img src="https://m.media-amazon.com/images/M/MV5BNzQ3OTY4NjAtNzM5OS00N2ZhLWJlOWUtYzYwZjNmOWRiMzcyXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_SX300.jpg" 
+                     class="h-64 w-60 block object-cover">
+                     <div class="flex flex-col h-14 px-2 py-1">
+                         <strong class="capitalize text-gray-600 text-sm">jurassic world</strong>
+                         <small class="text-xs text-gray-400">Action, Adventure, Sci-Fi</small>
+                     </div>
+                     <span class="absolute bottom-5 -right-3 bg-pink-600 p-2 text-white font-semibold rounded-full shadow-2xl ">8.3</span>
+                 </article>
+                 <article class="relative my-4 mx-auto shadow-xl hover:scale-105 hover:shadow-2xl transform transition-all flex-shrink-0">
+                     <img src="https://m.media-amazon.com/images/M/MV5BMTk0MDQ3MzAzOV5BMl5BanBnXkFtZTgwNzU1NzE3MjE@._V1_SX300.jpg" 
+                     class="h-64 w-60 block object-cover">
+                     <div class="flex flex-col h-14 px-2 py-1">
+                         <strong class="capitalize text-gray-600 text-sm">gone girl</strong>
+                         <small class="text-xs text-gray-400">Drama, Mystery, Thriller</small>
+                     </div>
+                     <span class="absolute bottom-5 -right-3 bg-pink-600 p-2 text-white font-semibold rounded-full shadow-2xl">8.7</span>
+                 </article>
+                 <article class="relative my-4 mx-auto shadow-xl hover:scale-105 hover:shadow-2xl transform transition-all flex-shrink-0">
+                     <img src="https://m.media-amazon.com/images/M/MV5BMTc2MTQ3MDA1Nl5BMl5BanBnXkFtZTgwODA3OTI4NjE@._V1_SX300.jpg" 
+                     class="h-64 w-60 block object-cover">
+                     <div class="flex flex-col h-14 px-2 py-1">
+                         <strong class="capitalize text-gray-600 text-sm">the martian</strong>
+                         <small class="text-xs text-gray-400">Drama, Sci-Fi, Thriller</small>
+                     </div>
+                     <span class="absolute bottom-5 -right-3 bg-pink-600 p-2 text-white font-semibold rounded-full shadow-2xl">8.3</span>
+                 </article>
+             </section>
+         </main>
+         <main class="tabSection w-full flex flex-col items-center p-4 justify-start h-1/2 min-h-screen bg-white">
+             <h2 class="capitalize font-light text-4xl text-pink-600 font-special">
+                 my lists
+             </h2>
+             <p class="leading-relaxed text-gray-500 font-light my-2 italic mb-2 pb-2">
+                 Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quae, nobis! list
+             </p>
+             <section class="w-full flex flex-col bg-gradient-to-r from-red-50 to-pink-50">
+                 <!-- if no list found -->
+                 <article class="flex flex-col items-center mx-auto my-10">
+                     <h2 class="text-center uppercase text-xl w-full">
+                         you don't have any lists.
+                     </h2>
+                     <span class="flex items-center text-center text-base text-gray-400">
+                         Click
+                         <a href="#" class="transition-all text-blue-400 mx-1 hover:text-blue-500 hover:underline">
+                             here
+                         </a>
+                         to create a list.
+                     </span>
+                 </article>
+                 <!-- else -->
+                 <article class="w-5/6 max-w-3xl my-3 mx-auto relative h-80 bg-gray-50 shadow-md items-center flex flex-col justify-center p-4 md:hover:shadow-lg md:hover:scale-105 md:hover:-translate-y-px md:transform transform-none transition-all">
+                     <div class="w-full flex flex-col justify-center items-center max-w-lg">
+                         <div class="flex flex-col items-center uppercase absolute -top-2 -left-2 bg-gray-700 text-white shadow-md px-2 py-1">
+                             <span>
+                                 30
+                             </span>
+                             <small class="text-xs">
+                                 aug
+                             </small>
+                         </div>
+                         <strong class="font-special text-2xl text-center mx-auto capitalize text-gray-700 font-light mb-4">
+                             Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                         </strong>
+                         <p class="text-center leading-relaxed text-sm text-gray-500">
+                             Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima consequuntur, dolore fugiat porro vitae qui.
+                         </p>
+                         <a href="#" class="mx-auto my-4 uppercase text-base text-gray-400 hover:text-gray-700 transition-colors">
+                             read more
+                         </a>
+                     </div>
+                 </article>
+                 <article class="w-5/6 max-w-3xl my-3 mx-auto relative h-80 bg-gray-50 shadow-md items-center flex flex-col justify-center p-4 md:hover:shadow-lg md:hover:scale-105 md:hover:-translate-y-px md:transform transform-none transition-all">
+                     <div class="w-full flex flex-col justify-center items-center max-w-lg">
+                         <div class="flex flex-col items-center uppercase absolute -top-2 -left-2 bg-gray-700 text-white shadow-md px-2 py-1">
+                             <span>
+                                 30
+                             </span>
+                             <small class="text-xs">
+                                 mar
+                             </small>
+                         </div>
+                         <strong class="font-special text-2xl text-center mx-auto capitalize text-gray-700 font-light mb-4">
+                             my favorite animes
+                         </strong>
+                         <p class="text-center leading-relaxed text-sm text-gray-500">
+                             Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima consequuntur, dolore fugiat porro vitae qui.
+                         </p>
+                         <a href="#" class="mx-auto my-4 uppercase text-base text-gray-400 hover:text-gray-700 transition-colors">
+                             read more
+                         </a>
+                     </div>
+                 </article>
+                 <article class="w-5/6 max-w-3xl my-3 mx-auto relative h-80 bg-gray-50 shadow-md items-center flex flex-col justify-center p-4 md:hover:shadow-lg md:hover:scale-105 md:hover:-translate-y-px md:transform transform-none transition-all">
+                     <div class="w-full flex flex-col justify-center items-center max-w-lg">
+                         <div class="flex flex-col items-center uppercase absolute -top-2 -left-2 bg-gray-700 text-white shadow-md px-2 py-1">
+                             <span>
+                                 30
+                             </span>
+                             <small class="text-xs">
+                                 mar
+                             </small>
+                         </div>
+                         <strong class="font-special text-2xl text-center mx-auto capitalize text-gray-700 font-light mb-4">
+                             my favorite animes
+                         </strong>
+                         <p class="text-center leading-relaxed text-sm text-gray-500">
+                             Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima consequuntur, dolore fugiat porro vitae qui.
+                         </p>
+                         <a href="#" class="mx-auto my-4 uppercase text-base text-gray-400 hover:text-gray-700 transition-colors">
+                             read more
+                         </a>
+                     </div>
+                 </article>
+             </section>
+         </main>
+     </div>
+ 
+     <!-- pagination -->
+     <ul class="flex items-center justify-center my-8">
+         <li class="mx-2 border-2 border-current text-gray-500 hover:text-gray-600"><a href="" class="p-2 font-bold uppercase">&larr; prev</a></li>
+         <li class="mx-2 border-2 border-current text-gray-500 hover:text-gray-600 bg-gray-50"><a href="" class="p-2 font-bold uppercase">1</a></li>
+         <li class="mx-2 border-2 border-current text-gray-500 hover:text-gray-600"><a href="" class="p-2 font-bold uppercase">2</a></li>
+         <li class="mx-2 border-2 border-current text-gray-500 hover:text-gray-600"><a href="" class="p-2 font-bold uppercase">3</a></li>
+         <li class="mx-2 border-2 border-current text-gray-500 hover:text-gray-600"><a href="" class="p-2 font-bold uppercase">next &rarr;</a></li>
+     </ul>
+ 
+<!-- **************************************************************************** -->
+
+<script src="/static/js/index.js"></script>
+<script src="/static/js/navScroll.js"></script>
+<script src="/static/js/profilepage.js"></script>
+
+<%- include('../partials/footer') %>

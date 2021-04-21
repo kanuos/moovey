@@ -8,7 +8,8 @@ const {
     handleLogOut, 
     showMyProfile,
     showEditProfilePage,
-    submitEditProfile
+    submitEditProfile,
+    forgotPasswordPage
     } = require("../_Controller/accountController")
 const imageMiddleware = require("../imageMiddleware");
 const {redirectToLogin, preventLoginRoute} = require("../sessionMiddleware")
@@ -46,6 +47,13 @@ const {redirectToLogin, preventLoginRoute} = require("../sessionMiddleware")
 // METHODS  :   [POST]
 
 accoutRoutes.get("/logout", redirectToLogin, handleLogOut)
+
+// FORGOT PASSWORD ROUTES
+// URL      :   /forgot-password
+// ACCESS   :   PUBLIC
+// METHODS  :   [GET]
+
+accoutRoutes.get("/forgot-password", preventLoginRoute, forgotPasswordPage)
 
 
  // USERS LIST ROUTES

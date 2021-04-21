@@ -1,4 +1,4 @@
-const {minimumLength, validEmail, maximumLength} = require("../functions");
+const {minimumLength, validEmail, maximumLength, readableDateStringFormat} = require("../functions");
 const imdBB = require("imgbb-uploader");
 const fs = require("fs/promises")
 const pool = require("../_Database")
@@ -11,12 +11,15 @@ exports.renderDisplayRoute = async function(req, res) {
         const {rows} = await pool.query(`SELECT * FROM users`);
         if (rows[rows.length - 1]?.uid === req.query.success) {
             redirect = "Account created successfully. Log in to continue"
+            isLoginMode = true
         } 
     } else if (req.query?.redirect) {
         redirect = "You are not logged in or your session has expired. Please log in to continue."
+        isLoginMode = true
     }
     return res.render("pages/landing", 
-    {
+    {   
+        loggedIn : false,
         title: "Welcome to your personal movie blog", 
         redirect, isLoginMode, isRegisterMode, errorMsg
     })
@@ -60,13 +63,13 @@ exports.submitLoginForm = async function(req, res) {
         req.session.uid = existingUser.uid;
         req.session.email = existingUser.email;
         req.session.userName = existingUser.name.split(" ")[0];  
-        console.log("Redirect")      
         return res.redirect(301, "/dashboard")
             
     }
     catch(err){
         return res.render("pages/landing", 
         {
+            loggedIn : false,
             title: "Welcome to your personal movie blog", 
             redirect : undefined, 
             isLoginMode : true, 
@@ -77,7 +80,6 @@ exports.submitLoginForm = async function(req, res) {
 }
 
 exports.submitRegisterForm = async function(req, res) {
-    console.log(req.body);
     try {
         let {registerName, registerEmail, registerPassword} = req.body;
         const name = registerName.trim(), email = registerEmail.trim(), password = registerPassword.trim();
@@ -124,7 +126,9 @@ exports.submitRegisterForm = async function(req, res) {
             redirect : undefined, 
             isLoginMode : false, 
             isRegisterMode : true,
-            errorMsg : err.message
+            errorMsg : err.message,
+            loggedIn : false,
+
         })
     }
 }
@@ -132,7 +136,15 @@ exports.submitRegisterForm = async function(req, res) {
 exports.handleLogOut = function(req, res) {
     req.session.destroy();
     res.clearCookie(process.env.SESSION_NAME)
-    return res.redirect("/")
+    return res.render("pages/landing", 
+    {   
+        loggedIn : false,
+        title: "Welcome to your personal movie blog", 
+        redirect : "You have been logged out successfully.", 
+        isLoginMode : true, 
+        isRegisterMode : false, 
+        errorMsg : false
+    })
 }
 
 exports.showMyProfile = async function(req, res) {
@@ -141,7 +153,13 @@ exports.showMyProfile = async function(req, res) {
         const showProfile = rows[0].email === req.session.email;
         delete rows[0].password;
         rows[0].showProfile = showProfile
-        return res.render("pages/my_profile", {title : `${req.session.userName}'s Profile`, profile: rows[0]})
+        rows[0].date_joined = readableDateStringFormat(rows[0].date_joined)
+        return res.render("pages/user_profile", 
+            {
+                loggedIn : true,
+                title : `${req.session.userName}'s Profile`, 
+                profile: rows[0]
+            })
     }
     catch(er){
 
@@ -151,7 +169,12 @@ exports.showMyProfile = async function(req, res) {
 exports.showEditProfilePage = async function(req, res) {
     try {
         const {rows} = await pool.query(`SELECT * FROM users WHERE uid = $1`, [req.session.uid]);
-        return res.render("pages/edit_profile", {title : `${req.session.userName}'s Profile`, user: rows[0]})
+        return res.render("pages/edit_profile", 
+            {
+                title : `${req.session.userName}'s Profile`, 
+                loggedIn : false,
+                user: rows[0]
+            })
     }
     catch(er){
 
@@ -208,9 +231,20 @@ exports.reviewerProfile = async function(req, res) {
         if (loggedUser && loggedUser === rows[0].email) {
             return res.redirect('/dashboard');
         }
-        return res.render("pages/my_profile", {title : ``, profile: rows[0] ?? []})
+        return res.render("pages/uder_profile", 
+            {
+                loggedIn : false,
+                title : ``, 
+                profile: rows[0] ?? []
+            })
     }
     catch(err) {
         console.log(err, "profile detail error");
     }
+}
+
+exports.forgotPasswordPage = async function(req, res) {
+    return res.render("pages/forgot_password", {
+        title : "Forgot password?"
+    })
 }
