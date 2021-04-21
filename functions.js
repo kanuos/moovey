@@ -2,7 +2,9 @@ const axios = require('axios');
 
 const URL = `http://www.omdbapi.com/?apikey=${process.env.MOVIE_API_KEY}&`
 
-
+const MONTHS = [
+    "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"
+]
 
 const getMovieTitles = async (searchKeyword) => {
     try {
@@ -44,8 +46,20 @@ const titleCase = input => {
     }).join(" ")
 }
 
-const slugify = string => {
-    return string.trim().split(" ").join("+");
+const readableDateStringFormat = (dateStr = Date.now()) => {
+    // Wed Apr 21 2021 12:32:29 GMT-0400 (Eastern Daylight Time)
+    const dateObj = new Date(dateStr);
+    let suffix = "th";
+    if (parseInt(dateObj.getDate()) % 10 === 1) { suffix = "st"}
+    else if (parseInt(dateObj.getDate()) % 10 === 2) { suffix = "nd"}
+    else if (parseInt(dateObj.getDate()) % 10 === 3) { suffix = "rd"}
+
+    return {
+        date : dateObj.getDate() < 10 ? `0${dateObj.getDate()}` : dateObj.getDate(),
+        year : dateObj.getFullYear(),
+        month : MONTHS[dateObj.getMonth()],
+        suffix
+    }
 }
 
 const dbLikeQueryString = string => {
@@ -63,8 +77,8 @@ module.exports = {
     minimumLength,
     validEmail,
     titleCase,
-    slugify,
     reformatMovieURL,
     dbLikeQueryString,
-    maximumLength
+    maximumLength,
+    readableDateStringFormat
 }
