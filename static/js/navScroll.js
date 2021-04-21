@@ -7,7 +7,7 @@ const observer = new IntersectionObserver((entries, _observer)=> {
             nav?.classList.remove("shadow-lg")
         }
     }
-)}, {threshold : 0.15, rootMargin: "0px 0px -5px 0px"})
+)}, {threshold : 0, rootMargin: "-600px 0px 0px 0px"})
 
 observer.observe(header)
 
