@@ -1,66 +1,76 @@
 const {Pool} = require('pg');
 
-const {DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, DB_PORT} = process.env;
+const {DATABASE_URL, NODE_ENV} = process.env;
 
 const pool = new Pool({
-    user : DB_USER,
-    password: DB_PASSWORD,
-    port: DB_PORT,
-    database: DB_NAME,
-    host : DB_HOST,
+    connectionString : DATABASE_URL,
+    ssl :NODE_ENV === "production" ?  {
+        rejectUnauthorized : false
+    } : undefined
 });
 
-pool.connect()
-    .then(function() {
-        pool.query(`CREATE TABLE IF NOT EXISTS users (
-            uid BIGSERIAL NOT NULL PRIMARY KEY,
+async function initDB() {
+    try {
+        await pool.query(`CREATE TABLE IF NOT EXISTS users (
+            uid TEXT PRIMARY KEY,
             name VARCHAR(150) NOT NULL,
             email VARCHAR(150) NOT NULL UNIQUE,
             password VARCHAR(100) NOT NULL,
-            dob DATE,
-            country VARCHAR(200),
-            bio TEXT,
+            date_joined TIMESTAMPTZ DEFAULT NOW()
+        )`);
+        console.log("users table created")
+        await pool.query(`CREATE TABLE IF NOT EXISTS profile (
+            pid BIGSERIAL NOT NULL,
             picture TEXT,
-            default_pic TEXT DEFAULT 'https://i.ibb.co/TRM37z9/image-not-found.png'
+            default_picture TEXT DEFAULT '',
+            location VARCHAR(100),
+            bio TEXT,
+            facebook VARCHAR(100),
+            twitter VARCHAR(100),
+            instagram VARCHAR(100),
+            uid TEXT REFERENCES users(uid) ON DELETE CASCADE,
+            PRIMARY KEY (uid, pid)
         )`);
-    })
-    .then(function() {
-        console.log("users table created");
-        pool.query(`CREATE TABLE IF NOT EXISTS movies (
-            imdbID VARCHAR(10) NOT NULL PRIMARY KEY,
+        console.log("profile table created")
+        await pool.query(`CREATE TABLE IF NOT EXISTS movies_meta (
+            imdbID VARCHAR(20) NOT NULL PRIMARY KEY,
             title TEXT NOT NULL,
-            plot TEXT ,
             imdbRating REAL,
-            actors TEXT,
-            genre TEXT,
-            released TEXT,
-            director TEXT,
+            year TEXT,
             poster TEXT NOT NULL
-        )`);
-    })
-    .then(function() {
-        console.log("movies table created");
-        pool.query(`CREATE TABLE IF NOT EXISTS list_meta (
-            list_id BIGSERIAL NOT NULL PRIMARY KEY,
-            title TEXT NOT NULL,
-            author INT NOT NULL REFERENCES  users(uid)
+        )`)
+        console.log("movies_meta table created")
+        await pool.query(`CREATE TABLE IF NOT EXISTS movies_detail (
+            imdbID VARCHAR(20) REFERENCES movies_meta(imdbID) ON DELETE RESTRICT,
+            metadata JSONB NOT NULL,
+            PRIMARY KEY (imdbID, metadata)
+        )`)
+        console.log("movies_detail table created");
+        await pool.query(`CREATE TABLE IF NOT EXISTS blogs (
+            blog_id BIGSERIAL NOT NULL UNIQUE,
+            blog_title TEXT NOT NULL,
+            blog_content TEXT NOT NULL,
+            plot_rating INT CHECK (plot_rating >= 0 AND plot_rating <= 10) DEFAULT 5,
+            acting_rating INT CHECK (acting_rating >= 0 AND acting_rating <= 10) DEFAULT 5,
+            direction_rating INT CHECK (direction_rating >= 0 AND direction_rating <= 10) DEFAULT 5,
+            created TIMESTAMPTZ DEFAULT Now(),
+            imdbID VARCHAR(20) NOT NULL REFERENCES movies_meta(imdbID) ON DELETE RESTRICT,
+            uid TEXT NOT NULL REFERENCES users(uid) ON DELETE CASCADE,
+            PRIMARY KEY (uid, imdbID)
             )`)
-        })
-    // .then(function() {
-    //     console.log("list_meta table created");
-    //     pool.query(`CREATE TABLE IF NOT EXISTS list_item (
-    //         id BIGSERIAL NOT NULL PRIMARY KEY,
-    //         l_id INT NOT NULL REFERENCES list_meta(list_id),
-    //         movie VARCHAR(10) NOT NULL REFERENCES movies(imdbID)
-    //         )`)
-    //     })
-    // .then(function() {
-    //         console.log("list item table created")    
-    // })
-    .catch(err => {
-        console.log("DB table creation error");
-        console.log(err);
-        console.log("DB table creation error");
-    })
+        console.log("blogs table created");
+        await pool.query(`CREATE TABLE IF NOT EXISTS recommendations (
+            imdbID VARCHAR(20) NOT NULL REFERENCES movies_meta(imdbID) ON DELETE RESTRICT,
+            uid TEXT NOT NULL REFERENCES users(uid) ON DELETE CASCADE,
+            PRIMARY KEY (uid, imdbID)
+            )`)
+        console.log("recommendations table created");
+    }
+    catch(err) {
+        console.log("DB Creation error : ",err);
+    }
+};
+
+initDB();
 
 module.exports = pool;
