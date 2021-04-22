@@ -15,32 +15,21 @@
                 moovey••
             </strong>
             <ul class="flex flex-col md:flex-row items-center justify-between w-max mx-auto md:ml-auto md:mx-0">
-                <!-- active -->
-                <% if(loggedIn) {%>
-                    <li class="m-3 md:mx-3 md:my-0 items-center flex">
-                        <strong class="tracking-tighter capitalize px-0.5 font-light text-sm cursor-pointer flex-shrink-0 border-transparent border-b-2 hover:border-current">
-                            my profile
-                        </strong>
-                    </li>
-                    <% } %>
                 <li class="m-3 md:mx-3 md:my-0 flex items-center">
                     <strong class="tracking-tighter capitalize px-0.5 border-current border-b-2 text-sm cursor-pointer flex-shrink-0 font-light">
                         articles &amp; lists
                     </strong>
                 </li>
                 <li class="m-3 md:mx-3 md:my-0 flex items-center">
-                    <strong class="tracking-tighter capitalize px-0.5 font-light text-sm cursor-pointer flex-shrink-0 border-transparent border-b-2 hover:border-current">
-                        reviewers
-                    </strong>
+                    <a href="/reviewers" class="outline-none focus:outline-none">
+                        <strong class="tracking-tighter capitalize px-0.5 font-light text-sm cursor-pointer flex-shrink-0 border-transparent border-b-2 hover:border-current">
+                            reviewers
+                        </strong>
+                    </a>
                 </li>
                 <% if(loggedIn) {%>
-                <li class="m-3 md:mx-3 md:my-0 items-center flex">
-                    <strong class="tracking-tighter capitalize px-0.5 font-light text-sm cursor-pointer flex-shrink-0 border-transparent border-b-2 hover:border-current">
-                        my watchlist
-                    </strong>
-                </li>
                 <li class="absolute bottom-4 flex items-center justify-center md:relative md:bottom-auto md:mx-3 md:my-0">
-                    <a href="/logout" class="text-xs md:tracking-tighter capitalize md:md:px-0.5 font-light md:text-sm cursor-pointer flex-shrink-0 border-transparent border-b-2 md:hover:border-current">log out</a>
+                    <a href="/logout" class="text-xs md:tracking-tighter capitalize md:md:px-0.5 font-light md:text-sm cursor-pointer flex-shrink-0 border-transparent border-b-2 hover:border-current">log out</a>
                 </li>
                 <% } %>
             </ul>
