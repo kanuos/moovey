@@ -115,9 +115,11 @@ exports.submitRegisterForm = async function(req, res) {
         
         // insert user to DB
         const uid = uuid()
-        const user = await pool.query("INSERT INTO users (uid, name, email, password) VALUES ($1, $2, $3, $4) RETURNING *", [uid, name, email, hashedPassword]);         
-
-        return res.redirect(301, `/?success=${user.rows[0]?.uid}`)        
+        let user = await pool.query("INSERT INTO users (uid, name, email, password) VALUES ($1, $2, $3, $4) RETURNING *", [uid, name, email, hashedPassword]);         
+        let profile = await pool.query("INSERT INTO profile (uid) VALUES ($1) RETURNING *", [user.rows[0].uid]);         
+        const userProfile = {...user.rows[0], ...profile.rows[0]}
+        console.log(userProfile);
+        return res.redirect(301, `/?success=${userProfile.uid}`)        
     }
     catch(err){
         return res.render("pages/landing", 
@@ -149,11 +151,12 @@ exports.handleLogOut = function(req, res) {
 
 exports.showMyProfile = async function(req, res) {
     try {
-        const {rows} = await pool.query(`SELECT * FROM users WHERE uid = $1`, [req.session.uid]);
+        const {rows} = await pool.query(`SELECT * FROM users INNER JOIN profile ON users.uid = profile.uid WHERE users.uid = $1`, [req.session.uid]);
         const showProfile = rows[0].email === req.session.email;
         delete rows[0].password;
         rows[0].showProfile = showProfile
         rows[0].date_joined = readableDateStringFormat(rows[0].date_joined)
+        rows[0].blogs = []
         return res.render("pages/user_profile", 
             {
                 loggedIn : true,
@@ -161,27 +164,41 @@ exports.showMyProfile = async function(req, res) {
                 profile: rows[0]
             })
     }
-    catch(er){
-
+    catch(err){
+        console.log(err);
     }
 }
 
 exports.showEditProfilePage = async function(req, res) {
     try {
-        const {rows} = await pool.query(`SELECT * FROM users WHERE uid = $1`, [req.session.uid]);
-        return res.render("pages/edit_profile", 
+        const {rows} = await pool.query(`SELECT * FROM users JOIN profile ON profile.uid = users.uid WHERE users.uid = $1`, [req.session.uid]);
+        delete rows[0].password
+        console.log(rows[0]);
+        return res.render("pages/edit-profile", 
             {
                 title : `${req.session.userName}'s Profile`, 
-                loggedIn : false,
+                loggedIn : true,
                 user: rows[0]
             })
     }
     catch(er){
-
+        console.log("edit profile err, ", er);
     }
 }
 
 exports.submitEditProfile = async function(req, res) {
+    //   {
+    //     new_name: '',
+    //     location: '',
+    //     bio: '',
+    //     facebook: '',
+    //     twitter: '',
+    //     'your instagram account link': 'sounak.theone@gmail.com',
+    //     current_password: '1234',
+    //     new_password: '',
+    //     confirm_password: ''
+    //   } null
+
     const valuesArray = [...Object.values(req.body)?.map(el => el.trim() ?? "")]
     try {
         if (req.files?.picture?.name) {
@@ -227,9 +244,12 @@ exports.reviewerList = async function(req, res) {
 exports.reviewerProfile = async function(req, res) {
     const {id} = req.params, loggedUser = req.session?.email;
     try {
-        const {rows} = await pool.query("SELECT * FROM users WHERE uid = $1", [id]);
+        const {rows} = await pool.query("SELECT * FROM users INNER JOIN profile ON users.uid = profile.uid WHERE users.uid = $1", [id]);
         if (loggedUser && loggedUser === rows[0].email) {
             return res.redirect('/dashboard');
+        }
+        if(rows[0]){
+            delete rows[0].password
         }
         return res.render("pages/uder_profile", 
             {

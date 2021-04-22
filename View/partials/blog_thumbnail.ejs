@@ -1,0 +1,31 @@
+<article class="relative w-11/12 max-w-md mx-auto my-3 text-gray-600 shadow-lg bg-gray-50">
+    <% if(blog.image) { %>
+    <img
+        class="h-80 w-full block object-cover" 
+        src="<%= blog.image %>" alt="">
+    <% } else { >
+    <img
+        class="h-80 w-full block object-cover" 
+        src="/static/assets/placeholder.jpg" alt="">
+    <% } %>
+    <div class="flex flex-col items-center justify-center bg-gray-700 text-white absolute w-min py-1 px-3 -top-2 -left-2 shadow-md">
+        <span class="font-semibold">
+            <%= blog.created.date %>
+        </span>
+        <small class="uppercase text-xs">
+            <%= blog.created.month %>
+        </small>
+    </div>
+    <strong class="block text-center text-xl text-gray-500 font-light font-special capitalize my-4 break-words px-2">
+        <%= blog.title %>
+    </strong>
+    <span class="block uppercase text-center px-2 tracking-wider">
+        <%= blog.blog_title %> 
+    </span>
+    <p class="leading-relaxed my-2 text-center text-sm px-2">
+       <%= blog.blog_content?.slice(0, 150) %> <% if (blog.blog_content?.length > 150 ) { %>...<% } %>
+    </p>
+    <a href="#" class="text-center uppercase block w-max my-6 mx-auto text-gray-400 hover:text-gray-900 text-sm tracking-wide">
+        keep reading...
+    </a>
+</article>
