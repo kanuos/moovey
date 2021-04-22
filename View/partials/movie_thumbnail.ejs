@@ -1,0 +1,9 @@
+<article class="relative my-4 mx-auto shadow-xl hover:scale-105 hover:shadow-2xl transform transition-all flex-shrink-0">
+    <img src="<%= movie.poster %>" 
+    class="h-64 w-60 block object-cover">
+    <div class="flex flex-col h-14 px-2 py-1">
+        <strong class="capitalize text-gray-600 text-sm"><%= movie.title %></strong>
+        <small class="text-xs text-gray-400"><%= movie.genres %></small>
+    </div>
+    <span class="absolute bottom-5 -right-3 bg-pink-600 p-2 text-white font-semibold rounded-full shadow-2xl "><%= movie.imdbRating %></span>
+</article>

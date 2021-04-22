@@ -1,0 +1,21 @@
+<article class="w-5/6 max-w-3xl my-3 mx-auto relative h-80 bg-gray-50 shadow-md items-center flex flex-col justify-center p-4 md:hover:shadow-lg md:hover:scale-105 md:hover:-translate-y-px md:transform transform-none transition-all">
+    <div class="w-full flex flex-col justify-center items-center max-w-lg">
+        <div class="flex flex-col items-center uppercase absolute -top-2 -left-2 bg-gray-700 text-white shadow-md px-2 py-1">
+            <span>
+                <%= list.created.date %>
+            </span>
+            <small class="text-xs">
+                <%= list.created.month %>
+            </small>
+        </div>
+        <strong class="font-special text-2xl text-center mx-auto capitalize text-gray-700 font-light mb-4">
+            <%= list.title %>
+        </strong>
+        <p class="text-center leading-relaxed text-sm text-gray-500">
+            <%= list.description %>
+        </p>
+        <a href="#" class="mx-auto my-4 uppercase text-base text-gray-400 hover:text-gray-700 transition-colors">
+            read more
+        </a>
+    </div>
+</article>

@@ -8,7 +8,7 @@
              class="hidden md:block h-full w-full object-cover absolute top-0 left-0 opacity-10 lg:opacity-30">
                  <source src="/static/assets/video.mp4" type="video/mp4"/><
          </video>
-         <section class="flex flex-col justify-center items-center transform lg:-translate-y-2.5 lg:bg-white lg:z-10 lg:p-4 lg:grid lg:grid-cols-2 max-w-5xl lg:grid-rows-6 lg:h-3/4 lg:gap-x-3 lg:shadow-xl lg:rounded-md">
+         <section class="flex flex-col justify-center items-center transform lg:-translate-y-2.5 lg:bg-gray-50 lg:z-10 lg:p-4 lg:grid lg:grid-cols-2 max-w-5xl lg:grid-rows-6 lg:h-3/4 lg:gap-x-3 lg:shadow-2xl lg:rounded-md">
              
              <h1 class="flex flex-col items-center justify-center lg:col-start-2 lg:text-center lg:row-start-1 lg:row-end-2 mb-0.5">
                  <span class="text-2xl font-special capitalize text-gray-600 md:text-gray-800">
@@ -75,17 +75,6 @@
                         <img src="/static/assets/twitter.svg" class="h-6 w-6 object-cover block" alt="twitter">
                     </li>
                 </ul>
-                    <% if(profile.showProfile) { %>
-                       <div class="flex flex-col-reverse lg:flex-row items-center w-full max-w-sm mx-auto justify-evenly my-3 lg:col-start-2 lg:col-end-3">
-                           <a href="/create-new" class="bg-black flex items-center m-2 px-4 py-2 rounded hover:shadow-lg text-gray-300 hover:text-white outline-none focus:outline-none w-max max-w-xs transform hover:scale-105 transition-all hover:-translate-y-px">
-                               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-                               <span class="capitalize text-xs ml-1">
-                                   new content
-                               </span>
-                           </a>
-                       </div>
-                       <% } %>
-
              </div>
             </section>
      </header>
@@ -96,7 +85,7 @@
          <li class="sectionSelector cursor-pointer hover:text-gray-500 px-3 text-gray-400 uppercase text-sm">lists</li>
          <li class="sectionSelector cursor-pointer hover:text-gray-500 px-3 text-gray-400 uppercase text-sm">recommendations</li>
          <% if(profile.showProfile) { %>
-            <li class="sectionSelector cursor-pointer hover:text-gray-500 px-3 text-gray-400 uppercase text-sm">my watchlist</li>
+            <li class="sectionSelector cursor-pointer hover:text-gray-500 px-3 text-gray-400 uppercase text-sm">watchlist</li>
             <li class="sectionSelector cursor-pointer hover:text-gray-500 px-3 text-gray-400 uppercase text-sm">settings</li>
         <% } %>
      </ul>
@@ -107,9 +96,20 @@
              <h2 class="capitalize font-light text-4xl text-pink-600 font-special">
                  articles
              </h2>
-             <p class="leading-relaxed text-gray-500 font-light my-2 italic mb-2 pb-2 border-b-2">
-                Here's the list of all the movies you have reviewed. Sorted by date.
+             <p class="leading-relaxed text-gray-500 font-light my-2 italic mb-2 pb-2 border-b-2 text-center">
+                Here's the list of all the movies you have reviewed.
              </p>
+             <% if (profile.showProfile) { %>
+                <a href="/moovey/new-review" class="flex w-max px-4 py-2 bg-black text-center justify-center group relative mx-auto my-4 transition-all hover:scale-110 transform hover:shadow-lg">
+                    <div class="z-0 absolute top-0 left-0 h-full w-full bg-gradient-to-r from-pink-600 to-purple-700 transition-all opacity-50 transform scale-110 group-hover:opacity-0 animate-ping"></div>
+                    <div class="flex z-20 items-center justify-center text-gray-100 group-hover:text-white">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                        <span class="transition-all capitalize text-sm">
+                            new review
+                        </span>
+                    </div>
+                </a>
+            <% } %>
              <% if(profile.blogs.length > 0) {%>
                 <section class="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
                     <% profile.blogsforEach(blog => { %>
@@ -117,9 +117,11 @@
                     <% }) %>
                 </section>
             <% } else { %>
-                <p class="text-center text-xl h-40 text-gray-500 flex items-center justify-center font-light capitalize mx-auto">
-                    You haven't written a review yet.
-                </p>
+                <article class="flex flex-col items-center mx-auto my-10">
+                    <h2 class="text-center capitalize text-gray-500 font-light text-xl w-full">
+                        <%= profile.name %> hasn't reviewed a movie yet.
+                    </h2>
+                </article>
             <% } %>
 
          </main>
@@ -127,136 +129,78 @@
             <h2 class="capitalize font-light text-4xl text-pink-600 font-special">
                 my lists
             </h2>
-            <p class="leading-relaxed text-gray-500 font-light my-2 italic mb-2 pb-2">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quae, nobis! list
+            <p class="leading-relaxed text-gray-500 font-light my-2 italic mb-2 pb-2 text-center">
+                Here's all the compilation lists you have created.
             </p>
+            <% if (profile.showProfile) { %>
+                <a href="/moovey/new-list" class="flex w-max px-4 py-2 bg-black text-center justify-center group relative mx-auto my-4 transition-all hover:scale-110 transform hover:shadow-lg">
+                    <div class="z-0 absolute top-0 left-0 h-full w-full bg-gradient-to-r from-pink-600 to-purple-700 transition-all opacity-50 transform scale-110 group-hover:opacity-0 animate-ping"></div>
+                    <div class="flex z-20 items-center justify-center text-gray-100 group-hover:text-white">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                        <span class="transition-all capitalize text-sm">
+                            new list
+                        </span>
+                    </div>
+                </a>
+            <% } %>
+            <!-- if no list found -->
+            <% if (profile.lists.length === 0) {%>
+            <article class="flex flex-col items-center mx-auto my-10">
+                <h2 class="text-center capitalize text-gray-500 font-light text-xl w-full">
+                    <%= profile.name %> hasn't compiled any list yet.
+                </h2>
+            </article>
+            <% } else { %>
             <section class="w-full flex flex-col bg-gradient-to-r from-red-50 to-pink-50">
-                <!-- if no list found -->
-                <article class="flex flex-col items-center mx-auto my-10">
-                    <h2 class="text-center uppercase text-xl w-full">
-                        you don't have any lists.
-                    </h2>
-                    <span class="flex items-center text-center text-base text-gray-400">
-                        Click
-                        <a href="#" class="transition-all text-blue-400 mx-1 hover:text-blue-500 hover:underline">
-                            here
-                        </a>
-                        to create a list.
-                    </span>
-                </article>
-                <!-- else -->
-                <article class="w-5/6 max-w-3xl my-3 mx-auto relative h-80 bg-gray-50 shadow-md items-center flex flex-col justify-center p-4 md:hover:shadow-lg md:hover:scale-105 md:hover:-translate-y-px md:transform transform-none transition-all">
-                    <div class="w-full flex flex-col justify-center items-center max-w-lg">
-                        <div class="flex flex-col items-center uppercase absolute -top-2 -left-2 bg-gray-700 text-white shadow-md px-2 py-1">
-                            <span>
-                                30
-                            </span>
-                            <small class="text-xs">
-                                aug
-                            </small>
-                        </div>
-                        <strong class="font-special text-2xl text-center mx-auto capitalize text-gray-700 font-light mb-4">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        </strong>
-                        <p class="text-center leading-relaxed text-sm text-gray-500">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima consequuntur, dolore fugiat porro vitae qui.
-                        </p>
-                        <a href="#" class="mx-auto my-4 uppercase text-base text-gray-400 hover:text-gray-700 transition-colors">
-                            read more
-                        </a>
-                    </div>
-                </article>
-                <article class="w-5/6 max-w-3xl my-3 mx-auto relative h-80 bg-gray-50 shadow-md items-center flex flex-col justify-center p-4 md:hover:shadow-lg md:hover:scale-105 md:hover:-translate-y-px md:transform transform-none transition-all">
-                    <div class="w-full flex flex-col justify-center items-center max-w-lg">
-                        <div class="flex flex-col items-center uppercase absolute -top-2 -left-2 bg-gray-700 text-white shadow-md px-2 py-1">
-                            <span>
-                                30
-                            </span>
-                            <small class="text-xs">
-                                mar
-                            </small>
-                        </div>
-                        <strong class="font-special text-2xl text-center mx-auto capitalize text-gray-700 font-light mb-4">
-                            my favorite animes
-                        </strong>
-                        <p class="text-center leading-relaxed text-sm text-gray-500">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima consequuntur, dolore fugiat porro vitae qui.
-                        </p>
-                        <a href="#" class="mx-auto my-4 uppercase text-base text-gray-400 hover:text-gray-700 transition-colors">
-                            read more
-                        </a>
-                    </div>
-                </article>
-                <article class="w-5/6 max-w-3xl my-3 mx-auto relative h-80 bg-gray-50 shadow-md items-center flex flex-col justify-center p-4 md:hover:shadow-lg md:hover:scale-105 md:hover:-translate-y-px md:transform transform-none transition-all">
-                    <div class="w-full flex flex-col justify-center items-center max-w-lg">
-                        <div class="flex flex-col items-center uppercase absolute -top-2 -left-2 bg-gray-700 text-white shadow-md px-2 py-1">
-                            <span>
-                                30
-                            </span>
-                            <small class="text-xs">
-                                mar
-                            </small>
-                        </div>
-                        <strong class="font-special text-2xl text-center mx-auto capitalize text-gray-700 font-light mb-4">
-                            my favorite animes
-                        </strong>
-                        <p class="text-center leading-relaxed text-sm text-gray-500">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima consequuntur, dolore fugiat porro vitae qui.
-                        </p>
-                        <a href="#" class="mx-auto my-4 uppercase text-base text-gray-400 hover:text-gray-700 transition-colors">
-                            read more
-                        </a>
-                    </div>
-                </article>
+            <!-- else -->
+                <% profile.lists.forEach(list => { %>
+                    <%- include('../partials/list_thumbnail', {list : list})%>
+                <% }) %>
             </section>
+            <% } %>
         </main>
          <main class="tabSection w-full flex flex-col items-center p-4 justify-start h-1/2 min-h-screen bg-white">
              <h2 class="capitalize font-light text-4xl text-pink-600 font-special">
                  recommendations
              </h2>
-             <p class="leading-relaxed text-gray-500 font-light my-2 italic mb-2 pb-2 border-b-2">
-                 Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quae, nobis!
+             <p class="leading-relaxed text-gray-500 font-light my-2 italic mb-2 pb-2 border-b-2 text-center">
+                 Here's the list of movies you have recommended while reviewing. 
              </p>
-             <section class="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4">
-                 <article class="relative my-4 mx-auto shadow-xl hover:scale-105 hover:shadow-2xl transform transition-all flex-shrink-0">
-                     <img src="https://m.media-amazon.com/images/M/MV5BNzQ3OTY4NjAtNzM5OS00N2ZhLWJlOWUtYzYwZjNmOWRiMzcyXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_SX300.jpg" 
-                     class="h-64 w-60 block object-cover">
-                     <div class="flex flex-col h-14 px-2 py-1">
-                         <strong class="capitalize text-gray-600 text-sm">jurassic world</strong>
-                         <small class="text-xs text-gray-400">Action, Adventure, Sci-Fi</small>
-                     </div>
-                     <span class="absolute bottom-5 -right-3 bg-pink-600 p-2 text-white font-semibold rounded-full shadow-2xl ">8.3</span>
-                 </article>
-                 <article class="relative my-4 mx-auto shadow-xl hover:scale-105 hover:shadow-2xl transform transition-all flex-shrink-0">
-                     <img src="https://m.media-amazon.com/images/M/MV5BMTk0MDQ3MzAzOV5BMl5BanBnXkFtZTgwNzU1NzE3MjE@._V1_SX300.jpg" 
-                     class="h-64 w-60 block object-cover">
-                     <div class="flex flex-col h-14 px-2 py-1">
-                         <strong class="capitalize text-gray-600 text-sm">gone girl</strong>
-                         <small class="text-xs text-gray-400">Drama, Mystery, Thriller</small>
-                     </div>
-                     <span class="absolute bottom-5 -right-3 bg-pink-600 p-2 text-white font-semibold rounded-full shadow-2xl">8.7</span>
-                 </article>
-                 <article class="relative my-4 mx-auto shadow-xl hover:scale-105 hover:shadow-2xl transform transition-all flex-shrink-0">
-                     <img src="https://m.media-amazon.com/images/M/MV5BMTc2MTQ3MDA1Nl5BMl5BanBnXkFtZTgwODA3OTI4NjE@._V1_SX300.jpg" 
-                     class="h-64 w-60 block object-cover">
-                     <div class="flex flex-col h-14 px-2 py-1">
-                         <strong class="capitalize text-gray-600 text-sm">the martian</strong>
-                         <small class="text-xs text-gray-400">Drama, Sci-Fi, Thriller</small>
-                     </div>
-                     <span class="absolute bottom-5 -right-3 bg-pink-600 p-2 text-white font-semibold rounded-full shadow-2xl">8.3</span>
-                 </article>
-             </section>
+             <% if(profile.recommendations.length > 0) {%>
+                <section class="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4">
+                <% profile.recommendations.forEach(movie => { %>
+                    <%- include('../partials/movie_thumbnail', {movie}) %>
+                <% }) %>
+                </section>
+                <% } else { %>
+                <article class="flex flex-col items-center mx-auto my-10">
+                    <h2 class="text-center capitalize text-gray-500 font-light text-xl w-full">
+                        <%= profile.name %> hasn't recommended a movie yet.
+                    </h2>
+                </article>
+            <% } %>    
          </main>
     <% if(profile.showProfile) { %>
         <main class="tabSection w-full flex flex-col items-center p-4 justify-start h-1/2 min-h-screen bg-white max-w-xl mx-auto">
             <h2 class="capitalize font-light text-4xl text-pink-600 font-special">
-                 my watchlist
+                watchlist
             </h2>
-            <p class="leading-relaxed text-gray-500 font-light my-2 italic mb-2 pb-2 text-center">
-                 Here you will find all the movies you want to watch after reading other people's reviews. 
+            <p class="leading-relaxed text-gray-500 font-light my-2 italic mb-2 pb-2 border-b-2 text-center">
+                Here's the list of movies you plan to watch later. 
             </p>
-            <section class="w-full flex flex-col justify-center items-center md:flex-row">
-            </section>
+            <% if(profile.watchlist.length > 0) {%>
+               <section class="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4">
+               <% profile.watchlist.forEach(movie => { %>
+                   <%- include('../partials/movie_thumbnail', {movie}) %>
+               <% }) %>
+               </section>
+               <% } else { %>
+               <article class="flex flex-col items-center mx-auto my-10">
+                   <h2 class="text-center capitalize text-gray-500 font-light text-xl w-full">
+                       <%= profile.name %> doesn't have any movies in watchlist.
+                   </h2>
+               </article>
+           <% } %>
          </main>
         <main class="tabSection w-full flex flex-col items-center p-4 justify-start h-1/2 min-h-screen bg-white max-w-xl mx-auto">
             <h2 class="capitalize font-light text-4xl text-pink-600 font-special">

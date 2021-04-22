@@ -1,4 +1,10 @@
-const {minimumLength, validEmail, maximumLength, readableDateStringFormat} = require("../functions");
+const {
+    minimumLength, 
+    validEmail, 
+    maximumLength, 
+    readableDateStringFormat, 
+    titleCase
+} = require("../functions");
 const imdBB = require("imgbb-uploader");
 const fs = require("fs/promises")
 const pool = require("../_Database")
@@ -157,10 +163,13 @@ exports.showMyProfile = async function(req, res) {
         rows[0].showProfile = showProfile
         rows[0].date_joined = readableDateStringFormat(rows[0].date_joined)
         rows[0].blogs = []
+        rows[0].lists = []
+        rows[0].recommendations = []
+        rows[0].watchlist = []
         return res.render("pages/user_profile", 
             {
                 loggedIn : true,
-                title : `${req.session.userName}'s Profile`, 
+                title : `${titleCase(req.session.userName)}'s Profile`, 
                 profile: rows[0]
             })
     }
