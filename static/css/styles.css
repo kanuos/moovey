@@ -31899,184 +31899,34 @@ body::-webkit-scrollbar-thumb {
   background-color: black;
 }
 
-/* Main Section */
+/* user profile card */
 
-/* main {
-    background-image: linear-gradient(to bottom, rgba(77, 222, 179, 0.75),rgba(24, 170, 189, 0.877)), url(/static/assets/hero.jpg);
-    background-size: cover;
-    background-position: center;
-}
-.gradient-bg {
-    background-image: linear-gradient(to bottom, rgba(77, 222, 179, 0.95),rgba(24, 170, 189, 0.877)), url(/static/assets/basic.jpg);
-    background-size: cover;
-    background-position: center;
-}
-
-@media screen and (min-width: 768px) {
-    main {
-        background-image: 
-            linear-gradient(30deg,
-                rgba(10, 177, 127, 0.75),
-                rgba(24, 170, 189, 0.877) 60%,
-                rgba(255,255,255, 0.8) 60%), 
-            url(/static/assets/hero.jpg);
-    }
-}
-
-.landing, #account {
-    transform-origin: center;
-    animation: fadeIn .5s ease;
-}
-@keyframes fadeIn {
-    0% {
-        opacity: 0.5;
-        transform: scale(0);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-.animation-shape {
-    animation: shape 5s linear infinite;
-}
-.animation-shape:nth-child(1) {
-    animation-duration: 1s;
-}
-.animation-shape:nth-child(2) {
-    animation-duration: 2s;
-}
-.animation-shape:nth-child(3) {
-    animation-duration: 3s;
-}
-.animation-shape:nth-child(4) {
-    animation-duration: 4s;
-}
-.animation-shape:nth-child(5) {
-    animation-duration: 5s;
-}
-
-@keyframes shape {
-    0% {
-        transform: scale(.5) translateY(100%);
-    }
-    50% {
-        clip-path: polygon(50% 0, 100% 100%,0 100% );
-        transform: scale(1) translateY(-200%);
-    }
-    100% {
-        clip-path: circle();
-        transform: scale(2)  translateY(-700%);
-    }
-} */
-
-/* user card start */
-
-/* .user-card {
-    background: rgb(59,63,89);
-    height: 60vh;
-    width: 20rem;
-    margin: auto;
-    display: grid;
-    border-radius: .25rem;
-    grid-template-rows: repeat(5, 1fr);
-    grid-template-rows: 1fr;
-    overflow: hidden;
-    transition: all .5s ease;
-    filter: drop-shadow(0 .5px .5rem rgba(0,0,0,.25));
-}
-.user-card:hover {
-    filter: drop-shadow(0 .5px .5rem rgba(0,0,0,.5));
-}
-.user-card > img {
-    grid-row: 1/-1;
-    grid-column: 1/-1;
-    display: block;
-    object-fit: cover;
-    height: 100%;
-    width: 100%;
-    z-index: 2;
-}
-.user-card > section {
-    grid-row: 5/-1;
-    grid-column: 1/-1;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    width: 100%;
-    z-index: 1;
-    transition: none;
-}
-@media screen and (min-width: 768px) {
-    .user-card {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        backface-visibility: hidden;
-    }
-    .user-card > img {
-        position: absolute;
-        top: 0;
-        left: 0;
-        filter: grayscale(100%);
-    }
-    .user-card > section {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        transform-origin: bottom;
-        transform: translateY(-100%);
-        transition: all .5s ease;
-    }
-    .user-card:hover > img {
-        filter: grayscale(0%) blur(2px);
-        z-index: 1;
-    }
-    .user-card:hover > section {
-        top: 0;
-        z-index: 2;
-        bottom: unset;
-        transform: translateY(0%); 
-    }
-} */
-
-/* user card end */
-
-/* user profile page start */
-
-/* #fullImg {
-    background-color: rgba(59, 63, 89,.95);
-}
-.profile-body {
-    background-image: linear-gradient(rgba(24, 169, 189, .95),rgba(77, 222, 179, .9)),url(../assets/basic.jpg);
-    background-size: contain;
-    background-repeat: repeat;
-}
-.profile-header {
-    background-image: linear-gradient(160deg, rgba(24, 169, 189, .95),rgba(77, 222, 179, .9) 45%, rgba(235,235,235,.97) 45%),url(/static/assets/basic.jpg);
-    background-size: contain;
-    background-repeat: repeat;
-    overflow: hidden;
-    height: 70vh;
-}
 @media screen and (min-width:768px) {
-    .profile-header {
-        background-image: linear-gradient(90deg, rgba(59, 63, 89,.75) 25%,rgba(77, 222, 179, .9) 25%, rgba(24, 169, 189, .95) 75%, rgba(59, 63, 89,.75) 75%),url(/static/assets/basic.jpg);
-        background-size: contain;
-        background-repeat: repeat;
-        overflow: hidden;
-        height: 100vh;
-    }
-}
-@media screen and (min-width:1024px) {
-    .profile-header {
-        height: 100%;
-        background-image: none;
-    }
-} */
+  .profileCard > *{
+    transition: all .5s ease;
+    cursor: pointer;
+  }
 
-/* user profile page end */
+  .profileCard > div{
+    visibility: hidden;
+    opacity: 0;
+    transform: scale(0);
+    transform-origin: bottom;
+    transition: all .5s ease;
+  }
+
+  .profileCardContainer:hover > .profileCard:hover > div,
+    .profileCardContainer:hover > .profileCard:focus > div{
+    visibility: visible;
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .profileCardContainer:hover > .profileCard:hover > img,
+    .profileCardContainer:hover > .profileCard:focus > img{
+    transform: rotateY(180deg);
+  }
+}
 
 @media (min-width: 640px){
   .sm\:container{

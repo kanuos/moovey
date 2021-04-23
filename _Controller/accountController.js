@@ -2,6 +2,7 @@ const {
     minimumLength, 
     validEmail, 
     maximumLength, 
+    dbLikeQueryString,
     readableDateStringFormat, 
     titleCase
 } = require("../functions");
@@ -182,12 +183,12 @@ exports.showEditProfilePage = async function(req, res) {
     try {
         const {rows} = await pool.query(`SELECT * FROM users JOIN profile ON profile.uid = users.uid WHERE users.uid = $1`, [req.session.uid]);
         delete rows[0].password
-        console.log(rows[0]);
+        rows[0].date_joined = readableDateStringFormat(rows[0].date_joined)
         return res.render("pages/edit-profile", 
             {
-                title : `${req.session.userName}'s Profile`, 
+                title : `${titleCase(req.session.userName)}'s Profile`, 
                 loggedIn : true,
-                user: rows[0]
+                profile: rows[0]
             })
     }
     catch(er){
@@ -207,6 +208,7 @@ exports.submitEditProfile = async function(req, res) {
     //     new_password: '',
     //     confirm_password: ''
     //   } null
+    console.log(req.body, req.files);
 
     const valuesArray = [...Object.values(req.body)?.map(el => el.trim() ?? "")]
     try {
@@ -231,17 +233,29 @@ exports.submitEditProfile = async function(req, res) {
 }
 
 exports.reviewerList = async function(req, res) {
-    // generate all the users and return
-    const searchName = req.query?.name;
+    const searchName = req.query?.q;
+    const loggedIn = req.session?.uid;
     try {
         if(searchName) {
             const cleanedName = searchName.trim().split('+').join(' ').trim();
-            const {rows} = await pool.query("SELECT * FROM users WHERE name LIKE $1", [`%${cleanedName.toLowerCase()}%`]);
-            return res.render("pages/user_list", {title : `Search result for "${cleanedName}"`, reviewers : rows, notFound : `No result for "${cleanedName}" found.`});
+            const {rows} = await pool.query(`SELECT p.location, p.picture, u.name, COUNT(b)
+            FROM users AS u 
+            INNER JOIN profile AS p ON u.uid = p.uid
+            FULL OUTER JOIN blogs AS b ON b.uid = u.uid
+            WHERE u.name LIKE $1
+            GROUP BY p.pid, u.uid, b.blog_id, p.location, p.picture;`, 
+            [dbLikeQueryString(`%${cleanedName.toLowerCase()}%`)]);
+            
+            return res.render("pages/user_list", {title : `Search result for "${cleanedName}"`, reviewers : rows, notFound : `No result for "${cleanedName}" found.`, loggedIn});
         } 
         else {
-            const {rows} = await pool.query("SELECT * FROM users");
-            return res.render("pages/user_list", {title : 'All reviewers', reviewers : rows, notFound : "Be the first one to join!"});
+            const {rows} = await pool.query(`SELECT p.location, p.picture, u.name, COUNT(b)
+            FROM users AS u 
+            INNER JOIN profile AS p ON u.uid = p.uid
+            FULL OUTER JOIN blogs AS b ON b.uid = u.uid
+            GROUP BY p.pid, u.uid, b.blog_id, p.location, p.picture;`);
+            
+            return res.render("pages/user_list", {title : 'All reviewers', reviewers : rows, notFound : "Be the first one to join!", loggedIn});
         }
     }
     catch(err) {
