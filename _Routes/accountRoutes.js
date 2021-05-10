@@ -23,6 +23,7 @@ const {redirectToLogin, preventLoginRoute} = require("../sessionMiddleware")
 // METHODS  :   [GET]
 
  accoutRoutes.get("/", preventLoginRoute, renderDisplayRoute)
+ accoutRoutes.get("/login", preventLoginRoute, renderDisplayRoute)
  
  
  // LOGIN ROUTES

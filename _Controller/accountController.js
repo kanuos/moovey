@@ -14,13 +14,17 @@ const {v4 : uuid} = require("uuid")
 
 exports.renderDisplayRoute = async function(req, res) {
     let redirect = undefined, isLoginMode = false, isRegisterMode = false, errorMsg = null;
-    if (req.query?.success) {
+    if(req.route.path === "/login"){
+        isLoginMode = true
+    }
+    else if (req.query?.success) {
         const {rows} = await pool.query(`SELECT * FROM users`);
         if (rows[rows.length - 1]?.uid === req.query.success) {
             redirect = "Account created successfully. Log in to continue"
             isLoginMode = true
         } 
-    } else if (req.query?.redirect) {
+    } 
+    else if (req.query?.redirect) {
         redirect = "You are not logged in or your session has expired. Please log in to continue."
         isLoginMode = true
     }
