@@ -1,9 +1,9 @@
-<article class="relative my-4 mx-auto shadow-xl hover:scale-105 hover:shadow-2xl transform transition-all flex-shrink-0">
-    <img src="<%= movie.poster %>" 
-    class="h-64 w-60 block object-cover">
-    <div class="flex flex-col h-14 px-2 py-1">
+<article class="relative my-4 mx-auto shadow-xl hover:scale-105 hover:shadow-2xl transform transition-all flex-shrink-0 rounded-md w-60 bg-white">
+    <img src="<% if(movie.poster === 'N/A') { %>/static/assets/placeholder.jpg <% } else { %> <%= movie.poster %> <% } %>" 
+    class="h-80 w-full block object-cover rounded-t-md">
+    <div class="flex flex-col p-2 h-20">
         <strong class="capitalize text-gray-600 text-sm"><%= movie.title %></strong>
-        <small class="text-xs text-gray-400"><%= movie.genres %></small>
+        <span class="capitalize text-gray-500 text-xs"><%= movie.type %></span>
     </div>
-    <span class="absolute bottom-5 -right-3 bg-pink-600 p-2 text-white font-semibold rounded-full shadow-2xl "><%= movie.imdbRating %></span>
+    <small class="absolute -top-2 -left-2 text-xs py-1 px-3 text-white bg-pink-600"><%= movie.year %></small>
 </article>

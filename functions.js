@@ -63,7 +63,7 @@ const readableDateStringFormat = (dateStr = Date.now()) => {
 }
 
 const dbLikeQueryString = string => {
-    return string.toLowerCase().trim().split(" ").join("%");
+    return `'%${string.toLowerCase().trim()}%'`;
 }
 
 const reformatMovieURL = url => {
@@ -71,8 +71,29 @@ const reformatMovieURL = url => {
     return url;
 }
 
+const slugify = str => {
+    return str.split(" ").join("+")
+}
+
+const formatAPIResponse = obj => {
+    const json = {}
+    for (let key in obj){
+        if (key === "Poster"){
+            json[key.toLowerCase()]  = reformatMovieURL(obj[key])
+        }
+        else{
+            json[key.toLowerCase()]  =obj[key]
+        }
+    }
+    return json
+}
+
+
+
 module.exports = {
+    formatAPIResponse,
     getMovieTitles, 
+    slugify,
     getFullImage,
     minimumLength,
     validEmail,

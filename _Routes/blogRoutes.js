@@ -3,20 +3,20 @@ const blogRoute = require("express").Router();
 const {redirectToLogin} = require("../sessionMiddleware");
 
 // controller methods
-const {getUserDashboard, getBlogCreateForm, searchMovie} = require("../_Controller/blogController")
+const {getBlogCreateForm, searchMovie} = require("../_Controller/blogController")
 
 
-blogRoute.get("/",  (req, res) => {
-    // return res.render("pages/landing", {title: "Your personal movie universe"})
-    return res.json("show all blogs")
-})
+blogRoute.get("/", redirectToLogin, searchMovie)
 
-blogRoute.post("/",  (req, res) => {
+blogRoute.post("/",redirectToLogin,  (req, res) => {
     // return res.render("pages/landing", {title: "Your personal movie universe"})
     return res.json({msg: "write new blog", req})
 })
 
-blogRoute.get("/new",  (req, res) => getBlogCreateForm(req, res))
+blogRoute.get("/new-review", redirectToLogin, getBlogCreateForm)
+
+
+blogRoute.post("/search", redirectToLogin, searchMovie)
 
 
 blogRoute.get("/user/:id",  (req, res) => {
@@ -30,8 +30,6 @@ blogRoute.get("/:id",  (req, res) => {
 })
 
 // blogRoute.get("/dashboard", redirectToLogin, (req, res) => getUserDashboard(req, res))
-
-blogRoute.post("/search", (req, res) => searchMovie(req, res))
 
 
 module.exports = blogRoute;

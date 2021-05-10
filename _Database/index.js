@@ -35,9 +35,9 @@ async function initDB() {
         await pool.query(`CREATE TABLE IF NOT EXISTS movies_meta (
             imdbID VARCHAR(20) NOT NULL PRIMARY KEY,
             title TEXT NOT NULL,
-            imdbRating REAL,
             year TEXT,
-            poster TEXT NOT NULL
+            poster TEXT NOT NULL,
+            type TEXT
         )`)
         console.log("movies_meta table created")
         await pool.query(`CREATE TABLE IF NOT EXISTS movies_detail (

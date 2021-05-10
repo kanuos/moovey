@@ -1,142 +1,197 @@
 const fn = require("../functions");
 const pool = require("../_Database");
 const axios = require('axios');
+const format = require("pg-format");
 
 
-// return all the blogs 
-// public view
-exports.getAllBlogs = function (req, res) {
-    return res.json("Show all blogs.. public blogs")
-}
-
-// return blog with id 
-// public view
-exports.getBlogWithID = function (req, res) {
-    return res.json("Show blog with id: " + req.params.id)
-}
-
-// return the user dashboard 
-// private view
-exports.getUserDashboard = function (req, res) {
-    let {userName} = req.session;
-    userName = fn.titleCase(userName);
-    const context = {
-        title : `${userName}'s dashboard`,
-        user : userName
+exports.getAllBlogs = async function(req, res) {
+    try{
+        const {rows} = await pool.query("SELECT * FROM blogs");
+        const context = {
+            title : `Our moovey reviews `,
+            loggedIn : req.session?.uid,
+            message : "Search keyword cannot be empty.",
+            data : rows ?? []
+        }
+        return res.render("pages/search_movie",context)
     }
-    return res.render("pages/dashboard",context)
-}
-
-// return the movie search UI 
-// private view
-exports.getBlogCreateForm = function (req, res) {
-    const context = {
-        title : `Search Movie`,
+    catch(err){
+        return res.redirect("/dashboard")
     }
-    return res.render("pages/newReview",context)
 }
 
-async function searchMovieInDB(keyword) {
+exports.getBlogCreateForm = async function (req, res) {
+    // since this comes after search movie. the imdbid should already be in movies_meta
+    try{
+        const {imdbID} = req.query;
+        let context;
+        // if imdbid is not present in the request
+        const movie = await searchMovieInDB(imdbID, true);
+        console.log(movie);
+        if (!movie.length){
+            return res.redirect("/pageNotFound")
+        }
+        // imdbid is already present in movies_meta
+        // search if movie detail exists in db
+        const movies = await getMovieDetailFromDB(imdbID)
+        if (movies.length > 0){
+            context = {
+                title : `Search Movie`,
+                loggedIn : true,
+                message : "",
+                data : movies[0]
+            }
+            return res.render("pages/blog_create_form",context)
+        }
+        // data doesn't exist in movies_detail table
+        const data = await getMovieDetailFromAPI(imdbID) 
+        context = {
+            title : `Search Movie`,
+            loggedIn : true,
+            message : "",
+            data
+        }
+        return res.render("pages/blog_create_form",context)
+    }
+    catch(err){
+        console.log(err);
+        return res.redirect("/moovey/")
+    }
+}
+
+async function searchMovieInDB(keyword, searchById=false) {
     try {
-        const {rows} = 
-        await pool.query("SELECT * FROM movies WHERE LOWER(title) LIKE $1", 
-        [`%${fn.dbLikeQueryString(keyword)}%`]);
+        let sql;
+        if (searchById){
+            sql = format("SELECT * FROM movies_meta WHERE imdbid = '%s'",keyword)
+        }
+        else{
+            sql =format("SELECT * FROM movies_meta WHERE LOWER(title) LIKE %s",fn.dbLikeQueryString(keyword))
+        }
+        const {rows} =  await pool.query(sql);
+        console.log(rows);
         return rows;
     }
     catch(err){
-        console.log("search movie in db error");
+        return searchById ? null : []
     }
 }
 
-async function searchMovieFromAPI(keyword) {
+async function searchMovieFromAPI(keyword, searchById=false) {
     try {
-        const response = await axios({
-            method : 'GET',
-            url : `http://www.omdbapi.com/?apikey=${process.env.MOVIE_API_KEY}&s=${fn.slugify(keyword)}`
-        })
-        const {data} = response;
-        if (data.Error){
-            return [];
-        }
-        storeMovieToDB(data.Search);
-        return data.Search;
-    }
-    catch(err){
-        console.log(err);
-    }
-}
-
-exports.getMovieDetailFromAPI = async function(req, res){
-    try {
-        const {imdbid} = req.body;
-        if(!imdbid.trim().length > 0) {
-            return res.status(403).json({
-                data : [],
-                error : true
-            })
-        }
+        console.log("search movies from api, ", keyword, searchById)
+        const url = searchById ? `http://www.omdbapi.com/?apikey=${process.env.MOVIE_API_KEY}&i=${keyword}` : `http://www.omdbapi.com/?apikey=${process.env.MOVIE_API_KEY}&s=${keyword}` 
         const {data} = await axios({
             method : 'GET',
-            url : `http://www.omdbapi.com/?apikey=${process.env.MOVIE_API_KEY}&i=${imdbid}`
+            url,
         })
-        // if data is not empty update the movies db with imdbid
-        if (data.hasOwnProperty('Plot') && data.hasOwnProperty('imdbRating')){
-            const {rows} = await pool.query(`UPDATE movies SET 
-            plot = $1, imdbRating = $2, actors = $3, genre = $4, released = $5,
-            director = $6 WHERE imdbID = $7 RETURNING *`, 
-            [
-                data.Plot,data.imdbRating, JSON.stringify(data.Actors), 
-                JSON.stringify(data.Genre), JSON.stringify(data.Released),
-                JSON.stringify(data.Director), imdbid
-            ])
-            return res.status(200).json({
-                data: rows[0],
-                error: false
-            });
+        console.log(data, url);
+        if (!data || data.Error){
+            throw data.Error
         }
+        if (searchById){
+            const dataArray = [data];
+            return await storeMovieToDB(dataArray);
+        }
+        return await storeMovieToDB(data.Search);
     }
     catch(err){
-        console.log('get movie detail error');
         console.log(err);
-        console.log('get movie detail error');
-        return res.status(400).json(err)
+        return null;
+    }
+}
+
+async function getMovieDetailFromDB(imdbid){
+    try{
+        const {rows} = await pool.query("SELECT * FROM movies_meta INNER JOIN movies_detail ON movies_meta.imdbid = movies_detail.imdbid WHERE movies_meta.imdbid = $1", [imdbid])
+        return rows;
+    }
+    catch{
+        return null
+    }
+}
+
+async function getMovieDetailFromAPI(imdbid){
+    try {
+        const {data} = await axios({
+            method : 'GET',
+            url : `http://www.omdbapi.com/?apikey=${process.env.MOVIE_API_KEY}&i=${imdbid}&plot=full`
+        })
+        if (data.Response === "False"){
+            throw Error
+        }
+        const movie = await pool.query("INSERT INTO movies_detail (imdbid, metadata) VALUES ($1, $2) RETURNING *", [imdbid, fn.formatAPIResponse(data)]);
+        return movie?.rows[0];
+    }
+    catch{
+        return null;
     }
 }
 
 async function storeMovieToDB(items){
-    console.log(items);
-    try {
-        items.forEach(async ({Poster,Title,imdbID}) => {
-            const {rows} = await pool.query("SELECT * FROM movies WHERE imdbID = $1", [imdbID]);
-            if(rows.length === 0){
-                await pool.query("INSERT INTO movies (imdbID, title, poster) VALUES ($1,$2,$3)", 
-                [imdbID,Title.toLowerCase() ,Poster])
-            }
+    if (items?.length > 1){
+        valuesArray = items.map(item => {
+            return Object.values(item)
         })
-    }
-    catch(err){
-        console.log("store to db error ",err);
+    } 
+    try {
+        const sql = format("INSERT INTO movies_meta (title, year, imdbID, type, poster) VALUES %L ON CONFLICT (imdbID) DO NOTHING RETURNING *", valuesArray)
+        const {rows} = await pool.query(sql);
+        console.log(rows);
+        return rows;
+        }
+    catch(err){            
+        return null;
     }
 }
-
  
 exports.searchMovie = async function(req, res) {
     try {
         const {keyword} = req.body;
-        if(!keyword){
-            return res.status(400).json({message: "Keyword cannot be empty"})
+        let key = fn.slugify(keyword)
+        if(!key){
+            const context = {
+                title : `Search `,
+                loggedIn : true,
+                message : "Search keyword cannot be empty.",
+                data : []
+            }
+            return res.render("pages/search_movie",context)
         }
         // check the database first
         const rows = await searchMovieInDB(keyword);
-        if(rows.length > 0) {
-            return res.status(200).json({
-                data : rows,
-                dbMode : true
-            })
+        if(rows?.length > 0) {
+            const context = {
+                title : `Search | ${keyword}`,
+                loggedIn : true,
+                message : "",
+                data : rows ?? [],
+            }
+            console.log(keyword, " is in db");
+            return res.render("pages/search_movie",context)
         }
-        return res.status(200).json({data : await searchMovieFromAPI(keyword), dbMode: false})
+        const data = await searchMovieFromAPI(key);
+        const context = {
+            title : `Search | ${keyword}`,
+            loggedIn : true,
+            message : "",
+            data,
+        }
+        return res.render("pages/search_movie",context)
     }   
     catch(err){
-        return res.status(500).json({message: "Something went wrong", err})
+        console.log(err);
+        const context = {
+            title : `Search`,
+            loggedIn : true,
+            message : err ?? "",
+            data : []
+        }
+        return res.render("pages/search_movie",context)
     }
+}
+
+
+exports.addNewReview = async function(req, res) {
+
 }
