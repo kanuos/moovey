@@ -188,10 +188,12 @@ exports.showEditProfilePage = async function(req, res) {
         const {rows} = await pool.query(`SELECT * FROM users JOIN profile ON profile.uid = users.uid WHERE users.uid = $1`, [req.session.uid]);
         delete rows[0].password
         rows[0].date_joined = readableDateStringFormat(rows[0].date_joined)
+        console.log("show edit page for ", rows[0]);
         return res.render("pages/edit-profile", 
             {
                 title : `${titleCase(req.session.userName)}'s Profile`, 
                 loggedIn : true,
+                authorized : req.session.uid === rows[0].uid ? true: false,
                 profile: rows[0]
             })
     }
@@ -242,23 +244,18 @@ exports.reviewerList = async function(req, res) {
     try {
         if(searchName) {
             const cleanedName = searchName.trim().split('+').join(' ').trim();
-            const {rows} = await pool.query(`SELECT p.location, p.picture, u.name, COUNT(b)
-            FROM users AS u 
-            INNER JOIN profile AS p ON u.uid = p.uid
-            FULL OUTER JOIN blogs AS b ON b.uid = u.uid
-            WHERE u.name LIKE $1
-            GROUP BY p.pid, u.uid, b.blog_id, p.location, p.picture;`, 
+            const {rows} = await pool.query(`SELECT u.uid, name, picture, count(b.blog_id) AS blogs
+            FROM users AS u INNER JOIN profile AS p ON u.uid = p.uid LEFT JOIN blogs AS b ON b.uid = u.uid
+            GROUP BY u.uid, name, picture WHERE name LIKE $1;`, 
             [dbLikeQueryString(`%${cleanedName.toLowerCase()}%`)]);
             
             return res.render("pages/user_list", {title : `Search result for "${cleanedName}"`, reviewers : rows, notFound : `No result for "${cleanedName}" found.`, loggedIn});
         } 
         else {
-            const {rows} = await pool.query(`SELECT p.location, p.picture, u.name, COUNT(b)
-            FROM users AS u 
-            INNER JOIN profile AS p ON u.uid = p.uid
-            FULL OUTER JOIN blogs AS b ON b.uid = u.uid
-            GROUP BY p.pid, u.uid, b.blog_id, p.location, p.picture;`);
-            
+            const {rows} = await pool.query(`SELECT u.uid, name, picture, count(b.blog_id) AS blogs
+            FROM users AS u INNER JOIN profile AS p ON u.uid = p.uid LEFT JOIN blogs AS b ON b.uid = u.uid
+            GROUP BY u.uid, name, picture`);
+        
             return res.render("pages/user_list", {title : 'All reviewers', reviewers : rows, notFound : "Be the first one to join!", loggedIn});
         }
     }
@@ -278,9 +275,11 @@ exports.reviewerProfile = async function(req, res) {
         if(rows[0]){
             delete rows[0].password
         }
-        return res.render("pages/uder_profile", 
+        console.log(rows[0],loggedUser,req.session?.uid === rows[0].uid);
+        return res.render("pages/user_profile", 
             {
-                loggedIn : false,
+                loggedIn : loggedUser,
+                authorized : req.session?.uid === rows[0].uid,
                 title : ``, 
                 profile: rows[0] ?? []
             })
