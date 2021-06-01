@@ -22,7 +22,7 @@ const getFullImage = imageURL => {
     https://m.media-amazon.com/images/M/MV5BOTY4YjI2N2MtYmFlMC00ZjcyLTg3YjEtMDQyM2ZjYzQ5YWFkXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX300.jpg
     */
    if (imageURL.includes("._V1_SX300"))
-        return imageURL.replaceAll("._V1_SX300")
+        return imageURL.replace("._V1_SX300")
     return imageURL;
 }
 
@@ -47,7 +47,6 @@ const titleCase = input => {
 }
 
 const readableDateStringFormat = (dateStr = Date.now()) => {
-    // Wed Apr 21 2021 12:32:29 GMT-0400 (Eastern Daylight Time)
     const dateObj = new Date(dateStr);
     let suffix = "th";
     if (parseInt(dateObj.getDate()) % 10 === 1) { suffix = "st"}
@@ -57,9 +56,17 @@ const readableDateStringFormat = (dateStr = Date.now()) => {
     return {
         date : dateObj.getDate() < 10 ? `0${dateObj.getDate()}` : dateObj.getDate(),
         year : dateObj.getFullYear(),
-        month : MONTHS[dateObj.getMonth()],
+        month : monthInWords(dateObj.getMonth()),
         suffix
     }
+}
+
+const monthInWords = month => {
+    return MONTHS[month]
+}
+
+const doubleDigitDate = date => {
+    return (""+date).padStart(2,"0")
 }
 
 const dbLikeQueryString = string => {
@@ -67,12 +74,14 @@ const dbLikeQueryString = string => {
 }
 
 const reformatMovieURL = url => {
-    url = url.replace("._V1_SX300", '');
+    if (url.includes("._V1_SX300")){
+        url = url.replace("._V1_SX300", '');
+    }
     return url;
 }
 
 const slugify = str => {
-    return str.split(" ").join("+")
+    return str?.split(" ").join("+")
 }
 
 const formatAPIResponse = obj => {
@@ -101,5 +110,7 @@ module.exports = {
     reformatMovieURL,
     dbLikeQueryString,
     maximumLength,
-    readableDateStringFormat
+    readableDateStringFormat,
+    monthInWords,
+    doubleDigitDate
 }

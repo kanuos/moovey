@@ -1,6 +1,10 @@
 
 module.exports = {
-  purge: [],
+  // purge: [],
+  purge: {
+    enabled : true,
+    content: ['View/pages/*.ejs', 'View/partials/*.ejs']
+  },
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
@@ -8,16 +12,17 @@ module.exports = {
         'title' : ['Quicksand'],
         'regular' : ['Poppins'],
       },
-      colors : {
-        dark : '#3B3F59',
-        primary : '#4DDEB3',
-        secondary : '#18A9BD',
-        light : '#EBEBEB'
+      height : {
+        "half-vh" : "50vh",
+        "65vh" : "65vh"
       }
     },
   },
   variants: {
-    extend: {},
+    extend: {
+      scale : ["group-hover"],
+      translate : ["group-hover"],
+    },
   },
   plugins: [],
 }
