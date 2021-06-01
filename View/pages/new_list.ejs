@@ -1,0 +1,70 @@
+<%- include('../partials/head') %>
+
+<body class="min-h-screen font-regular relative bg-white">
+    <%- include('../partials/fixed_video_bg') %>
+    <%- include('../partials/navbar') %>
+
+    <header class="p-2 pt-14 h-screen flex flex-col items-center justify-center">
+        <strong class="text-xl text-pink-600 font-regular font-thin capitalize">
+            Hi <%= loggedIn %>,
+        </strong>
+        <h1 class="font-title text-3xl capitalize text-center">
+            <% if (formTitle) { %><%= formTitle %><% } else { %>
+            Create New List
+            <% } %>
+        </h1>
+        <small class="text-xs text-center block text-gray-400 tracking-wide w-5/6 max-w-xl break-words mx-auto my-2 font-light">
+            <% if (message.length > 0) { %>
+                <%= message %>
+            <% } %>
+        </small>
+        <form 
+            autocomplete="off"
+            aria-autocomplete="none"
+            method="POST"
+            action="<%= actionUrl %>" 
+            class="w-11/12 my-2 max-w-lg mx-auto flex flex-col items-center justify-self-center relative">
+            <section class="flex flex-col w-full">
+                <label for="title" class="m-1.5 text-sm font-regular text-gray-600 capitalize">Title</label>
+                <input 
+                    type="text" 
+                    name="title"
+                    id="title"
+                    required
+                    <% if (defaultData) { %>
+                        value="<%= defaultData.title %>"
+                    <% } %>
+                    placeholder="Your list title here"
+                    class="p-2.5 text-sm w-full block rounded-md shadow-md outline-none focus:outline-none focus:shadow-2xl focus:scale-x-105 transform transition-all duration-200 focus:text-gray-600 focus:placeholder-gray-600 text-black">
+            </section>
+            <section class="flex flex-col w-full my-2">
+                <label for="description" class="m-1.5 text-sm font-regular text-gray-600 capitalize">description</label>
+                <textarea 
+                    type="text" 
+                    name="description"
+                    id="description"
+                    maxlength="150"
+                    placeholder="Your list description here (optional)"
+                    class="p-2.5 text-sm w-full block rounded-md shadow-md outline-none focus:outline-none focus:shadow-2xl focus:scale-x-105 transform transition-all duration-200 focus:text-gray-600 focus:placeholder-gray-600 text-black resize-none h-40"><% if (defaultData) { %><%= defaultData.description %><% } %></textarea>
+            </section>
+            <button class="my-2 px-6 py-2 bg-black text-white rounded-sm shadow-sm flex items-center justify-center" type="submit">
+                <% if(!defaultData) {%>
+                <i class="fas fa-plus mr-2 text-xs"></i>
+                <span class="uppercase">
+                        add
+                </span>
+                <% } else { %>
+                <i class="fas fa-pen mr-2 text-xs"></i>
+                <span class="uppercase">
+                    edit
+                </span>
+                <% }  %>
+            </button>
+        </form>
+    </header>
+
+    <script src="/static/js/index.js"></script>
+    <script src="/static/js/navScroll.js"></script>
+</body>
+<%- include('../partials/footer') %>
+
