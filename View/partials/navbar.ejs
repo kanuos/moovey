@@ -2,30 +2,41 @@
  <nav class="fixed top-0 text-white w-full z-20 py-1 bg-transparent">
     <div class="lg:mx-16 flex items-center justify-between py-2 px-4 lg:p-3 mx-auto">
         <a href="/">
+        <% if (loggedIn) { %>
+            <span class="font-title capitalize px-1.5 w-max block text-transparent bg-gradient-to-r from-pink-600 to-purple-700 bg-clip-text border-2 border-pink-600 font-bold">
+                <%= loggedIn %>'s dashboard
+            </span>
+        <% } else { %>
             <strong class="tracking-tighter border-2 px-1.5 border-current flex-shrink-0 font-light text-base transform hover:scale-x-110 block transition-all">
                 moovey••
             </strong>
+        <% } %>
         </a>
-
         <button class="navbarToggler cursor-pointer transform md:hidden focus:outline-none outline-none hover:rotate-180">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16"></path></svg>
         </button>
         <div class="z-30 navList fixed md:relative top-0 left-0 w-screen h-screen md:w-full md:h-auto transform transition-all -translate-y-full md:-translate-y-0 duration-200 md:opacity-100 flex flex-col items-center justify-center text-black md:text-white bg-white md:bg-transparent">
             <strong class="tracking-tighter text-gray-700 border-2 px-1.5 border-gray-700 font-light text-2xl cursor-default mb-4 md:hidden">
+                <% if (loggedIn) { %>
+                    <%= loggedIn %>'s dashboard
+                <% } else { %>
                 moovey••
+                <% } %>
             </strong>
             <ul class="flex flex-col md:flex-row items-center justify-between w-max mx-auto md:ml-auto md:mx-0">
                 <li class="m-3 md:mx-3 md:my-0 flex items-center">
                     <a href="/moovey" class="outline-none focus:outline-none">
                         <strong class="tracking-tighter capitalize px-0.5 font-light text-sm cursor-pointer flex-shrink-0 border-transparent border-b-2 hover:border-current">
-                            articles
+                            articles <%= loggedIn %>
                         </strong>
                     </a>
                 </li>
                 <li class="m-3 md:mx-3 md:my-0 flex items-center">
-                    <strong class="tracking-tighter capitalize px-0.5 font-light text-sm cursor-pointer flex-shrink-0 border-transparent border-b-2 hover:border-current">
-                        lists
-                    </strong>
+                    <a href="/moovey/list" class="outline-none focus:outline-none">
+                        <strong class="tracking-tighter capitalize px-0.5 font-light text-sm cursor-pointer flex-shrink-0 border-transparent border-b-2 hover:border-current">
+                            lists
+                        </strong>
+                    </a>
                 </li>
                 <li class="m-3 md:mx-3 md:my-0 flex items-center">
                     <a href="/reviewers" class="outline-none focus:outline-none">

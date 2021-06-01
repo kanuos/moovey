@@ -1,12 +1,13 @@
-<article class="profileCard mx-auto my-4 h-80 w-64 relative flex flex-col shadow-lg  md:hover:scale-105 md:hover:shadow-2xl transform transition-all">
+<a href="/reviewers/<%= user.uid %>">
+<article class="mx-auto my-4 h-80 w-64 relative flex flex-col shadow-lg  md:hover:scale-110 md:hover:shadow-2xl transform transition-all">
     <span class="absolute top-2 -left-3 bg-pink-600 capitalize font-special rounded text-white text-xs p-2 shadow-md z-10">
-        <%= user.count %> reviews
+        <%= user.blogs %> reviews
     </span>
     <img 
     class="h-full w-full block object-cover absolute top-0 left-0 rounded-tr-md rounded-tl-md md:rounded-md"
-    src="https://i.pinimg.com/originals/35/ca/10/35ca10e069ffe2869749d42f31edc4eb.jpg" alt="">
-    <div class="flex flex-col items-center z-10 absolute bottom-0 p-2 bg-white left-0 w-full">
-        <strong class="uppercase text-sm tracking-wider font-light">
+    src="<% if (!user.picture || user.picture !== 'N/A') { %>/static/assets/placeholder.jpg <% } else { %>user.picture <% } %>" alt="">
+    <div class="flex flex-col items-center z-10 absolute bottom-0 p-2 bg-gradient-to-r from-pink-600 to-purple-700 left-0 w-full text-white rounded-b">
+        <strong class="capitalize text-sm tracking-wider font-light">
             <%= user.name %>
         </strong>
         <% if(user.location) {%>
@@ -19,3 +20,4 @@
         <% } %>
     </div>
 </article>
+</a>
