@@ -7,10 +7,13 @@ const {
     showEditListPage,
     deleteList,
     editList,
-    addMovieToList,
-    showSearchMovieItemForm,
+    submitNewMovieToList,
     submitSearchData, 
-    showAddItemModal
+    showSearchMovieItemPage,
+    addMovieToListPage,
+    deleteMovieFromList,
+    showEditListItemPage,
+    submitEditItem
 } = require("../_Controller/listController")
 const {redirectToLogin} = require("../sessionMiddleware")
 
@@ -24,18 +27,18 @@ listRoutes.get('/:id/edit',redirectToLogin, showEditListPage)
 listRoutes.post('/:id/edit',redirectToLogin, editList)
 listRoutes.post('/:id/delete',redirectToLogin, deleteList)
 
-listRoutes.get('/:lid/search',redirectToLogin, showSearchMovieItemForm)
 listRoutes.post('/:lid/search',redirectToLogin, submitSearchData)
+listRoutes.get('/:lid/search/',redirectToLogin, showSearchMovieItemPage)
+
+listRoutes.get('/:lid/add/:imdbid',redirectToLogin, addMovieToListPage)
+listRoutes.post('/:lid/add/:imdbid',redirectToLogin, submitNewMovieToList)
+
+listRoutes.post('/:lid/delete/:imdbid',redirectToLogin, deleteMovieFromList)
 
 
-listRoutes.get('/:lid/add/',redirectToLogin, showAddItemModal)
-listRoutes.post('/:lid/add/:imdbid',redirectToLogin, addMovieToList)
+listRoutes.get('/:lid/edit/:imdbid',redirectToLogin, showEditListItemPage)
+listRoutes.post('/:lid/edit/:imdbid',redirectToLogin, submitEditItem)
 
-// listRoutes.post('/:lid/:itemID/delete',redirectToLogin, addMovieToList)
-
-
-// listRoutes.get('/:lid/:itemID/edit', redirectToLogin, addMovieToList)
-// listRoutes.post('/:lid/:itemID/edit', redirectToLogin, addMovieToList)
 
 
 

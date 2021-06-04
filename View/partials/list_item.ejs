@@ -1,6 +1,6 @@
-<section class="list-item-container relative h-screen flex flex-col items-center justify-center">
-    <div class="h-65h transform scale-0 transition-all shadow-2xl font-regular">
-        <article class="z-10 w-full min-h-full max-w-md mx-auto flex flex-col my-4 bg-black relative overflow-y-auto">
+<section class="list-item-container relative h-screen">
+    <div class="h-full transform scale-0 transition-all font-regular w-full flex flex-col items-center justify-center">
+        <article class="z-10 w-full h-3/4 max-w-md mx-auto flex flex-col my-4 bg-black relative overflow-y-auto ">
             <% if(loggedIn) {%>
             <button class="expandListMenu text-gray-400 hover:text-white duration-100 transition-colors absolute right-4 top-4 outline-none focus:outline-none">
                 <i class="fas fa-ellipsis-v"></i>
@@ -10,12 +10,16 @@
                     <button class="closeListMenu absolute right-2 top-2 hover:text-pink-600 outline-none focus:outline-none">
                         <i class="fas fa-times"></i>
                     </button>
-                    <button class="text-sm text-gray-500 hover:text-black capitalize outline-none focus:outline-none">
-                        edit description
-                    </button>
-                    <button class="text-sm text-gray-500 hover:text-black capitalize outline-none focus:outline-none">
-                        delete item
-                    </button>
+                    <form action="/moovey/list/<%= lid %>/edit/<%= item.imdbid %>" method="get">
+                        <button type="submit" class="text-sm text-gray-500 hover:text-black capitalize outline-none focus:outline-none">
+                            edit description
+                        </button>
+                    </form>
+                    <form action="/moovey/list/<%= lid %>/delete/<%= item.imdbid %>" method="post">
+                        <button type="submit" class="text-sm text-gray-500 hover:text-black capitalize outline-none focus:outline-none">
+                            delete item
+                        </button>
+                    </form>
                 <% } else { %>
                 <button class="closeListMenu absolute right-2 top-2 hover:text-pink-600 outline-none focus:outline-none">
                     <i class="fas fa-times"></i>
@@ -36,15 +40,15 @@
             </div>
             <div class="px-4 flex flex-col w-full items-center justify-center">
                 <h2 class="text-2xl text-white my-2 text-center font-title capitalize">
-                    <%= item.movie_title %>
+                    <%= item.title %>
                 </h2>
-                <img src="<%= item.poster %>" 
+                <img src="<% if (item.poster !== 'N/A') { %> <%= item.poster %> <% } else { %>/static/assets/placeholder.jpg <% }%>" 
                 class="block w-auto h-64 object-scale-down my-2">
                 <p class="text-gray-100 text-center my-2 font-title w-5/6 mx-auto">
-                    <% if (item.description) { %>
-                        <%= item.description %>
+                    <% if (item.desc) { %>
+                        <%= item.desc %>
                     <% } else { %>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos ipsa odit ab, nisi doloribus possimus, voluptatibus delectus aut laboriosam nihil aperiam aspernatur necessitatibus esse! Suscipit asperiores vitae accusamus itaque!
+                        No description available.
                     <% } %>
                 </p>
             </div>
@@ -55,7 +59,7 @@
             <%= index + 1 %>.
         </span>
         <small class="text-xl border-t-4 border-current">
-            of <%= data.length %>
+            of <%= data.movies.length %>
         </small>
     </h3>
 </section>

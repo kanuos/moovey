@@ -1,0 +1,73 @@
+<%- include('../partials/head')%>
+<body class="h-screen font-regular w-full flex flex-col items-center justify-center overflow-x-hidden relative bg-black">
+    <!-- navbar -->
+    <%- include('../partials/fixed_video_bg')%>
+    <!-- header -->
+    <a id="goBackBtn" class="text-gray-400 hover:text-white transition-colors outline-none focus:outline-none absolute top-6 left-6 inline-flex items-center cursor-pointer">
+        <i class="fas fa-long-arrow-alt-left mr-2"></i>
+        <small class="text-xs capitalize">
+            go back
+        </small>
+    </a>
+
+    <main class="p-4 break-all break-word text-white w-5/6 mx-auto h-5/6 max-w-lg grid grid-cols-1 grid-rows-2 gap-6">
+        <div class="row-start-1 row-end-2 col-span-1">
+            <img 
+                class="h-full w-full object-scale-down block"
+                src="<% if (meta.poster !== 'N/A') { %><%= meta.poster %> <% } else { %>/static/assets/placeholder.jpg<% } %>" 
+                alt="<%= 'Thumbnail for ' + meta.title %>">
+            <h2 class="w-full max-w-md mx-auto text-center text-sm my-1">
+                <%= meta.title %> (<%= meta.year %>)
+            </h2>
+        </div>
+        <form action="<%= actionUrl %>" method="post" class="row-start-2 row-end-3 col-span-1 flex flex-col items-center">
+            <label for="desc" class="text-xs font-title text-gray-300 my-2 inline-block capitalize">
+                entry description (optional)
+            </label>
+            <textarea 
+                name="itemDescription" 
+                id="desc" 
+                autocomplete="address-line3" 
+                placeholder="Description about '<%= meta.title %>'"
+                autofocus="on"
+                maxlength="150" 
+                class="h-40 w-full resize-none block bg-white rounded text-black p-1.5 outline-none focus:outline-none focus:scale-x-105 transform transition-all placeholder-gray-400 text-center focus:placeholder-gray-700"
+            ><%= initialDescription %></textarea>
+            <% if (!editMode) { %>
+            <label 
+                for="recommend" 
+                title="Click to toggle recommendation"
+                class="font-title inline-block my-2 cursor-pointer text-white transform transition-all hover:scale-110 w-5/6 mx-auto text-center">
+                <span id="recommendLabelIcon">
+                    <i class="far fa-check-circle text-green-600"></i>
+                </span>
+                I <span id="recommendLabel" class="ml-1">recommend</span> watching this
+            </label>
+            <input type="checkbox" class="hidden" checked name="recommend" id="recommend">
+            <% } %>
+            <button type="submit" class="my-2 px-4 py-1.5 bg-white text-black rounded transition-all transform hover:scale-105 hover:-translate-y-px hover:shadow-xl font-semibold font-title">
+                <span>
+                    <i class="addBtnIcon fas fa-spinner animate-spin hidden"></i>
+                    <i class="addBtnIcon fas fa-plus"></i>
+                </span>
+                <span class="capitalize addBtnText">
+                    <% if(editMode) { %>
+                    edit
+                    <% } else { %>
+                    add to list
+                    <% } %>
+                </span>
+                <span class="capitalize addBtnText hidden opacity-60 cursor-wait">
+                    <% if(editMode) { %>
+                        updating item
+                    <% } else { %>
+                        adding to list
+                    <% } %>
+                </span>
+            </button>
+        </form>
+    </main>
+
+    <script src="/static/js/list_crud.js"></script>
+</body>
+</html>

@@ -14,7 +14,7 @@ exports.getAllList = async function(req, res) {
         const {title} = req.query;
         let lists;
         if (title) {
-            const {rows} = await pool.query("SELECT name, title, date_created AS date,lid, description FROM list_meta INNER JOIN users ON list_meta.uid = users.uid WHERE title LIKE $1 ORDER BY date DESC", [fn.dbLikeQueryString(title.toLowerCase().trim())]);
+            const {rows} = await pool.query("SELECT name, title, date_created AS date,lid, description FROM list_meta INNER JOIN users ON list_meta.uid = users.uid WHERE title ILIKE $1  ORDER BY date DESC", ['%' + title.toLowerCase().trim() + '%']);
             if (rows.length === 0){
                 context.message = `No list found with the title "${title.trim()}"`
             }
@@ -24,6 +24,7 @@ exports.getAllList = async function(req, res) {
             const {rows} = await pool.query("SELECT name, title, date_created AS date,lid, description FROM list_meta INNER JOIN users ON list_meta.uid = users.uid ORDER BY date DESC");
             lists = rows;
         }
+        context.message = title?.trim().length > 0 ? title.trim() : undefined;
         context.loggedIn = req.session?.name;
         context.data = lists ?? [];
         context.data?.forEach(datum => {
@@ -32,6 +33,7 @@ exports.getAllList = async function(req, res) {
         return res.render("pages/list_list", context)
     }
     catch(err){
+        console.log(err);
         return res.redirect("/")
     }
 }
@@ -57,7 +59,6 @@ exports.createNewList = async (req, res) => {
         // else create new list and redirect to list/:new_list_id
         const {rows} = await pool.query("INSERT INTO list_meta (title, uid, description) VALUES ($1, $2, $3) ON CONFLICT (title, uid) DO NOTHING RETURNING *", [title.toLowerCase(), req.session.uid, description]); 
         const context = rows[0];
-        console.log(context);
         if (!context){
             throw Error("You already have a list by the same title. Try a different title.")
         }
@@ -77,8 +78,10 @@ exports.createNewList = async (req, res) => {
 exports.getListByID = async function(req, res) { 
     try{
         const {id} = req.params;
-        const {rows} = await pool.query("select u.name, u.uid, lm.title as list_title,lm.lid,li.imdbid,li.description, lm.description as list_desc,lm.date_created, mm.poster, mm.title, mm.year from list_meta as lm inner join users as u on u.uid = lm.uid left join list_item as li on li.lid = lm.lid left join movies_meta as mm on mm.imdbid = li.imdbid where lm.lid = $1;", [id])
+        const {rows} = await pool.query("select u.name, u.uid, lm.title as list_title,lm.lid,li.imdbid,li.description, lm.description as list_desc,lm.date_created, mm.poster, mm.title, mm.year from list_meta as lm inner join users as u on u.uid = lm.uid left join list_item as li on li.lid = lm.lid left join movies_meta as mm on mm.imdbid = li.imdbid where lm.lid = $1", [id])
         
+        // add recommendation field to items
+
         if (rows.length === 0){
             throw Error
         }
@@ -132,7 +135,6 @@ exports.getListByID = async function(req, res) {
         context.showSearchForm = false;
         context.showAddModal = false;
         context.searchFor = ''
-        console.log(context);
         return res.render("pages/list_detail", {...context})
     }
     catch(err){
@@ -141,18 +143,9 @@ exports.getListByID = async function(req, res) {
     }
 }
 
-exports.searchMovie = async function(req, res) {
-    try {
-        const {keyword} = req.body;
-    } catch (error) {
-        
-    }
-}
-
 exports.deleteList = async function(req, res) {
     try {
         const {id} = req.params;
-        console.log("delete list with id ", id);
         const {rows} = await pool.query("DELETE FROM list_meta WHERE lid = $1 AND uid = $2 RETURNING *", [id, req.session?.uid]);
         if (rows.length === 0){
             throw Error
@@ -226,65 +219,55 @@ exports.editList = async function(req, res) {
                     hreflang: "Click here to go home"
                 },
             ] 
-        })
-        console.log("This line runs!");
-        context.loggedIn = req.session?.name
-        context.defaultData = req.body;
-        context.actionUrl = `/moovey/list/${id}/edit`
-        context.authError = error.message
-        return res.render("pages/new_list", context)        
+        })    
      }
-}
-
-exports.removeMovieFromList = async function(req, res) {
-
 }
 
 exports.submitSearchData = async function(req, res) {
     try{
         const {lid} = req.params;
-        const {searchKey} = req.body;
-        const {rows} = await pool.query("SELECT * FROM list_meta WHERE lid = $1", [parseInt(lid)]);
+        const {keyword} = req.body;
+        if (keyword.trim().length === 0){
+            throw Error("Search keyword cannot be empty")
+        }
+        const {rows} = await pool.query("SELECT * FROM list_meta WHERE lid = $1", [lid]);
         // check if logged in user is authorized 
         if (rows[0].uid !== req.session?.uid){
             throw Error("Not authorized")
         }
-        // check if movie with title searchKey exists in movies_meta
-        const movieInDB = await searchMovieMetaInDB(searchKey)
+        // check if movie with title keyword exists in movies_meta
+        const movieInDB = await searchMovieMetaInDB(keyword)
         // if data exists render data
         if (movieInDB.length > 0){
-            context.loggedIn = req.session?.name;
-            context.showSearchForm = false;
-            context.authorized = req.session?.uid === rows[0].uid;
-            context.data = rows[0];
-            context.movies = movieInDB
-            context.showAddModal = false;
-            context.searchFor = searchKey
-            context.data.date = fn.readableDateStringFormat(`${context.data.date}`)
-            
-            return res.render("pages/list_detail", context)
+            movieInDB.forEach(movie => movie.href = `/moovey/list/${lid}/add/${movie.imdbid}`)
+            return res.render("pages/search_movie", {
+                message : `Search result for "${keyword}"`,
+                actionUrl : `/moovey/list/${lid}/search`,
+                data : movieInDB,
+                title: 'Add to list #' + lid,
+                loggedIn : req.session?.name
+            })
         }
-        // if data doesn't exists search api for results
-        const moviesFromAPI = await searchMovieMetaFromAPI(searchKey)
-        // if search result is none throw error
+
+        // // if data doesn't exists search api for results
+        const moviesFromAPI = await searchMovieMetaFromAPI(keyword)
+        // // if search result is none throw error
         if (moviesFromAPI.length === 0){
             throw Error("Movie not found!")
         }
-        // if search result exists store movies to db
-        const {success, data} = await storeMoviesMetaToDB(moviesFromAPI);
-        // return movies list
+        const {data, success} = await storeMoviesMetaToDB(moviesFromAPI)
         if (!success){
-            throw Error("Something went wrong")
+            throw Error("Something went wrong. Please try again.")
         }
-        context.loggedIn = req.session?.name;
-        context.authorized = req.session?.uid === rows[0].uid
-        context.showSearchForm = false;
-        context.data = rows[0];
-        context.movies = data.rows
-        context.searchFor = searchKey
-        context.showAddModal = false;
-        context.data.date = fn.readableDateStringFormat(`${context.data.date}`)
-        return res.render("pages/list_detail", context)
+
+        data.forEach(movie => movie.href = `/moovey/list/${lid}/add/${movie.imdbid}`)
+        return res.render("pages/search_movie", {
+            message : `Search result for "${keyword}"`,
+            actionUrl : `/moovey/list/${lid}/search`,
+            data,
+            title: 'Add to list #' + lid,
+            loggedIn : req.session?.name
+        })
     }
     catch(err){
         const context = {
@@ -303,42 +286,19 @@ exports.submitSearchData = async function(req, res) {
             ]
         }
         return res.render("pages/redirect_temp", context)
+        return res.redirect("/moovey/list")
     }
 }
 
-exports.showSearchMovieItemForm = async function(req, res) {
-    try{
-        const {lid} = req.params;
-        const {rows} = await pool.query("SELECT lid, users.uid AS uid, description, title, date_created AS date, name FROM list_meta INNER JOIN users ON list_meta.uid = users.uid WHERE lid = $1", [parseInt(lid)]);
-
-        if (rows.length === 0){
-            throw Error("List not found")
-        }
-        
-        context.loggedIn = req.session?.name;
-        context.authorized = req.session?.uid === rows[0].uid
-        context.showSearchForm = true;
-        context.data = rows[0];
-        context.movies = []
-        context.showAddModal = false;
-        context.searchFor = ''
-        context.data.date = fn.readableDateStringFormat(`${context.data.date}`)
-        return res.render("pages/list_detail", context)
-    }
-    catch(err){
-        return res.redirect("/pageNotFound")
-    }
-}
-
-exports.showAddItemModal = async function(req, res) {
+exports.showSearchMovieItemPage = async function(req, res) {
     try{
         const {lid} = req.params;
         const listMeta = (await pool.query("SELECT * FROM list_meta AS lm WHERE lm.lid = $1 AND lm.uid = $2", [lid, req.session.uid])).rows[0];
-        console.log(listMeta);
         return res.render("pages/search_movie", {
             message : `Search Movie to add to "${listMeta.title}"`,
+            actionUrl : `/moovey/list/${lid}/search`,
             data : [],
-            title: 'Add to list #' + lid,
+            title: 'Add to list ',
             loggedIn : req.session?.name
         })
     }
@@ -348,25 +308,39 @@ exports.showAddItemModal = async function(req, res) {
     }
 }
 
-
-exports.addMovieToList = async function(req, res) {
+exports.submitNewMovieToList = async function(req, res) {
     try {
-       const {itemDescription, imdbid} = req.body;
-       const {lid} = req.params;
-       if (req.params?.imdbid !== imdbid){
-           throw Error("400")
-       }
-       const list = (await pool.query("SELECT * FROM list_meta WHERE lid = $1", [lid])).rows[0];
-       if (list.uid !== req.session?.uid){
-           throw Error("403")
-       }
-       const {rows} = await pool.query("INSERT INTO list_item (lid, uid, imdbid, description) VALUES ($1, $2, $3, $4) ON CONFLICT (uid, lid, imdbid) DO NOTHING RETURNING *", [lid, req.session?.uid, imdbid, itemDescription])
-       if (rows.length === 0){
-           throw Error("500")
-       }
-       return res.redirect(`/moovey/list/${lid}`);
+       const {itemDescription, recommend} = req.body;
+       const {lid, imdbid} = req.params;
+
+    const selectedMovie = (await pool.query("SELECT * FROM movies_meta WHERE imdbid = $1", [imdbid])).rows[0];
+    // verify imdbid is valid
+    if (!selectedMovie){
+        throw Error("404")
+    }
+    const list = (await pool.query("SELECT * FROM list_meta WHERE lid = $1", [lid])).rows[0];
+    // verify list exists 
+    if(!list) {
+        throw Error("404")
+    } 
+    // verify user can add to lid
+    if (list.uid !== req.session?.uid){
+        throw Error("403")
+    }
+    // if recommend is true add to recommend and to list
+    if (recommend === "on"){
+        // transaction
+        await pool.query("INSERT INTO recommendations (uid, imdbid) VALUES ($1, $2) ON CONFLICT (uid, imdbid) DO NOTHING", [req.session.uid, selectedMovie.imdbid]);
+    }
+    const {rows} = await pool.query("INSERT INTO list_item (lid, uid, imdbid, description) VALUES ($1, $2,  $3, $4) ON CONFLICT (uid, lid, imdbid) DO NOTHING RETURNING *", [lid, req.session?.uid, imdbid, itemDescription])
+    if (rows.length === 0){
+        throw Error("500")
+    }
+    return res.redirect(`/moovey/list/${lid}`)
+    // else only add to list
 
     } catch (error) {
+        console.log(error);
         const templateData = {
             title : "Whoa! That was not cool",
             links : [
@@ -399,4 +373,218 @@ exports.addMovieToList = async function(req, res) {
             }
             return res.render("pages/render_temp", templateData)
     }
+}
+
+exports.addMovieToListPage = async function(req, res) {
+    try {
+        const { lid, imdbid } = req.params;
+        const existingList = (await pool.query("SELECT * FROM list_meta WHERE lid = $1", [lid])).rows[0];
+        
+        if(!existingList) {
+            throw Error(`List #${lid} doesn't exist`)
+        }
+        if (existingList.uid !== req.session.uid) {
+            throw Error("You are not authorized to add to list #"+ lid)
+        }
+
+        const movie = (await pool.query("SELECT * FROM movies_meta WHERE imdbid = $1", [imdbid])).rows[0];
+
+        if (!movie){
+            throw Error("Invalid movie id")
+        }
+
+        const context = {
+            actionUrl: `/moovey/list/${lid}/add/${imdbid}`,
+            meta : movie,
+            title : `Add "${movie.title}" to ${existingList.title}`,
+            initialDescription: '',
+            editMode : false
+        }
+        return res.render("pages/list_crud_page", context)
+    } catch (error) {
+        console.log("show add to page error", error);
+    }
+}
+
+exports.deleteMovieFromList = async function(req, res) {
+    try {
+        const {lid, imdbid} = req.params;
+        const authUser = (await pool.query("SELECT lm.uid, lm.title FROM list_meta AS lm LEFT JOIN list_item AS li ON lm.lid = li.lid WHERE lm.lid = $1 AND imdbid = $2", [lid, imdbid])).rows[0];
+
+        // if list with imdbid exists
+        if(!authUser) {
+            throw Error("404")
+        }
+        // if active user has permission to delete list item from list
+        if (authUser.uid !== req.session.uid) {
+            throw Error("403")
+        }
+
+        // delete item from list
+        const deletedItem = (await pool.query("DELETE FROM list_item WHERE imdbid = $1 AND lid = $2 AND uid = $3 RETURNING *", [imdbid, lid, req.session.uid])).rows[0];
+
+        if (!deletedItem){
+            throw Error("500")
+        }
+        return res.render("pages/redirect_temp", {
+            message : `Operation Successful`,
+            title: "Deleted List",
+            description : `"${deletedItem.title}" was deleted from  ${authUser.title} successfully.`,
+            links : [
+                {
+                    href : "/moovey/list/" + lid,
+                    hreflang: "Go back to list"
+                },
+                {
+                    href : "/",
+                    hreflang: "Click here to go home"
+                },
+            ] 
+        })
+    } catch (error) {
+        const templateData = {
+            title : "Whoa! That was not cool",
+            links : [
+                {
+                    hreflang: 'Check out all the lists',
+                    href : '/moovey/list'
+                },
+                {
+                    hreflang: 'Go to home',
+                    href : '/'
+                },
+            ]
+        }
+        switch(error.message){
+            case "400":
+                templateData.message = 'error 400'
+                templateData.description = 'Bad request. List you are looking for does not exist or may have been deleted. Sorry for the inconvenience.'
+                break;
+
+            case "403":
+                templateData.message = 'error 403'
+                templateData.description = 'You are trying to add moovey to the list that you are not authorized to. To add movies to list, either create your own list or add to your existing lists. Sorry for the inconvenience.'
+                break;
+            case "500":
+                templateData.message = 'error 500'
+                templateData.description = 'Something went wrong at the server. Please try again later. Sorry for the inconvenience.'
+                break;
+                default: 
+                    return res.redirect("/pageNotFound")
+            }
+            return res.render("pages/render_temp", templateData) 
+    }
+}
+
+exports.showEditListItemPage = async function(req, res) {
+    try {
+        const { lid, imdbid } = req.params;
+        const listItem = (await pool.query("SELECT mm.poster, mm.title as title,year, lm.lid, lm.description AS list_desc, lm.title AS list_title, lm.uid, li.imdbid, li.description AS desc FROM list_meta AS lm LEFT JOIN list_item AS li ON li.lid = lm.lid INNER JOIN movies_meta AS mm on mm.imdbid = li.imdbid WHERE li.lid = $1 AND li.imdbid = $2", [lid, imdbid])).rows[0];
+
+        if(!listItem) {
+            throw Error("404")
+        }
+        if (listItem.uid !== req.session.uid) {
+            throw Error("403")
+        }
+
+        const context = {
+            actionUrl: `/moovey/list/${lid}/edit/${imdbid}`,
+            meta : listItem,
+            title : `Edit list #${lid}`,
+            initialDescription: listItem.desc,
+            editMode : true
+        }
+        return res.render("pages/list_crud_page", context)
+    } 
+    catch (error) {
+        const templateData = {
+            title : "Whoa! That was not cool",
+            links : [
+                {
+                    hreflang: 'Check out all the lists',
+                    href : '/moovey/list'
+                },
+                {
+                    hreflang: 'Go to home',
+                    href : '/'
+                },
+            ]
+        }
+        switch(error.message){
+            case "400":
+                templateData.message = 'error 400'
+                templateData.description = 'Bad request. List you are looking for does not exist or may have been deleted. Sorry for the inconvenience.'
+                break;
+
+            case "403":
+                templateData.message = 'error 403'
+                templateData.description = 'You are trying to add moovey to the list that you are not authorized to. To add movies to list, either create your own list or add to your existing lists. Sorry for the inconvenience.'
+                break;
+            case "500":
+                templateData.message = 'error 500'
+                templateData.description = 'Something went wrong at the server. Please try again later. Sorry for the inconvenience.'
+                break;
+                default: 
+                    return res.redirect("/pageNotFound")
+            }
+        return res.render("pages/render_temp", templateData) 
+    }
+}
+
+exports.submitEditItem = async function(req, res) {
+    const { lid, imdbid} = req.params;
+    try {
+        const { itemDescription} = req.body;
+        const existingListItem = (await pool.query("SELECT * FROM list_meta AS lm LEFT JOIN list_item AS li ON li.lid = lm.lid WHERE lm.lid = $1 AND li.imdbid = $2", [lid, imdbid])).rows[0];
+        //  check whether lid and imdbid exists
+        if (!existingListItem){
+            throw Error("404")
+        }
+        //  check whether active user has access to edit lid and imdbid
+        if (existingListItem.uid !== req.session.uid){
+            throw Error("403")
+        }
+        //  update itemDescription of list item
+        const updatedItem = (await pool.query("UPDATE list_item SET description = $1 WHERE lid = $2 and imdbid = $3 RETURNING *", [itemDescription, lid, imdbid])).rows[0];
+        //  return to moovey/list/lid
+        if (!updatedItem){
+            throw Error("500")
+        }
+        console.log(updatedItem);
+        return res.redirect("/moovey/list/" + lid)
+    } catch (error) {
+        const templateData = {
+            title : "Whoa! That was not cool",
+            links : [
+                {
+                    hreflang: 'Go back to list',
+                    href : '/moovey/list/' + lid
+                },
+                {
+                    hreflang: 'Go to home',
+                    href : '/'
+                },
+            ]
+        }
+        switch(error.message){
+            case "400":
+                templateData.message = 'error 400'
+                templateData.description = 'Bad request. List you are looking for does not exist or may have been deleted. Sorry for the inconvenience.'
+                break;
+
+            case "403":
+                templateData.message = 'error 403'
+                templateData.description = 'You are trying to add moovey to the list that you are not authorized to. To add movies to list, either create your own list or add to your existing lists. Sorry for the inconvenience.'
+                break;
+            case "500":
+                templateData.message = 'error 500'
+                templateData.description = 'Something went wrong at the server. Please try again later. Sorry for the inconvenience.'
+                break;
+                default: 
+                    return res.redirect("/pageNotFound")
+            }
+        return res.render("pages/render_temp", templateData) 
+    }
+
 }

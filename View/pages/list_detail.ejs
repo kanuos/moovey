@@ -4,7 +4,7 @@
     <!-- navbar -->
     <%- include('../partials/navbar')%>
     <!-- header -->
-    <header class="min-h-screen pt-12 pb-4 flex flex-col items-center justify-center relative">
+    <header class="min-h-screen mt-5 py-10 flex flex-col items-center justify-center relative">
         <div class="list-detail__appear transform scale-0 transition-all list-detail__appear--2 flex flex-col items-center justify-center text-gray-500 text-sm">
             <strong class="capitalize font-title">
                 created on
@@ -13,7 +13,7 @@
                 <span><%= data.date.date %></span><sup><%= data.date.suffix %></sup><span class="capitalize">&nbsp; <%= data.date.month %></span><span>&nbsp;&comma; <%= data.date.year %></span>
             </div>
         </div>
-        <h1 class="list-detail__appear transform scale-0 transition-all list-detail__appear--1 text-7xl font-title capitalize text-center w-min mx-auto bg-gradient-to-r from-pink-600 to-purple-700 text-transparent bg-clip-text font-bold">
+        <h1 class="list-detail__appear transform scale-0 transition-all list-detail__appear--1 text-6xl font-title capitalize text-center w-min mx-auto bg-gradient-to-r from-pink-600 to-purple-700 text-transparent bg-clip-text font-bold md:w-3/5 md:mx-auto md:text-7xl my-2">
             <%= data.list_title %>
         </h1>
         <div class="flex items-center justify-center list-detail__appear transform scale-0 transition-all list-detail__appear--3 my-2 mx-auto w-max ">
@@ -38,6 +38,12 @@
                 <a href="/moovey/list/<%= data.lid %>/edit" title="Edit" class="text-xl transform transition-all hover:scale-125 text-pink-600 far fa-edit m-2 outline-none focus:outline-none"></a>
                 <button id="openDeleteModal" title="Delete" class="text-xl transform transition-all hover:scale-125 text-pink-600 far fa-times-circle m-2 outline-none focus:outline-none"></button>
             </div>
+            <a href="/moovey/list/<%= data.lid%>/search" class="list-detail__appear scale-0 transition-all list-detail__appear--5 flex items-center py-2 px-5 bg-black rounded transform text-gray-100 hover:text-white outline-none focus:outline-none my-2 mx-auto w-max hover:shadow-xl hover:scale-105 hover:-translate-y-px">
+                <i class="fas fa-plus text-sm mr-2"></i>
+                <small class="capitalize">
+                    add to list
+                </small>
+            </a>
         <% } %>
         <% if (data.movies.length > 0) {%>
         <div id="readList" class="flex flex-col items-center justify-center list-detail__appear transform scale-0 transition-all list-detail__appear--6 my-4 mx-auto w-max text-gray-400 hover:text-gray-700 relative">
@@ -46,8 +52,9 @@
         <% } %>
     </header>
 
+
     <% if (data.movies.length > 0) {%>
-    <ul class="z-10 flex items-center justify-center my-4 w-full">
+    <ul class="z-10 flex items-center justify-center my-4 w-full py-2">
         <li class="sectionSelector cursor-pointer px-3 text-pink-600 font-bold uppercase flex items-center">
             <i class="fas fa-stream"></i>
             <span class="ml-1 hidden md:block">
@@ -63,23 +70,14 @@
     </ul>
     <main id="listBody" class="min-h-screen h-full w-full bg-gradient-to-r to-pink-700 from-purple-700">
         <% data.movies.forEach((movie, index) => { %>
-            <%- include('../partials/list_item', { item: movie, index: index }) %>
+            <%- include('../partials/list_item', { item: movie, index: index, lid: data.lid }) %>
         <% }) %>        
     </main>
     <% } else { %>
     <main id="listBody" class="h-40 w-full flex flex-col items-center justify-start">
-        <h3 class="text-pink-600 text-3xl capitalize font-title">
-            No items in the list! 
+        <h3 class="text-pink-600 text-3xl capitalize font-title font-bold">
+            No items in the list
         </h3>
-        <% if(authorized) {%> 
-        <a href="/moovey/list/<%= data.lid%>/add" class="flex items-center py-2 px-5 bg-black rounded transform transition-all text-gray-100 hover:text-white outline-none focus:outline-none my-2 mx-auto">
-            <i class="fas fa-plus text-sm mr-2"></i>
-            <small>
-                add to list
-            </small>
-        </a>
-
-        <% } %>
     </main>
     <% }  %>
   <!-- only auth -->
