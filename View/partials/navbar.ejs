@@ -1,6 +1,6 @@
  <!-- navbar -->
- <nav class="fixed top-0 text-white w-full z-20 py-1 bg-transparent">
-    <div class="lg:mx-16 flex items-center justify-between py-2 px-4 lg:p-3 mx-auto">
+ <nav class="fixed top-0 text-white w-full z-20 bg-transparent">
+    <div class="lg:mx-16 flex items-center justify-between py-2 px-4 lg:p-2.5 mx-auto">
         <a href="/">
         <% if (loggedIn) { %>
             <span class="font-title capitalize px-1.5 w-max block text-transparent bg-gradient-to-r from-pink-600 to-purple-700 bg-clip-text border-2 border-pink-600 font-bold">
@@ -27,7 +27,7 @@
                 <li class="m-3 md:mx-3 md:my-0 flex items-center">
                     <a href="/moovey" class="outline-none focus:outline-none">
                         <strong class="tracking-tighter capitalize px-0.5 font-light text-sm cursor-pointer flex-shrink-0 border-transparent border-b-2 hover:border-current">
-                            articles <%= loggedIn %>
+                            articles
                         </strong>
                     </a>
                 </li>
