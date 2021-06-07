@@ -243,6 +243,7 @@ exports.submitSearchData = async function(req, res) {
             if (movieInDB.length > 0){
                 movieInDB.forEach(movie => movie.href = `/moovey/list/${lid}/add/${movie.imdbid}`)
                 return res.render("pages/search_movie", {
+                    method : 'POST',
                     message : `Search result for "${keyword}"`,
                     actionUrl : `/moovey/list/${lid}/search`,
                     data : movieInDB,
@@ -264,6 +265,7 @@ exports.submitSearchData = async function(req, res) {
                 }
                 data.forEach(movie => movie.href = `/moovey/list/${lid}/add/${movie.imdbid}`)
                 return res.render("pages/search_movie", {
+                    method : 'POST',
                     message : `Search result for "${keyword}"`,
                     actionUrl : `/moovey/list/${lid}/search`,
                     data,
@@ -286,6 +288,7 @@ exports.submitSearchData = async function(req, res) {
             }
             data.forEach(movie => movie.href = `/moovey/list/${lid}/add/${movie.imdbid}`)
             return res.render("pages/search_movie", {
+                method : 'POST',
                 message : `Search result for "${keyword}"`,
                 actionUrl : `/moovey/list/${lid}/search`,
                 data,
@@ -322,6 +325,7 @@ exports.showSearchMovieItemPage = async function(req, res) {
         const {lid} = req.params;
         const listMeta = (await pool.query("SELECT * FROM list_meta AS lm WHERE lm.lid = $1 AND lm.uid = $2", [lid, req.session.uid])).rows[0];
         return res.render("pages/search_movie", {
+            method : 'POST', 
             message : `Search Movie to add to "${listMeta.title}"`,
             actionUrl : `/moovey/list/${lid}/search`,
             data : [],
