@@ -226,7 +226,8 @@ exports.editList = async function(req, res) {
 exports.submitSearchData = async function(req, res) {
     try{
         const {lid} = req.params;
-        const {keyword} = req.body;
+        const {keyword, year, type} = req.body;
+        console.log(req.body);
         if (keyword.trim().length === 0){
             throw Error("Search keyword cannot be empty")
         }
@@ -235,39 +236,65 @@ exports.submitSearchData = async function(req, res) {
         if (rows[0].uid !== req.session?.uid){
             throw Error("Not authorized")
         }
-        // check if movie with title keyword exists in movies_meta
-        const movieInDB = await searchMovieMetaInDB(keyword)
-        // if data exists render data
-        if (movieInDB.length > 0){
-            movieInDB.forEach(movie => movie.href = `/moovey/list/${lid}/add/${movie.imdbid}`)
+        if (!year && !type) {
+            // check if movie with title keyword exists in movies_meta
+            const movieInDB = await searchMovieMetaInDB(keyword)
+            // if data exists render data
+            if (movieInDB.length > 0){
+                movieInDB.forEach(movie => movie.href = `/moovey/list/${lid}/add/${movie.imdbid}`)
+                return res.render("pages/search_movie", {
+                    message : `Search result for "${keyword}"`,
+                    actionUrl : `/moovey/list/${lid}/search`,
+                    data : movieInDB,
+                    title: 'Add to list #' + lid,
+                    loggedIn : req.session?.name,
+                    dbMode : true
+                })
+            }
+            else {
+                // // if data doesn't exists search api for results
+                const moviesFromAPI = await searchMovieMetaFromAPI(keyword, null, null)
+                // // if search result is none throw error
+                if (moviesFromAPI.length === 0){
+                    throw Error("Movie not found!")
+                }
+                const {data, success} = await storeMoviesMetaToDB(moviesFromAPI)
+                if (!success){
+                    throw Error("Something went wrong. Please try again.")
+                }
+                data.forEach(movie => movie.href = `/moovey/list/${lid}/add/${movie.imdbid}`)
+                return res.render("pages/search_movie", {
+                    message : `Search result for "${keyword}"`,
+                    actionUrl : `/moovey/list/${lid}/search`,
+                    data,
+                    title: 'Add to list #' + lid,
+                    loggedIn : req.session?.name,
+                    dbMode : false
+                })
+            }
+        }
+        else {
+            // // if data doesn't exists search api for results
+            const moviesFromAPI = await searchMovieMetaFromAPI(keyword, type, year)
+            // // if search result is none throw error
+            if (moviesFromAPI.length === 0){
+                throw Error("Movie not found!")
+            }
+            const {data, success} = await storeMoviesMetaToDB(moviesFromAPI)
+            if (!success){
+                throw Error("Something went wrong. Please try again.")
+            }
+            data.forEach(movie => movie.href = `/moovey/list/${lid}/add/${movie.imdbid}`)
             return res.render("pages/search_movie", {
                 message : `Search result for "${keyword}"`,
                 actionUrl : `/moovey/list/${lid}/search`,
-                data : movieInDB,
+                data,
                 title: 'Add to list #' + lid,
-                loggedIn : req.session?.name
+                loggedIn : req.session?.name,
+                dbMode : false
             })
         }
 
-        // // if data doesn't exists search api for results
-        const moviesFromAPI = await searchMovieMetaFromAPI(keyword)
-        // // if search result is none throw error
-        if (moviesFromAPI.length === 0){
-            throw Error("Movie not found!")
-        }
-        const {data, success} = await storeMoviesMetaToDB(moviesFromAPI)
-        if (!success){
-            throw Error("Something went wrong. Please try again.")
-        }
-
-        data.forEach(movie => movie.href = `/moovey/list/${lid}/add/${movie.imdbid}`)
-        return res.render("pages/search_movie", {
-            message : `Search result for "${keyword}"`,
-            actionUrl : `/moovey/list/${lid}/search`,
-            data,
-            title: 'Add to list #' + lid,
-            loggedIn : req.session?.name
-        })
     }
     catch(err){
         const context = {
@@ -299,7 +326,8 @@ exports.showSearchMovieItemPage = async function(req, res) {
             actionUrl : `/moovey/list/${lid}/search`,
             data : [],
             title: 'Add to list ',
-            loggedIn : req.session?.name
+            loggedIn : req.session?.name,
+            dbMode : false
         })
     }
     catch(err){
