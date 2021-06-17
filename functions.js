@@ -78,7 +78,6 @@ const formatAPIResponse = obj => {
 module.exports = {
     formatAPIResponse,
     slugify,
-    getFullImage,
     minimumLength,
     validEmail,
     titleCase,
