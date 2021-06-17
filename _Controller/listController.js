@@ -316,7 +316,6 @@ exports.submitSearchData = async function(req, res) {
             ]
         }
         return res.render("pages/redirect_temp", context)
-        return res.redirect("/moovey/list")
     }
 }
 
