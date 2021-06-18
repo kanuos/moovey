@@ -1,31 +1,46 @@
-<article class="relative w-11/12 max-w-md mx-auto my-3 text-gray-600 shadow-lg bg-gray-50">
-    <% if(blog.image) { %>
-    <img
-        class="h-80 w-full block object-cover" 
-        src="<%= blog.image %>" alt="">
-    <% } else { >
-    <img
-        class="h-80 w-full block object-cover" 
-        src="/static/assets/placeholder.jpg" alt="">
-    <% } %>
-    <div class="flex flex-col items-center justify-center bg-gray-700 text-white absolute w-min py-1 px-3 -top-2 -left-2 shadow-md">
-        <span class="font-semibold">
-            <%= blog.created.date %>
+<section class="outline-none focus:outline-none my-4 transition-all transform hover:scale-105 shadow-sm h-60vh w-4/5 max-w-sm mx-auto relative hover:shadow-2xl ease-linear grid place-items-start group bg-gradient-to-r from-pink-600 to-purple-600">
+    
+    <div class="flex flex-col items-center py-2.5 px-4 bg-black shadow-lg w-min absolute -top-4 -left-4 rounded-sm z-20 group-hover:bg-pink-600">
+        <strong class="text-transparent text-white w-max inline-block font-title">
+            10
+        </strong>
+        <span class="uppercase text-xs text-white font-regular">
+            jun
         </span>
-        <small class="uppercase text-xs">
-            <%= blog.created.month %>
-        </small>
     </div>
-    <strong class="block text-center text-xl text-gray-500 font-light font-special capitalize my-4 break-words px-2">
-        <%= blog.title %>
-    </strong>
-    <span class="block uppercase text-center px-2 tracking-wider">
-        <%= blog.blog_title %> 
-    </span>
-    <p class="leading-relaxed my-2 text-center text-sm px-2">
-       <%= blog.blog_content?.slice(0, 150) %> <% if (blog.blog_content?.length > 150 ) { %>...<% } %>
-    </p>
-    <a href="#" class="text-center uppercase block w-max my-6 mx-auto text-gray-400 hover:text-gray-900 text-sm tracking-wide">
-        keep reading...
+
+    <img 
+    src="<% if (blog.poster !== 'N/A') { %><%= blog.poster %><% } else {%>/static/assets/placeholder.jpg<% } %>" 
+    class="block h-full w-full object-cover pointer-events-none z-0 absolute opacity-100 group-hover:opacity-10">
+
+    
+    <article class="flex flex-col h-auto z-10 w-full py-6 bg-white group-hover:bg-black overflow-hidden transition-all">  
+        <div class="px-4 flex flex-col w-full items-center justify-center">
+            <h3 class="text-sm font-semibold text-black group-hover:text-white text-center font-title capitalize tracking-wider w-3/5 mx-auto transition-all">
+                <%= blog.title %> (<%= blog.year %>)
+            </h3>
+            <span class="text-black group-hover:text-white capitalize text-xs flex items-center">
+                <span class="mr-1">
+                    review by :
+                </span>
+                <a title="View <%= blog.name %>'s profile" class="hover:border-current border-transparent border-b" href="/reviewers/<%= blog.uid %>"><%= blog.name %></a>
+            </span>
+            <a title="Read Review" href="/moovey/<%= blog.blog_id %>" class="hover:scale-105 hover:-translate-y-px transform transition-all grid place-items-center my-4 px-2">
+                <h2 
+                class="text-xl font-bold font-title text-transparent bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-center break-words flex items-center justify-center capitalize transition-all">
+                    <%= blog.blog_title %>
+                </h2>
+            </a>
+        </div>
+    </article>
+
+    <a title="Read Review" href="/moovey/<%= blog.blog_id %>" class="grid place-items-start w-1/2 mx-auto h-full transform hover:shadow-2xl transition-all">
+        <figure class="block h-56 w-full group-hover:opacity-100 -translate-y-full transform transition-all opacity-0 group-hover:-translate-y-0 mx-auto ease-linear p-2 bg-black duration-300 delay-100 overflow-hidden">
+            <img 
+                src="<% if (blog.poster !== 'N/A') { %><%= blog.poster %><% } else {%>/static/assets/placeholder.jpg<% } %>" 
+                class="block h-full w-full object-cover pointer-events-none">
+        </figure>
     </a>
-</article>
+
+</section>
+
