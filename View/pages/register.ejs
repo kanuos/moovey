@@ -1,0 +1,99 @@
+<%- include('../partials/head') %>
+<body class="font-regular relative">
+    <main class="h-screen w-full relative grid place-items-center">
+        <img 
+        src="https://images.pexels.com/photos/4340785/pexels-photo-4340785.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" 
+        alt="" 
+        class="absolute pointer-events-none top-0 left-0 h-full w-full object-cover block opacity-20 filter grayscale sm:opacity-100 sm:grayscale-0">
+
+
+        <div class="w-full h-full z-10 bg-transparent bg-opacity-80 flex flex-col items-center justify-center sm:bg-white sm:max-w-md sm:h-3/4 sm:bg-opacity-50">
+            
+        <p id="accountGlobalError" class="absolute top-0 left-0 font-special font-semibold block w-full text-center p-4 text-sm text-gray-600">
+        </p>
+
+            <form
+                autocomplete="off" 
+                class="h-full w-full p-2 flex flex-col items-center justify-center sm:bg-white max-w-sm sm:my-10">
+                <h1 class="capitalize mb-6 flex flex-col justify-center items-center">
+                    <p class="font-special text-2xl text-black">
+                        M<small class="inline-block animate-bounce">&deg;</small>
+                    </p>
+                    <span class="font-regular font-semibold">
+                        sign up
+                    </span>
+                </h1>
+                <div class="w-full h-1/2 flex justify-center items-center flex-col">
+                    <section class="w-11/12 max-w-md mb-1 sm:w-5/6">
+                        <label for="name" class="text-xs mb-0.5 capitalize font-semibold text-gray-400 tracking-wider">
+                            <small>name</small>
+                        </label>
+                        <input 
+                            data-tag="visible"
+                            data-active="black"
+                            data-inactive="gray-400"
+                            autocomplete="cc-additional-name"
+                            name="name"
+                            type="text" 
+                            class="w-full border-2 p-1 rounded-md border-gray-400 bg-transparent text-sm outline-none focus:outline-none font-semibold font-regular transition-all"
+                            id="name">
+                    </section>
+                    <small class="my-1 text-xs text-black font-special font-semibold capitalize">
+                    </small>
+                    <section class="w-11/12 max-w-md mb-1 sm:w-5/6">
+                        <label for="email" class="text-xs mb-0.5 capitalize font-semibold text-gray-400 tracking-wider">
+                            <small>email</small>
+                        </label>
+                        <input 
+                            data-tag="visible"
+                            data-active="black"
+                            data-inactive="gray-400"
+                            data-type="email"
+                            type="text" 
+                            class="w-full border-2 p-1 rounded-md border-gray-400 bg-transparent text-sm outline-none focus:outline-none font-semibold font-regular transition-all"
+                            id="email">
+                    </section>
+                    <small class="my-1 text-xs text-black font-special font-semibold capitalize">
+                    </small>
+                    <section class="w-11/12 max-w-md mb-1 sm:w-5/6 relative">
+                        <label for="password" class="text-xs mb-0.5 capitalize font-semibold text-gray-400 tracking-wider">
+                            <small>password</small>
+                        </label>
+                        <input 
+                            data-tag="visible"
+                            data-active="black"
+                            data-inactive="gray-400"
+                            data-type="password"
+                            type="text" 
+                            class="w-full border-2 p-1 pr-4 rounded-md border-gray-400 bg-transparent text-sm outline-none focus:outline-none font-semibold font-regular transition-all"
+                            id="password">
+                        <button type="button" id="togglePassword" class="absolute bottom-2 right-2 flex flex-col items-center justify-center outline-none focus:outline-none hover:text-black text-gray-500 transition-all">
+                            <i class="fas fa-eye"></i>
+                            <small class="hidden">show/hide password</small>
+                        </button>
+                    </section>
+                    <small class="my-1 text-xs text-black font-special font-semibold capitalize">
+                    </small>
+                </div>
+                <input type="hidden" name="email">
+                <input type="hidden" name="password">
+                <section class="w-4/5 max-w-md my-6 sm:w-5/6">
+                    <button  
+                        type="submit"  
+                        class="w-max bg-black text-xs text-white py-1.5 px-5 mx-auto flex items-center justify-center capitalize outline-none focus:outline-none">
+                        <i class="fas fa-user-plus"></i>
+                        <span class="ml-1.5">register</span>
+                    </button>
+                </section>
+                <section class="w-full text-center mb-6">
+                    <p class="text-xs text-center text-gray-500">
+                        Already have an account? <a href="/login" class="border-b border-transparent outline-none focus:outline-none hover:border-current hover:text-black font-semibold">Login Now</a>
+                    </p>
+                </section>
+    
+            </form>
+        </div>
+    </main>    
+<script src="/static/js/account.js"></script>
+</body>
+</html>

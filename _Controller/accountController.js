@@ -1,16 +1,21 @@
 const {
-    minimumLength, 
+    minimumLength,
     validEmail, 
     maximumLength, 
     dbLikeQueryString,
     readableDateStringFormat, 
     titleCase
 } = require("../functions");
+
 const imdBB = require("imgbb-uploader");
-const fs = require("fs/promises")
 const pool = require("../_Database")
 const bcrypt = require("bcryptjs");
-const {v4 : uuid} = require("uuid")
+const {v4 : uuid} = require("uuid");
+const mailer = require("nodemailer");
+const { renderEmailHtml } = require("./emailTemplate");
+const {
+    MAIL_USER, MAIL_PASSWORD, MAIL_PORT, MAIL_HOST
+} = process.env;
 
 exports.renderDisplayRoute = async function(req, res) {
     let redirect = undefined, isLoginMode = false, isRegisterMode = false, errorMsg = null;
@@ -30,7 +35,7 @@ exports.renderDisplayRoute = async function(req, res) {
     }
     return res.render("pages/landing", 
     {   
-        loggedIn : false,
+        loggedIn : req.session?.name,
         title: "Welcome to your personal movie blog", 
         redirect, isLoginMode, isRegisterMode, errorMsg
     })
@@ -71,16 +76,17 @@ exports.submitLoginForm = async function(req, res) {
         if (!isValidPassword)
             throw new Error("Login credentials invalid.")
 
+        console.log(existingUser);
         req.session.uid = existingUser.uid;
         req.session.email = existingUser.email;
-        req.session.userName = existingUser.name.split(" ")[0];  
+        req.session.name = existingUser.name.split(" ")[0];  
         return res.redirect(301, "/dashboard")
             
     }
     catch(err){
         return res.render("pages/landing", 
         {
-            loggedIn : false,
+            loggedIn : req.session?.name,
             title: "Welcome to your personal movie blog", 
             redirect : undefined, 
             isLoginMode : true, 
@@ -140,7 +146,7 @@ exports.submitRegisterForm = async function(req, res) {
             isLoginMode : false, 
             isRegisterMode : true,
             errorMsg : err.message,
-            loggedIn : false,
+            loggedIn : req.session?.name,
 
         })
     }
@@ -151,7 +157,7 @@ exports.handleLogOut = function(req, res) {
     res.clearCookie(process.env.SESSION_NAME)
     return res.render("pages/landing", 
     {   
-        loggedIn : false,
+        loggedIn : req.session?.name,
         title: "Welcome to your personal movie blog", 
         redirect : "You have been logged out successfully.", 
         isLoginMode : true, 
@@ -173,8 +179,8 @@ exports.showMyProfile = async function(req, res) {
         rows[0].watchlist = []
         return res.render("pages/user_profile", 
             {
-                loggedIn : true,
-                title : `${titleCase(req.session.userName)}'s Profile`, 
+                loggedIn : req.session?.name,
+                title : `${titleCase(req.session.name)}'s Profile`, 
                 profile: rows[0]
             })
     }
@@ -192,7 +198,7 @@ exports.showEditProfilePage = async function(req, res) {
         return res.render("pages/edit-profile", 
             {
                 title : `${titleCase(req.session.userName)}'s Profile`, 
-                loggedIn : true,
+                loggedIn : req.session?.name,
                 authorized : req.session.uid === rows[0].uid ? true: false,
                 profile: rows[0]
             })
@@ -240,7 +246,7 @@ exports.submitEditProfile = async function(req, res) {
 
 exports.reviewerList = async function(req, res) {
     const searchName = req.query?.q;
-    const loggedIn = req.session?.uid;
+    const loggedIn = req.session?.name;
     try {
         if(searchName) {
             const cleanedName = searchName.trim().split('+').join(' ').trim();
@@ -291,6 +297,113 @@ exports.reviewerProfile = async function(req, res) {
 
 exports.forgotPasswordPage = async function(req, res) {
     return res.render("pages/forgot_password", {
-        title : "Forgot password?"
+        title : "Forgot password?",
+        forgotMsg : ''
     })
+}
+
+exports.resetPassword = async function(req, res) {
+    try {
+        let {email} = req.body;
+        email = email?.trim().toLowerCase();
+        if (!email) {
+            throw Error("Email cannot be empty")
+        }
+        const existingUser = (await pool.query("SELECT * FROM users WHERE email = $1", [email])).rows[0];
+        if (!existingUser) {
+            throw Error("User doesn't exist")
+        }
+        // user exists...
+        // generate a code
+        const code = uuid();
+        const transport = await mailer.createTransport({
+            host : `${MAIL_HOST}`,
+            port : MAIL_PORT,
+            auth : {
+                user : MAIL_USER,
+                pass : MAIL_PASSWORD
+            },
+            subject : `Reset password for ${existingUser.name}'s Moovey•• account`,
+        })
+        // add code to forgot table
+        const recovery = (await pool.query("INSERT INTO recover (uid, token) VALUES ($1, $2) ON CONFLICT (uid) DO UPDATE SET token = $2 RETURNING *", [existingUser.uid, code])).rows[0]
+
+        const request = new Date(`${recovery.request_valid}`).toLocaleTimeString();
+
+        // send mail to user
+        const mailResponse = await transport.sendMail({
+            from : MAIL_USER,
+            subject : `Reset password for ${existingUser.name}'s Moovey•• account`,
+            to : existingUser.email,
+            html : renderEmailHtml({
+                name : existingUser.name,
+                token : recovery.token,
+                validity : request,
+            })
+        })
+
+        if (mailResponse?.rejected.length > 0) {
+            throw Error("Recovery email couldn't be sent to your registered email ID.")
+        }
+
+        return res.render("pages/reset_password", {title: "Recover password", formMsg: '', uid : existingUser.uid})
+    } catch (error) {
+        console.log(error);
+        return res.render("pages/forgot_password", {
+            title : "Forgot password?",
+            forgotMsg : error.message
+        })
+    }
+}
+
+
+exports.updatePassword = async function(req, res) {
+    try {
+        console.log(req.body);
+        let { uid, code, newPassword, confirmPassword } = req.body;
+        newPassword = newPassword.trim()
+        confirmPassword = confirmPassword.trim()
+        code = code.trim()
+        if (newPassword !== confirmPassword){
+            throw Error("Passwords don't match")
+        }
+        if (!minimumLength(newPassword, 6)){
+            throw Error("Password must be at least 6 characters")
+        }
+        if (!maximumLength(newPassword, 15)){
+            throw Error("Password can be of maximum 15 characters")
+        }
+
+        const resetToken = (await pool.query("SELECT * FROM recover WHERE uid = $1", [uid])).rows[0];
+
+        for (let i = 0; i < 100; i++) {
+            const tokenValidFor = new Date().getTime() - new Date(`${resetToken.request_sent}`).getTime();
+            console.log("TOken generated ", Math.floor(tokenValidFor / 1000),  " seconds ago")
+        }
+        console.log(resetToken);
+
+
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+exports.showLoginPage = async (req, res) => {
+    try {
+        return res.render("pages/login", {title: "Login"})
+    } catch (error) {
+        console.log("login error");
+        console.log(error);
+    }
+}
+
+exports.showRegisterPage = async (req, res) => {
+    try {
+        return res.render("pages/register", {title: "Register"})
+    } catch (error) {
+        console.log("register error");
+        console.log(error);
+    }
 }
