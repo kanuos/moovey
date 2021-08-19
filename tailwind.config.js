@@ -1,28 +1,25 @@
+// purge: {
+//   enabled : true,
+//   content: ['View/pages/*.ejs', 'View/partials/*.ejs']
+// },
 
 module.exports = {
-  // purge: [],
-  purge: {
-    enabled : true,
-    content: ['View/pages/*.ejs', 'View/partials/*.ejs']
-  },
+  purge: [],
   darkMode: false, // or 'media' or 'class'
   theme: {
-    extend: {
-      fontFamily : {
-        'title' : ['Quicksand'],
-        'regular' : ['Poppins'],
-      },
-      height : {
-        "half-vh" : "50vh",
-        "65vh" : "65vh"
-      }
+    fontFamily : {
+      "special" : ['Quicksand'],
+      "regular" : ['Poppins']
     },
+    extend: {},
   },
   variants: {
     extend: {
-      scale : ["group-hover"],
+      display: ["group-hover","group-focus"],
       translate : ["group-hover"],
     },
   },
-  plugins: [],
+  plugins: [
+    require("@tailwindcss/aspect-ratio")
+  ],
 }
