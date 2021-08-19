@@ -1,63 +1,131 @@
- <!-- navbar -->
- <nav class="fixed top-0 text-white w-full z-20 bg-transparent py-0.5">
-    <div class="lg:mx-16 flex items-center justify-between py-2 px-4 lg:p-2.5 mx-auto">
-        <a href="/">
-        <% if (loggedIn) { %>
-            <span class="font-title capitalize px-1.5 w-max block text-transparent bg-gradient-to-r from-pink-600 to-purple-700 bg-clip-text border-2 border-pink-600 font-bold">
-                <%= loggedIn %>'s dashboard
-            </span>
-        <% } else { %>
-            <strong class="tracking-tighter border-2 px-1.5 border-current flex-shrink-0 font-light text-base transform hover:scale-x-110 block transition-all">
-                moovey••
-            </strong>
-        <% } %>
+<nav class="fixed z-20 top-0 left-0 w-full flex items-center justify-between py-2 px-4 text-black">
+    <h2 class="font-special font-light text-lg capitalize">
+        <a href="/" class="outline-none focus:outline-none">
+            m&deg;
         </a>
-        <button class="navbarToggler cursor-pointer transform md:hidden focus:outline-none outline-none hover:rotate-180">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16"></path></svg>
+    </h2>
+    <i class="navMenuToggler fas fa-stream text-xs hover:text-pink-600 transition-all cursor-pointer"></i>
+
+    <section id="navMenu" class="fixed top-0 left-0 w-full h-screen transform transition-all -translate-y-full bg-white z-50 flex items-center justify-center">
+        <!-- menu close btn -->
+        <button type="button" class="navMenuToggler absolute top-2 right-4 outline-none focus:outline-none text-gray-500 hover:text-pink-600">
+            <i class="fa fa-times text-lg"></i>
         </button>
-        <div class="z-30 navList fixed md:relative top-0 left-0 w-screen h-screen md:w-full md:h-auto transform transition-all -translate-y-full md:-translate-y-0 duration-200 md:opacity-100 flex flex-col items-center justify-center text-black md:text-white bg-white md:bg-transparent">
-            <strong class="tracking-tighter text-gray-700 border-2 px-1.5 border-gray-700 font-light text-2xl cursor-default mb-4 md:hidden">
-                <% if (loggedIn) { %>
-                    <%= loggedIn %>'s dashboard
-                <% } else { %>
-                moovey••
-                <% } %>
-            </strong>
-            <ul class="flex flex-col md:flex-row items-center justify-between w-max mx-auto md:ml-auto md:mx-0">
-                <li class="m-3 md:mx-3 md:my-0 flex items-center">
-                    <a href="/moovey" class="outline-none focus:outline-none">
-                        <strong class="tracking-tighter capitalize px-0.5 font-light text-sm cursor-pointer flex-shrink-0 border-transparent border-b-2 hover:border-current">
-                            articles
+
+        <!-- container -->
+        <div class="w-full flex items-center justify-center h-full max-w-3xl mx-auto">
+            <section class="hidden md:w-1/2 md:block md:h-full md:p-2 relative">
+                <article data-desc="articles" class="link-desc transition-all opacity-100 absolute top-0 left-0 flex w-full h-full">
+                    <img
+                        class="absolute h-72 w-auto transform top-1/3 left-10 lg:left-0 -rotate-6 object-scale-down block p-2 bg-white shadow-lg" 
+                        src="https://m.media-amazon.com/images/M/MV5BNDYxNjQyMjAtNTdiOS00NGYwLWFmNTAtNThmYjU5ZGI2YTI1XkEyXkFqcGdeQXVyMTMxODk2OTU@.jpg" alt="">
+                    <img
+                        class="absolute h-72 w-auto transform top-20 left-20 rotate-12 object-scale-down block p-2 bg-white shadow-lg" 
+                        src="https://m.media-amazon.com/images/M/MV5BMTc5MDE2ODcwNV5BMl5BanBnXkFtZTgwMzI2NzQ2NzM@.jpg" alt="">
+                    <img
+                        class="absolute h-72 w-auto transform bottom-1/3 right-6 rotate-6 object-scale-down block p-2 bg-white shadow-lg" 
+                        src="https://m.media-amazon.com/images/M/MV5BMTM4OGJmNWMtOTM4Ni00NTE3LTg3MDItZmQxYjc4N2JhNmUxXkEyXkFqcGdeQXVyNTgzMDMzMTg@._V1_SX300.jpg" alt="">
+                </article>
+                <article data-desc="lists" class="link-desc transition-all opacity-0 absolute top-0 left-0 flex flex-col items-center justify-around w-full h-full gap-y-4 py-8 px-4">
+                    <section class="bg-gray-100 w-max mr-auto h-1/4 gap-4 flex flex-col items-start rounded shadow-md p-4">
+                        <strong class="text-pink-600 capitalize font-special block text-center">
+                            My favorite psychological thrillers
                         </strong>
-                    </a>
-                </li>
-                <li class="m-3 md:mx-3 md:my-0 flex items-center">
-                    <a href="/moovey/list" class="outline-none focus:outline-none">
-                        <strong class="tracking-tighter capitalize px-0.5 font-light text-sm cursor-pointer flex-shrink-0 border-transparent border-b-2 hover:border-current">
-                            lists
+                        <span class="font-regular text-xs font-semibold">Created By John Doe</span>
+                        <small class="text-xs font-special text-gray-400">15 October 2020</small>
+                    </section>
+                    <section class="bg-gray-100 w-max ml-auto h-1/4 gap-4 flex flex-col items-start rounded shadow-md p-4">
+                        <strong class="text-pink-600 capitalize font-special block text-center">
+                            My favorite sitcoms of all times
                         </strong>
-                    </a>
-                </li>
-                <li class="m-3 md:mx-3 md:my-0 flex items-center">
-                    <a href="/reviewers" class="outline-none focus:outline-none">
-                        <strong class="tracking-tighter capitalize px-0.5 font-light text-sm cursor-pointer flex-shrink-0 border-transparent border-b-2 hover:border-current">
-                            reviewers
+                        <span class="font-regular text-xs font-semibold">Created By Sounak</span>
+                        <small class="text-xs font-special text-gray-400">25 July 2018</small>
+                    </section>
+                    <section class="bg-gray-100 w-max mr-auto h-1/4 gap-4 flex flex-col items-start rounded shadow-md p-4">
+                        <strong class="text-pink-600 capitalize font-special block text-center">
+                            Best dystopian movies and shows
                         </strong>
-                    </a>
+                        <span class="font-regular text-xs font-semibold">Created By Jane Doe</span>
+                        <small class="text-xs font-special text-gray-400">3 March 2021</small>
+                    </section>
+                </article>
+                <article data-desc="users" class="link-desc transition-all opacity-0 absolute top-14 left-0 flex flex-col items-center justify-around w-5/6 h-3/4 gap-y-4 py-8 px-4">
+                    <section class="w-max mr-auto flex flex-col items-center justify-center">
+                        <img class="h-24 w-24 mb-2 block object-cover rounded-full p-1 shadow-lg bg-white" src="https://images.unsplash.com/photo-1552058544-f2b08422138a?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=344&q=80" alt="">
+                        <span class="font-regular text-xs font-semibold">John Doe</span>
+                        <small class="font-special text-xs">I love watching movies</small>
+                    </section>
+                    <section class="w-max ml-auto flex flex-col items-center justify-center">
+                        <img class="h-24 w-24 mb-2 block object-cover rounded-full p-1 shadow-lg bg-white" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=334&q=80" alt="">
+                        <span class="font-regular text-xs font-semibold">Anne Doe</span>
+                        <small class="font-special text-xs">Movies!Movies!Movies!</small>
+                    </section>
+                    <section class="w-max mr-auto flex flex-col items-center justify-center">
+                        <img class="h-24 w-24 mb-2 block object-cover rounded-full p-1 shadow-lg bg-white" src="https://images.unsplash.com/photo-1543871595-e11129e271cc?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1050&q=80" alt="">
+                        <span class="font-regular text-xs font-semibold">Jennifer Smith</span>
+                        <small class="font-special text-xs">Amateur cinephile</small>
+                    </section>
+                </article>
+            </section>
+            <ul class="w-full h-2/3 gap-y-4 justify-evenly flex flex-col md:w-1/2">
+                <li class="w-full text-sm py-2 relative text-gray-400 transition-all transform hover:scale-105 origin-center hover:text-black font-semibold">
+                    <div class="relative w-full">
+                        <ul class="hidden items-center justify-start w-1/3 absolute top-1/2 transform -translate-y-1/2 left-0">
+                            <i class="h-0.5 w-5/6 bg-pink-600 "></i>   
+                            <i class="text-pink-600 fas fa-dot-circle text-xs"></i>
+                        </ul>
+                        <h6 class="w-2/3 block pl-3 ml-auto font-regular uppercase">
+                            dashboard
+                        </h6>
+                    </div>
                 </li>
-                <% if(loggedIn) {%>
-                <li class="absolute bottom-4 flex items-center justify-center md:relative md:bottom-auto md:mx-3 md:my-0">
-                    <a href="/logout" class="text-xs md:tracking-tighter capitalize md:md:px-0.5 font-light md:text-sm cursor-pointer flex-shrink-0 border-transparent border-b-2 hover:border-current">log out</a>
+                <li data-target="articles" class="active navlink-desc w-full text-2xl py-2 relative text-black">
+                    <div class="relative w-full">
+                        <ul class="flex items-center justify-start w-1/3 absolute top-1/2 transform -translate-y-1/2 left-0">
+                            <i class="h-0.5 w-5/6 bg-pink-600 "></i>   
+                            <i class="text-pink-600 fas fa-dot-circle text-xs"></i>
+                        </ul>
+                        <h6 class="w-2/3 block pl-3 ml-auto font-regular uppercase">articles</h6>
+                    </div>
                 </li>
-                <% } else {%>
-                <li class="absolute bottom-4 flex items-center justify-center md:relative md:bottom-auto md:mx-3 md:my-0">
-                    <a href="/login" class="text-xs md:tracking-tighter capitalize md:md:px-0.5 font-light md:text-sm cursor-pointer flex-shrink-0 border-transparent border-b-2 hover:border-current">log in</a>
+                <li data-target="lists" class="navlink-desc w-full text-sm py-2 relative text-gray-400 transition-all transform hover:scale-105 origin-center hover:text-black font-semibold">
+                    <div class="relative w-full">
+                        <ul class="hidden items-center justify-start w-1/3 absolute top-1/2 transform -translate-y-1/2 left-0">
+                            <i class="h-0.5 w-5/6 bg-pink-600 "></i>   
+                            <i class="text-pink-600 fas fa-dot-circle text-xs"></i>
+                        </ul>
+                        <h6 class="w-2/3 block pl-3 ml-auto font-regular uppercase">lists</h6>
+                    </div>
                 </li>
-                <% } %>
+                <li data-target="users" class="navlink-desc w-full text-sm py-2 relative text-gray-400 transition-all transform hover:scale-105 origin-center hover:text-black font-semibold">
+                    <div class="relative w-full">
+                        <ul class="hidden items-center justify-start w-1/3 absolute top-1/2 transform -translate-y-1/2 left-0">
+                            <i class="h-0.5 w-5/6 bg-pink-600 "></i>   
+                            <i class="text-pink-600 fas fa-dot-circle text-xs"></i>
+                        </ul>
+                        <h6 class="w-2/3 block pl-3 ml-auto font-regular uppercase">reviewers</h6>
+                    </div>
+                </li>
+                <li class="w-full text-sm py-2 relative text-gray-400 transition-all transform hover:scale-105 origin-center hover:text-black font-semibold">
+                    <div class="relative w-full">
+                        <ul class="hidden items-center justify-start w-1/3 absolute top-1/2 transform -translate-y-1/2 left-0">
+                            <i class="h-0.5 w-5/6 bg-pink-600 "></i>   
+                            <i class="text-pink-600 fas fa-dot-circle text-xs"></i>
+                        </ul>
+                        <h6 class="w-2/3 block pl-3 ml-auto font-regular uppercase">log out</h6>
+                    </div>
+                </li>
+            
+            
             </ul>
-            <button class="absolute top-4 right-4 navbarToggler cursor-pointer md:hidden transform hover:text-gray-700  focus:text-gray-700 focus:outline-none outline-none hover:rotate-180">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            </button>
         </div>
-    </div>
+
+
+        <!-- footer in nav fixed -->
+        <small class="fixed bottom-2 text-xs text-gray-500 capitalize w-full block text-center left-0">
+            created by sounak
+        </small>
+    </section>
+
+
 </nav>

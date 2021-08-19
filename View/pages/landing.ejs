@@ -1,303 +1,194 @@
 <%- include('../partials/head') %>
-<body class="relative h-full w-full font-regular min-h-screen overflow-x-hidden">
-<%- include('../partials/fixed_video_bg') %>
+    <body class="font-special relative">
+        <img id="bgImg"
+            src="https://images.pexels.com/photos/4340785/pexels-photo-4340785.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+            class="object-cover h-full w-full block fixed top-0 left-0 pointer-events-none z-0 filter opacity-100 transition-all"
+            alt="">
+        <%- include('../partials/navbar') %>
 
-
-<section class="accountModalBox transform origin-center transition-all fixed top-0 left-0 h-screen w-full flex items-center justify-center bg-black z-30 
-
-    <% if(isRegisterMode || isLoginMode) { %> 
-        <%= 'scale-100' %> 
-    <% } else { %> 
-        <%= 'scale-0' %> 
-    <% } %>
-    
-    ">
-    <% if(redirect) { %>
-    <span class="absolute top-0 left-0 w-full p-3 bg-gradient-to-r from-pink-600 to-purple-700 text-white text-sm font-special capitalize block text-center">
-        <%= redirect %>
-    </span>
-    <% } %>
-
-    <div class="flex items-start justify-center h-3/4 w-4/5 max-w-lg lg:max-w-4xl mx-auto overflow-hidden relative bg-gradient-to-br from-pink-600 to-purple-700 rounded">
-        <video autoplay loop muted preload="auto" class="absolute top-0 left-0 h-full w-full block object-cover opacity-5 pointer-events-none lg:hidden">
-            <source src="/static/assets/video.mp4" type="video/mp4">
-        </video>
-
-        <div class="flex z-50 items center w-full top-0 left-0 justify-end pr-4 pt-2 absolute">
-            <button type="button" class="hideModal text-3xl outline-none focus:outline-none hover:text-black">
-                &times;
-            </button>
-        </div>
-
-        <!-- login form -->
-        <section class="accountModal flex items-center z-40 absolute top-0 right-0 transform w-full h-full transition-all duration-500 text-white origin-center ease-out <% if (isLoginMode) {%> <%= 'scale-100 pointer-events-auto'%> <%} else { %><%= 'scale-0 pointer-events-none'%> <% } %>">
-            <section class="hidden lg:flex absolute top-0 left-0 w-1/2 h-full">
-                <video autoplay loop muted preload="auto" class="absolute top-0 left-0 h-full w-full block object-cover opacity-5 pointer-events-none">
-                    <source src="/static/assets/video.mp4" type="video/mp4">
-                </video>
-                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-full flex items-center justify-center text-white flex-col w-full">
-                    <strong class="tracking-tighter border-2 py-0.5 px-1.5 border-current flex-shrink-0 font-light text-lg cursor-pointer">
-                        moovey••
-                    </strong>
-                    
-                    <div class="flex items-center justify-center flex-col origin-center duration-500 transition-all">
-                        <span class="text-2xl capitalize font-light font-special my-4">
-                            dont have an account?
-                        </span>
-                        <button type="button" class="accountModeToggler capitalize inline-block outline-none focus:outline-none">create account now</button>
-                        <a href="/forgot-password" class=" my-1 capitalize inline-block outline-none focus:outline-none">
-                            forgot password
+        <header class="h-screen relative flex items-center p-4 filter">
+            <article class="z-10 w-4/5 flex flex-col items-end sm:items-start max-w-sm text-right ml-auto select-none xl:transform xl:-translate-x-1/2 2xl:-translate-x-full">
+                <h1 class="text-3xl sm:text-4xl font-special text-pink-600 mb-2 2xl:text-5xl">
+                    M<span class="inline-block animate-bounce">&deg;</span><sub class="text-3xl sm:text-4xl 2xl:text-5xl">&deg;</sub>vey
+                </h1>
+                <p class="font-regular text-sm sm:text-base text-gray-500 capitalize italic">
+                    a place for cinephiles
+                </p>
+                <blockquote class="relative mt-10 sm:mt-16">
+                    <i class="fas fa-quote-left absolute -top-6 -left-6 sm:-top-10 sm:-left-10 text-black sm:text-gray-400 text-xl sm:text-3xl"></i>
+                    <p class="text-right sm:text-left border-b mb-3 pb-1 font-semibold text-gray-800 text-sm 2xl:text-base">
+                        Now more than ever we need to talk to each other, to listen to each other and understand how we see the world, and cinema is the best medium for doing this.
+                    </p>
+                    <ul class="flex flex-col items-end sm:items-start">
+                        <li class="font-regular font-semibold text-pink-700 capitalize text-sm 2xl:text-base">
+                            martin scorsese
+                        </li>
+                        <li class="capitalize text-gray-500 text-xs 2xl:text-sm">
+                            film maker
+                        </li>
+                    </ul>
+                </blockquote>
+            </article> 
+        </header>
+        <main class="min-h-screen bg-white">
+            <!-- movie thumbnails showcase -->
+            <section class="targetSection min-h-screen my-10 origin-bottom transition-all max-w-4xl mx-auto">
+                <article class="transform transition-all origin-bottom flex flex-col-reverse md:flex-row">
+                    <ul class="relative w-full mx-auto h-80 max-w-xs md:w-1/2">
+                        <li class="absolute filter imgBox left-5 md:left-1/3 md:top-1/2 top-5 transition-all z-10">
+                            <img src="https://m.media-amazon.com/images/M/MV5BMTczNTI2ODUwOF5BMl5BanBnXkFtZTcwMTU0NTIzMw@@.jpg"
+                            class="block h-56 md:h-72 w-auto p-2 shadow-sm object-scale-down bg-white"
+                             alt="">
+                        </li>
+                        <li class="absolute filter imgBox md:-rotate-12 md:transform right-1/4 top-1/4 transition-all">
+                            <img src="https://m.media-amazon.com/images/M/MV5BM2MyNjYxNmUtYTAwNi00MTYxLWJmNWYtYzZlODY3ZTk3OTFlXkEyXkFqcGdeQXVyNzkwMjQ5NzM@.jpg" 
+                            class="block h-56 md:h-72 w-auto p-2 shadow-sm object-scale-down bg-white"
+                            alt="">
+                        </li>
+                        <li class="absolute filter imgBox md:rotate-12 md:transform right-9 top-9 transition-all">
+                            <img src="https://m.media-amazon.com/images/M/MV5BMDFkYTc0MGEtZmNhMC00ZDIzLWFmNTEtODM1ZmRlYWMwMWFmXkEyXkFqcGdeQXVyMTMxODk2OTU@.jpg" 
+                            class="block h-56 md:h-72 w-auto p-2 shadow-sm object-scale-down bg-white"
+                            alt="">
+                        </li>
+                    </ul>
+                    <section class="relative px-4 md:w-1/2 max-w-xl">
+                        <h2 class="font-regular text-pink-600 font-semibold text-lg capitalize md:text-xl xl:text-3xl">
+                            watch good cinema
+                        </h2>
+                        <p class="text-sm font-special font-semibold my-6 md:my-10 text-gray-500 w-4/5 max-w-md md:max-w-xl md:w-full mr-auto md:text-base xl:text-xl">
+                            There are more than <span class="text-black">500,000</span> movies out there. And the number is increasing by the day! <br><br> Checkout the recommendations before deciding whether to watch a movie/TV show/web series or not.. <br><br>You can add movies to your watchlist or favorites too!!
+                        </p>
+                        <a href="" class="block my-2 w-max p-1 capitalize font-semibold font-regular text-black outline-none focus:outline-none hover:shadow-xl transform transition-all hover:-translate-y-px xl:text-xl">
+                            read reviews
                         </a>
-                    </div>
-                </div>        
+                        <a href="" class="block my-2 w-max p-1 capitalize font-semibold font-regular text-black outline-none focus:outline-none hover:shadow-xl transform transition-all hover:-translate-y-px xl:text-xl">
+                            check out the lists
+                        </a>
+                    </section>
+                </article>
             </section>
-            <!-- form content -->
-            <form class="absolute top-0 right-0 z-40 w-full h-full mx-auto px-6 py-8 text-center flex flex-col justify-between lg:w-1/2 lg:bg-white lg:text-pink-600"
-                action="/login"
-                autocomplete="off" 
-                method="POST">
-                <div class="flex-1 h-full flex flex-col items-center justify-start w-full">
-                    <h2 class="my-2 text-2xl tracking-wide w-max mx-auto pb-1 uppercase font-special">
-                        login
-                    </h2>
-                    <% if(isLoginMode && errorMsg) { %>
-                    <small class="text-xs text-center block mx-auto mb-2 text-black tracking-wider font-semibold capitalize transform transition-all -translate-y-ull opacity-100 pointer-events-none bg-gray-50 p-1.5 shadow-lg">
-                        <!-- error message if any -->
-                        <%= errorMsg %>
-                    </small>
-                    <% } %>
-                    <div class="flex flex-1  flex-col items-center justify-start w-full mt-4">
-                        <section class="flex flex-col-reverse items-start w-full justify-center">
-                            <input 
-                                type="text" 
-                                name="loginEmail" 
-                                id="loginEmail" 
-                                placeholder="Your email ID"
-                                autocomplete="username"
-                                class="w-full block p-1.5 rounded-sm shadow-lg bg-purple-300 bg-opacity-30 my-2 transform focus:outline-none outline-none focus:scale-x-105 focus:shadow-lg transition-all text-sm text-gray-50 opacity-60 focus:opacity-100 placeholder-gray-300 font-light lg:bg-transparent lg:shadow-none lg:border-b-2 lg:border-gray-400 lg:focus:border-pink-600 lg:focus:scale-x-100 lg:focus:shadow-none lg:focus:placeholder-pink-600 lg:text-gray-700 lg:placeholder-gray-600">
-                            <label for="loginEmail" class="text-xs lg:text-gray-600 text-gray-50 tracking-wider uppercase">Email</label>
-                        </section>
-                        <section class="flex flex-col-reverse items-start w-full justify-center my-2 relative">
-                            <input 
-                                type="password" 
-                                name="loginPassword" 
-                                id="loginPassword" 
-                                placeholder="Your password"
-                                autocomplete="current-password"
-                                class="w-full block p-1.5 rounded-sm shadow-lg bg-purple-300 bg-opacity-30 my-2 transform focus:outline-none outline-none focus:scale-x-105 focus:shadow-lg transition-all text-sm text-gray-50 opacity-60 focus:opacity-100 placeholder-gray-300 font-light lg:bg-transparent lg:shadow-none lg:border-b-2 lg:border-gray-400 lg:focus:border-pink-600 lg:focus:scale-x-100 lg:focus:shadow-none lg:focus:placeholder-pink-600 lg:text-gray-700 lg:placeholder-gray-600">
-                            <label for="loginPassword" class="text-xs lg:text-gray-600 text-gray-50 tracking-wider uppercase">password</label>
-                            <button data-target="login" type="button" class="showHidePassword absolute right-0 top-1/2 transform -translate-y-0.5 -translate-x-1/2 outline-none focus:outline-none text-gray-500 hover:text-black transition-colors">
-                                <svg class="eye w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                                <svg class="eye w-5 h-5 block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path></svg>
-                            </button>
-                        </section>
-                    </div>
-                </div>
-                <div class="flex flex-col items-center">
-                    <button type="submit" class="outline-none focus:outline-none px-6 py-2 bg-black text-gray-300 text-sm uppercase hover:shadow-lg transform transition-all hov:-translate-y-px hover:scale-110 my-4 rounded-sm">
-                        login
-                    </button>
-                    <a href="/forgot-password" class="capitalize mb-0.5 text-xs text-gray-200 lg:text-gray-500 block outline-none focus:outline-none lg:hidden">
-                        forgot password?
+            <!-- movie thumbnails showcase end -->
+    
+            <!-- users thumbnails showcase -->
+            <section class="targetSection min-h-screen my-10 origin-bottom transition-all max-w-4xl mx-auto">
+                <article class="transform transition-all origin-bottom flex flex-col-reverse md:flex-row-reverse">
+                    <ul class="relative w-full mx-auto mt-6 h-80 max-w-sm lg:max-w-xl md:mt-0 md:w-1/2">
+                        <li class="absolute left-6 md:-top-3 top-5 transition-all z-10">
+                            <img src="https://surpasssoftware.com/wp-content/uploads/2019/11/avatar-1.jpg"
+                            class="block h-28 w-28 lg:h-40 lg:w-40 rounded-full p-1.5 shadow-sm md:shadow-lg object-cover object-top bg-white"
+                             alt="">
+                        </li>
+                        <li class="absolute right-1/4 top-1/4 transition-all">
+                            <img src="https://fonciermarket.com/asset/images/avtar/16.jpg" 
+                            class="block h-52 w-52 lg:h-80 lg:w-80 rounded-full p-1.5 shadow-sm md:shadow-lg object-cover object-top bg-white"
+                            alt="">
+                        </li>
+                        <li class="absolute bottom-0 md:-bottom-10 right-9 transition-all">
+                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlciUyMHByb2ZpbGV8ZW58MHx8MHx8&ixlib=rb-1.2.1&w=1000&q=80" 
+                            class="block h-28 w-28 lg:h-40 lg:w-40 rounded-full p-1.5 shadow-sm md:shadow-lg object-cover object-top bg-white"
+                            alt="">
+                        </li>
+                    </ul>
+                    <section class="relative pl-8 pr-4 md:w-1/2 max-w-xl">
+                        <h2 class="font-regular text-pink-600 font-semibold text-lg capitalize md:text-xl xl:text-3xl">
+                            Join the Moovey army
+                        </h2>
+                        <p class="text-sm font-special font-semibold my-6 md:my-10 text-gray-500 w-4/5 max-w-md md:max-w-xl md:w-full mr-auto md:text-base xl:text-xl">
+                            How many times have you felt overwhelmed or underwhelmed after watching a cinema? Moovey provides a platform to express your emotions and feelings by reviewing it. <br>Rate the movie based on different categories like plot, acting or direction. <br><br>Based on other cinephiles’ ratings of your reviewes you can be a <span class="text-black">top reviewer</span> in no time!!<br><br>Join the cinephile army!
+                        </p>
+                        <a href="" class="capitalize p-1 font-semibold font-regular text-black outline-none focus:outline-none hover:shadow-xl transform transition-all hover:-translate-y-px xl:text-xl">
+                            meet the cinephiles
+                        </a>
+                    </section>
+                </article>
+            </section>
+            <!-- users thumbnails showcase end -->
+    
+            <!-- movie thumbnails showcase -->
+            <section class="targetSection min-h-screen my-10 origin-bottom transition-all max-w-4xl mx-auto">
+                <article class="transform transition-all origin-bottom flex flex-col-reverse md:flex-row">
+                    <ul class="relative w-full flex flex-col px-3 gap-2 mx-auto h-auto max-w-md md:w-1/2">
+                       <!-- list thumbnail -->
+                        <li class="w-5/6 mx-auto max-w-lg bg-white shadow-lg rounded flex flex-col items-start p-2">
+                            <span class="text-pink-600 text-xs uppercase font-regular font-semibold">
+                                my favorite psychological thrillers
+                            </span>
+                            <ul class="text-xs">
+                                <li class="text-black capitalize font-semibold">
+                                    <small>
+                                        sounak
+                                    </small>
+                                </li>
+                                <li class="text-gray-500">
+                                    <small>
+                                        23-October-2019
+                                    </small>
+                                </li>
+                            </ul>
+                        </li>
+                        <!-- testimonial thumbnail -->
+                        <li class="w-full max-w-lg bg-white shadow-lg rounded flex items-center justify-start gap-2 p-2 ml-auto">
+                            <img src="https://m.media-amazon.com/images/M/MV5BMDFkYTc0MGEtZmNhMC00ZDIzLWFmNTEtODM1ZmRlYWMwMWFmXkEyXkFqcGdeQXVyMTMxODk2OTU@.jpg" class="h-28 w-auto" alt="">
+                            <div class="flex flex-col justify-start mb-auto items-start">
+                                <span class="text-pink-600 text-xs uppercase font-regular font-semibold">
+                                    my favorite psychological thrillers
+                                </span>
+                                <ul class="text-xs">
+                                    <li class="text-black capitalize font-semibold">
+                                        <small>
+                                            sounak
+                                        </small>
+                                    </li>
+                                    <li class="text-gray-500">
+                                        <small>
+                                            23-October-2019
+                                        </small>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <!-- testimonial thumbnail -->
+                        <li class="w-5/6 mx-auto max-w-xs bg-white shadow-lg rounded flex flex-col items-center justify-center gap-2 p-2">
+                            <img src="https://surpasssoftware.com/wp-content/uploads/2019/11/avatar-1.jpg" class="h-20 w-20 rounded-full p-1 shadow-lg" alt="">
+                            <small class="my-0.5 text-black text-xs">Jane Doe</small>
+                            <ul class="flex items-center text-pink-600 justify-center text-lg">
+                                <li><i class="fas fa-star"></i></li>
+                                <li><i class="fas fa-star"></i></li>
+                                <li><i class="fas fa-star"></i></li>
+                                <li><i class="fas fa-star"></i></li>
+                                <li><i class="fas fa-star-half-alt"></i></li>
+                            </ul>
+                            <small class="text-black font-semibold text-xs uppercase font-special px-2 text-center">
+                                loved your review! keep up the good work
+                            </small>
+                        </li>
+                    </ul>
+                    <section class="relative px-4 md:w-1/2 max-w-xl">
+                        <h2 class="font-regular text-pink-600 font-semibold text-lg capitalize md:text-xl xl:text-3xl">
+                            create lists, write reviews, testimonials and lot more
+                        </h2>
+                        <p class="text-sm font-special font-semibold my-6 md:my-10 text-gray-500 w-4/5 max-w-md md:max-w-xl md:w-full mr-auto md:text-base xl:text-xl">Write reviews of umpteen movies, films, documentaries, animes, tv shows, web series and more. If you like list based articles, we have got good news for you. You can make your favorite assorted lists too!! And making one on Moovey couldn’t be easier.Create your lists for the world to see. <br> cheer other reviewers by writing testimonials on their reviews and lists. 
+                        </p>
+                        <a href="" class="capitalize font-semibold font-regular text-black outline-none focus:outline-none hover:shadow-xl transform transition-all hover:-translate-y-px xl:text-xl">
+                            
+                        </a>
+                    </section>
+                </article>
+                <div class="transform transition-all origin-bottom flex gap-2 flex-col items-center justify-center w-full mt-10 md:mt-20">
+                    <a href="" class="bg-black capitalize focus:outline-none font-regular hover:-translate-y-px hover:scale-105 hover:shadow-xl outline-none px-5 py-1.5 text-white text-xs transform transition-all focus:shadow-xl focus:-translate-y-px focus:scale-105 md:text-base xl:text-xl">
+                        join now
                     </a>
-                    <span class="text-xs text-gray-200 lg:text-gray-500 block lg:hidden">
-                        New user?
-                        <button type="button" class="accountModeToggler capitalize inline-block outline-none focus:outline-none">
-                            click here
-                        </button>
-                    </span>
-                </div>
-            </form>
-        </section>
-
-        <!-- register form -->
-        <section class="accountModal flex items-center z-40 absolute top-0 left-0 transform w-full h-full transition-all duration-500 text-white origin-centerease-out <% if (isRegisterMode) {%> <%= 'scale-100 pointer-events-auto'%> <%} else { %><%= 'scale-0 pointer-events-none'%> <% } %>">
-            <section class="hidden lg:flex absolute top-0 right-0 w-1/2 h-full">
-                <video autoplay loop muted preload="auto" class="absolute top-0 right-0 h-full w-full block object-cover opacity-5 pointer-events-none">
-                    <source src="/static/assets/video.mp4" type="video/mp4">
-                </video>
-                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-full flex items-center justify-center text-white flex-col w-full">
-                    <strong class="tracking-tighter border-2 py-0.5 px-1.5 border-current flex-shrink-0 font-light text-lg cursor-pointer">
-                        moovey••
-                    </strong>
-                    
-                    <div class="flex items-center justify-center flex-col origin-center duration-500 transition-all">
-                        <span class="text-2xl capitalize font-light font-special my-4">
-                            already have an account?
-                        </span>
-                        <button type="button" class="accountModeToggler capitalize inline-block outline-none focus:outline-none">login now</button>
-                    </div>
-                </div>        
-            </section>
-            <!-- form content -->
-            <form 
-                action="/register" 
-                method="POST" 
-                autocomplete="off"
-                class="absolute top-0 left-0 z-40 w-full h-full mx-auto px-6 py-8 text-center flex flex-col justify-between lg:w-1/2 lg:bg-white lg:text-pink-600">
-                <div class="flex-1 h-full flex flex-col items-center justify-start w-full">
-                    <h2 class="my-2 text-2xl tracking-wide w-max mx-auto pb-1 uppercase font-special">
-                        register
-                    </h2>
-                    <% if(isRegisterMode && errorMsg) { %>
-                    <small class="text-xs text-center block mx-auto mb-2 text-black tracking-wider font-semibold capitalize transform transition-all -translate-y-ull opacity-100 pointer-events-none bg-gray-50 p-1.5 shadow-lg">
-                        <!-- error message if any -->
-                        <%= errorMsg %>
+                    <small class="text-xs text-gray-500 capitalize font-special">
+                        already have an account? <a href="" class="font-semibold hover:text-black focus:text-black transition-all border-b border-transparent hover:border-current focus:border-current outline-none focus:outline-none">login now</a>
                     </small>
-                    <% } %>
-                    <div class="flex flex-1  flex-col items-center justify-start w-full mt-4">
-                        <section class="flex flex-col-reverse items-start w-full justify-center">
-                            <input 
-                                type="text" 
-                                name="registerName" 
-                                id="name" 
-                                placeholder="Your name"
-                                class="w-full block p-1.5 rounded-sm shadow-lg bg-purple-300 bg-opacity-30 my-2 transform focus:outline-none outline-none focus:scale-x-105 focus:shadow-lg transition-all text-sm text-gray-50 opacity-60 focus:opacity-100 placeholder-gray-300 font-light lg:bg-transparent lg:shadow-none lg:border-b-2 lg:border-gray-400 lg:focus:border-pink-600 lg:focus:scale-x-100 lg:focus:shadow-none lg:focus:placeholder-pink-600 lg:text-gray-700 lg:placeholder-gray-600">
-                            <label for="name" class="text-xs lg:text-gray-600 text-gray-50 tracking-wider uppercase">Name</label>
-                        </section>
-                        <section class="flex flex-col-reverse items-start w-full justify-center">
-                            <input 
-                                type="text" 
-                                name="registerEmail" 
-                                id="email" 
-                                placeholder="Your email ID"
-                                autocomplete="username"
-                                class="w-full block p-1.5 rounded-sm shadow-lg bg-purple-300 bg-opacity-30 my-2 transform focus:outline-none outline-none focus:scale-x-105 focus:shadow-lg transition-all text-sm text-gray-50 opacity-60 focus:opacity-100 placeholder-gray-300 font-light lg:bg-transparent lg:shadow-none lg:border-b-2 lg:border-gray-400 lg:focus:border-pink-600 lg:focus:scale-x-100 lg:focus:shadow-none lg:focus:placeholder-pink-600 lg:text-gray-700 lg:placeholder-gray-600">
-                            <label for="email" class="text-xs lg:text-gray-600 text-gray-50 tracking-wider uppercase">Email</label>
-                        </section>
-                        <section class="flex flex-col-reverse items-start w-full justify-center my-2 relative">
-                            <input 
-                                type="password" 
-                                name="registerPassword" 
-                                id="password" 
-                                placeholder="Your password"
-                                autocomplete="new-password"
-                                class="w-full block p-1.5 rounded-sm shadow-lg bg-purple-300 bg-opacity-30 my-2 transform focus:outline-none outline-none focus:scale-x-105 focus:shadow-lg transition-all text-sm text-gray-50 opacity-60 focus:opacity-100 placeholder-gray-300 font-light lg:bg-transparent lg:shadow-none lg:border-b-2 lg:border-gray-400 lg:focus:border-pink-600 lg:focus:scale-x-100 lg:focus:shadow-none lg:focus:placeholder-pink-600 lg:text-gray-700 lg:placeholder-gray-600">
-                            <label for="password" class="text-xs lg:text-gray-600 text-gray-50 tracking-wider uppercase">password</label>
-                            <button data-target="register" type="button" class="showHidePassword absolute right-0 top-1/2 transform -translate-y-0.5 -translate-x-1/2 outline-none focus:outline-none text-gray-500 hover:text-black transition-colors">
-                                <svg class="eye w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                                <svg class="eye w-5 h-5 block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path></svg>
-                            </button>
-                        </section>
-                    </div>
                 </div>
-                <div class="flex flex-col items-center">
-                    <button type="submit" class="outline-none focus:outline-none px-6 py-2 bg-black text-gray-300 text-sm uppercase hover:shadow-lg transform transition-all hov:-translate-y-px hover:scale-110 my-4 rounded-sm">
-                        register
-                    </button>
-                    <span class="text-xs capitalize text-gray-200 lg:text-gray-500 block lg:hidden">
-                        Existing user?
-                        <button type="button" class="accountModeToggler inline-block outline-none focus:outline-none">
-                            click here
-                        </button>
-                    </span>
-                </div>
-            </form>
-        </section>
+            </section>
+            <!-- movie thumbnails showcase end -->
+        </main>
 
-    </div>
-</section>
-
-<%- include('../partials/navbar') %>
-
-
-<header class="h-screen bg-gradient-to-r from-pink-600 to-purple-700 flex flex-col items-center justify-center pb-8">
-    <section class="flex flex-1 flex-col mx-auto justify-center items-start w-5/6 max-w-md md:items-center">
-        <div class="flex flex-col items-center w-full">
-            <h1 class="text-8xl mb-10 mt-2 font-regular font-bold mx-auto w-min flex flex-col items-center justify-center md:text-9xl select-none">
-                <span class="headingHeroText tracking-wide">
-                    Watch
-                </span>
-                <span class="headingHeroText tracking-wide">
-                    Review
-                </span>
-                <span class="headingHeroText tracking-wide">
-                    Repeat
-                </span>
-            </h1>
-            <button type="button" class="showLoginModal block font-special group-hover:text-white transition-all rounded-sm transform hover:-translate-y-px hover:scale-110 text-sm uppercase bg-black text-gray-300 z-10 py-2 px-8 outline-none focus:outline-none">log in</button>
-        </div>
-    </section>
-
-    <a href="#main" class="text-sm rounded capitalize font-semibold text-white animate-bounce outline-none focus:outline-none flex items-center">
-        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 17l-4 4m0 0l-4-4m4 4V3"></path></svg>
-        <span class="hidden">next</span>
-    </a>
-</header>
-
-<main id="main" class="w-full min-h-screen justify-center p-4 items-center flex-col">
-    <section class="w-11/12 mx-auto max-w-3xl">
         
-        <article class="carousel my-6 border-b p-2">
-            <h2 class="font-title capitalize tracking-wider text-pink-600 font-light text-xl my-4 flex items-center justify-start md:text-2xl">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                <span class="mx-1">
-                    about moovey
-                </span>
-            </h2>
-            <blockquote class="mb-2 text-black w-full">
-                <div class="flex items-start">
-                    <i class="fas fa-quote-left text-xl"></i>
-                    <span class="italic text-lg m-2.5 inline-block">I have a very simple definition of a good movie: a good movie makes you forget you're watching a movie </span>
-                    <i class="fas fa-quote-right text-xl"></i>
-                </div>
-                <h3 class="capitalize text-base text-right text-pink-600">&mdash; michael cimino</h3>
-            </blockquote>
-            <p class="text-sm text-gray-500 transform duration-300 transition-all text-left capitalize md:text-base">
-                Join the network of reviewers from all over the world. Read reviews about good movies of all languages, genres etc before watching it. Write a review after watching a movie. Recommend and promote good movies to other people.
-                there are over 500,000 movies in existence. it simply isn't possible to watch all the movies ever made. with moovey you can decide whether to watch a movie or not. search a movie by title. read the reviewes without the spoilers. decide for yourself whether it is worth your time or not. read reviews and write reviewes to recommend and promote good movies from across the world.  
-            </p>
-        </article>
 
-        <article class="carousel my-6 border-b p-2">
-            <h2 class="font-title capitalize tracking-wider text-pink-600 font-light text-xl text-right my-4 flex items-center justify-end md:text-2xl">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-                <span class="mx-1">
-                    read and write reviews
-                </span>
-            </h2>
-            <p class="text-sm text-gray-500 transform duration-300 transition-all text-right capitalize md:text-base">
-                moovey provides you a platform to write reviews of a huge array of movies. read other reviewers' reviews. rate other reviewers' reviews. be it movies, anime, web shows, tv series, documentaries, we've got you. before committing to watch a movie, read the review. once you watch a movie, review it. be the best reviewer by accurately reviewing good cinema.
-            </p>
-            <a href="/moovey/blogs" class="carouselLink duration-1000 text-pink-700 text-sm border-b border-transparent hover:border-current hover:shadow-md hover:scale-x-110 transform transition-all my-2 mx-auto block w-max text-center font-special capitalize">our reviews</a>
-        </article>
-
-        <article class="carousel my-6 border-b p-2">
-            <h2 class="font-title capitalize tracking-wider text-pink-600 font-light text-xl text-left my-4 flex items-center justify-start md:text-2xl">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
-                <span class="mx-1">
-                    moovey lists
-                </span>
-            </h2>
-            <p class="text-sm text-gray-500 transform duration-300 transition-all text-left md:text-base capitalize">
-                start creating your own lists. be it your all time favorite movies, worst movies you ever watched, top 10 movies on the world wars, best animes to watch.. you get the gist. create as many lists as you want. for you and for others. moovey believes that best way to promote good cinema is by creating lists. 
-            </p>
-            <a href="/moovey/lists" class="carouselLink duration-1000 text-pink-700 text-sm border-b border-transparent hover:border-current hover:shadow-md hover:scale-x-110 transform transition-all my-2 mx-auto block w-max text-center font-special capitalize">our lists</a>
-        </article>
-
-        <article class="carousel my-6 border-b p-2">
-            <h2 class="font-title capitalize tracking-wider text-pink-600 font-light text-xl text-left my-4 flex items-center justify-end md:text-2xl">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                <span class="mx-1">
-                    be a reviewer
-                </span>
-            </h2>
-            <p class="text-sm text-gray-500 transform duration-300 transition-all text-right md:text-base capitalize">
-                the more you write reviews and create lists the faster you become the top moovey reviewer. with every review you write you are helping fellow moovie user to watch good movies. let's unearth the hidden gems of cinema from across the world.
-            </p>
-            <a href="/reviewers" class="carouselLink duration-1000 text-pink-700 text-sm border-b border-transparent hover:border-current hover:shadow-md hover:scale-x-110 transform transition-all my-2 mx-auto block w-max text-center font-special capitalize">our reviewers</a>
-        </article>
-    </section>
-    <div id="mainEnd" class="h-72 flex items-center justify-center transform duration-500 transition-all ease-in">
-        <div class="cta my-10 mx-auto flex flex-col items-center justify-center w-max relative group">
-            <div class="absolute bg-opacity-50 top-0 left-0 w-full h-full bg-gray-500 z-0 animate-ping group-hover:bg-pink-600"></div>
-            <button type="button" class="showRegisterModal block font-special group-hover:text-white transition-all rounded-sm transform hover:-translate-y-px hover:scale-110 text-xl uppercase bg-black text-gray-300 z-10 py-4 px-10">join now</button>
-            <small class="text-xs text-gray-400 mt-1.5 capitalize">join now to be a reviewer</small>
-        </div>
-    </div>
-</main>
-
-<script src="/static/js/index.js"></script>
 <script src="/static/js/landing.js"></script>
+<script src="/static/js/navbar.js"></script>
 <%- include('../partials/footer') %>
 
