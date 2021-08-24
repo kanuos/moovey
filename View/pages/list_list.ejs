@@ -1,60 +1,27 @@
 <%- include('../partials/head')%>
-<body class="min-h-screen font-regular relative bg-gray-100">
-    <%- include('../partials/fixed_video_bg')%>
+<body class="min-h-screen font-special relative custom-scrollbar">
     <!-- navbar -->
     <%- include('../partials/navbar')%>
     <!-- header -->
-    <header class="mt-14 mb-4 p-2 flex flex-col items-center">
-        <h1 class="font-title text-3xl mt-9 lg:mt-12 capitalize text-center">
-            our moovey lists
-        </h1>
-        <% if(message){ %>
-        <p class="text-gray-400 text-lg font-regular mt-2 opacity-70 flex items-start">
-            <i class="text-xs fas fa-quote-left"></i>
-            <span class="text-pink-600 px-2">
-                Search Result For <%= message %>
-            </span>
-            <i class="text-xs fas fa-quote-right"></i>
-        </p>
-            <% } %>
-        <% if(authError){ %>
-        <span class="text-pink-600 text-sm font-semibold">
-            <%= authError %>
-        </span>
-        <% } %>
-        <form autocomplete="off"
-            method="GET"
-            action="/moovey/list" 
-            class="w-11/12 my-2 max-w-lg mx-auto flex flex-col items-start justify-self-center relative">
-            <section class="relative w-full">
-                <input 
-                    type="text" 
-                    name="title"
-                    required
-                    placeholder="Eg. My favorite psychological thrillers"
-                    class="p-2.5 pr-8 text-sm w-full block rounded-md shadow-md outline-none focus:outline-none focus:shadow-2xl focus:scale-x-105 transform transition-all duration-200 focus:text-gray-600 focus:placeholder-gray-600">
-                <button type="submit" class="text-gray-700 z-10 absolute right-2 top-1/2 transform 
-                -translate-y-1/2 outline-none focus:outline-none focus:scale-125 hover:scale-125">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                </button>
-            </section>
-        </form>
-    </header>
+    <%- include('../partials/list-header')%>
+    
     <% if (data?.length > 0) { %>
-        <main class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-11/12 my-4 mx-auto max-w-7xl min-h-screen gap-4">
-            <% data.forEach(list => { %>
-                <%- include("../partials/list_thumbnail", {list: list}) %>
-            <% }) %>
-        </main>
+        
+    <main class="pb-8 grid h-full min-h-screen grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-6 w-full mx-auto max-w-6xl">
+    <% data.forEach(list => { %>
+            <%- include("../partials/list_thumbnail", {list: list}) %>
+    <% }) %>
+    </main>
+    <%- include('../partials/pagination') %>
     <% } else { %>
-        <main class="h-65vh max-w-6xl my-4 mx-auto flex items-start pt-20 justify-center">
-            <p class="text-2xl font-title text-center block text-gray-600 tracking-wide w-max break-words mx-auto my-2 font-light">
-                No lists found. 
-            </p>
-        </main>
+    <main class="h-65vh max-w-6xl my-4 mx-auto flex items-start pt-20 justify-center">
+        <p class="text-2xl font-title text-center block text-gray-600 tracking-wide w-max break-words mx-auto my-2 font-light">
+            No lists found. 
+        </p>
+    </main>
     <% } %>
 
-    <script src="/static/js/index.js"></script>
-    <script src="/static/js/navScroll.js"></script>
-<!-- footer -->
-<%- include('../partials/footer') %>
+    <script src="/static/js/navbar.js"></script>
+    <script src="/static/js/list-header.js"></script>
+    <script src="/static/js/scroll-animation.js"></script>
+    <%- include('../partials/footer') %>
