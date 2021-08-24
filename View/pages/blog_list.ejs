@@ -1,0 +1,28 @@
+<%- include('../partials/head')%>
+<body class="min-h-screen font-regular relative custom-scrollbar">
+    <!-- navbar -->
+    <%- include('../partials/navbar')%>
+    <!-- header -->
+    <%- include('../partials/list-header')%>
+    
+    <% if (data?.length > 0) { %>
+        <main class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-11/12 my-4 mx-auto max-w-7xl min-h-screen gap-4">
+            <% data.forEach(blog => { %>
+                <%- include("../partials/blog_thumbnail", {blog: blog}) %>
+            <% }) %>
+        </main>
+        <%- include("../partials/pagination") %>
+        
+    <% } else { %>
+        <main class="h-60vh max-w-6xl my-4 mx-auto flex items-start justify-center">
+            <p class="text-xl text-center block text-gray-600 tracking-wide w-max break-words mx-auto my-2 font-light">
+                No reviews found! 
+            </p>
+        </main>
+    <% } %>
+    
+    <script src="/static/js/scroll-animation.js"></script>
+    <script src="/static/js/navbar.js"></script>
+    <script src="/static/js/list-header.js"></script>
+<!-- footer -->
+<%- include('../partials/footer') %>

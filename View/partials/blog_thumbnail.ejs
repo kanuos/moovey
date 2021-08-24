@@ -1,46 +1,59 @@
-<section class="outline-none focus:outline-none my-4 transition-all transform hover:scale-105 shadow-sm h-60vh w-4/5 max-w-sm mx-auto relative hover:shadow-2xl ease-linear grid place-items-start group bg-gradient-to-r from-pink-600 to-purple-600">
-    
-    <div class="flex flex-col items-center py-2.5 px-4 bg-black shadow-lg w-min absolute -top-4 -left-4 rounded-sm z-20 group-hover:bg-pink-600">
-        <strong class="text-transparent text-white w-max inline-block font-title">
-            10
-        </strong>
-        <span class="uppercase text-xs text-white font-regular">
-            jun
-        </span>
-    </div>
-
-    <img 
-    src="<% if (blog.poster !== 'N/A') { %><%= blog.poster %><% } else {%>/static/assets/placeholder.jpg<% } %>" 
-    class="block h-full w-full object-cover pointer-events-none z-0 absolute opacity-100 group-hover:opacity-10">
-
-    
-    <article class="flex flex-col h-auto z-10 w-full py-6 bg-white group-hover:bg-black overflow-hidden transition-all">  
-        <div class="px-4 flex flex-col w-full items-center justify-center">
-            <h3 class="text-sm font-semibold text-black group-hover:text-white text-center font-title capitalize tracking-wider w-3/5 mx-auto transition-all">
-                <%= blog.title %> (<%= blog.year %>)
-            </h3>
-            <span class="text-black group-hover:text-white capitalize text-xs flex items-center">
-                <span class="mr-1">
-                    review by :
-                </span>
-                <a title="View <%= blog.name %>'s profile" class="hover:border-current border-transparent border-b" href="/reviewers/<%= blog.uid %>"><%= blog.name %></a>
-            </span>
-            <a title="Read Review" href="/moovey/<%= blog.blog_id %>" class="hover:scale-105 hover:-translate-y-px transform transition-all grid place-items-center my-4 px-2">
-                <h2 
-                class="text-xl font-bold font-title text-transparent bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-center break-words flex items-center justify-center capitalize transition-all">
-                    <%= blog.blog_title %>
-                </h2>
+<!-- blog thumbnail -->
+<article data-animate="opacity-25" class="scrollArticle hover:scale-105 transform transition-all opacity-25 w-80 mx-auto relative break-words vh-60 group bg-white shadow-2xl group flex flex-col overflow-hidden">
+    <section class="w-full h-5/6 relative">
+        <!-- blog image -->
+        <img 
+            class="block absolute top-0 left-0 h-full w-full object-cover z-0 transition-all pointer-events-none object-top"
+            src="<%= blog.poster %>"
+            alt="">  
+        <!-- blog info -->
+        <section class="h-auto absolute bottom-0 left-0 w-full bg-white bg-opacity-95 p-4 flex flex-col items-center gap-2 transition-transform md:opacity-0 md:group-hover:opacity-100 transform md:translate-y-full md:group-hover:translate-y-0">
+            <strong class="text-sm text-center">
+                <%= blog.blog_title %>
+            </strong>
+            <img src="https://htmlstream.com/preview/unify-v2.6.3/assets/img-temp/400x450/img5.jpg" alt="" class="h-10 w-10 object-cover block p-0.5 rounded-full filter drop-shadow-md bg-white">
+            <a href="" class="text-pink-600 capitalize text-xs font-semibold font-special outline-none focus:outline-none hover:border-current border-transparent border-b transition-all">
+                <%= blog.name %>
             </a>
-        </div>
-    </article>
-
-    <a title="Read Review" href="/moovey/<%= blog.blog_id %>" class="grid place-items-start w-1/2 mx-auto h-full transform hover:shadow-2xl transition-all">
-        <figure class="block h-56 w-full group-hover:opacity-100 -translate-y-full transform transition-all opacity-0 group-hover:-translate-y-0 mx-auto ease-linear p-2 bg-black duration-300 delay-100 overflow-hidden">
-            <img 
-                src="<% if (blog.poster !== 'N/A') { %><%= blog.poster %><% } else {%>/static/assets/placeholder.jpg<% } %>" 
-                class="block h-full w-full object-cover pointer-events-none">
-        </figure>
-    </a>
-
-</section>
-
+            <!-- summary/desc of the list max 30 chars  -->
+            <p class="text-xs font-light text-center font-regular italic text-black">
+                <%= blog.blog_content %>
+            </p>
+            <a href="/moovey/<%= blog.blog_id %>" class="outline-none focus:outline-none text-xs font-regular capitalize text-black font-semibold mt-auto hover:text-pink-600">
+                read more
+            </a>
+        </section>
+        <!-- blog meta only for tab and above screen size. disappears on hover -->
+        <section class="h-autp p-1.5 hidden md:block absolute bottom-0 left-0 w-full bg-white group-hover:opacity-0 group-hover:-translate-y-full transform transition-all pointer-events-none">
+            <strong class="text-sm text-left">
+                <%= blog.blog_title %>
+            </strong>
+            <div class="flex items-center gap-2 mt-2">
+                <img src="https://htmlstream.com/preview/unify-v2.6.3/assets/img-temp/400x450/img5.jpg" alt="" class="h-8 w-8 object-cover block p-0.5 rounded-full filter drop-shadow-md bg-white">
+                
+                <a href="" class="text-pink-600 capitalize outline-none focus:outline-none">
+                    <small class="text-xs font-semibold font-special">
+                        <%= blog.name %>
+                    </small>
+                </a>
+            </div>
+        </section>
+    </section>
+    <!-- blog stats -->
+    <div class="h-1/6 mt-auto left-0 w-full grid place-items-center">
+        <ul class="flex items-center justify-around gap-x-4 py-2">
+            <li class="text-xs text-gray-400 font-special inline-flex items-center gap-1">
+                <i class="far fa-eye"></i>
+                <small>150</small>
+            </li>
+            <li class="text-xs text-gray-400 font-special inline-flex items-center gap-1">
+                <i class="far fa-star"></i>
+                <small>4.5/5</small>
+            </li>
+            <li class="text-xs text-gray-400 font-special inline-flex items-center gap-1">
+                <i class="far fa-calendar"></i>
+                <small>21-Oct-2020</small>
+            </li>
+        </ul>
+    </div>
+</article>
