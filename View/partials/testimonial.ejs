@@ -1,0 +1,52 @@
+<article data-animate="opacity-30" class="scrollArticle w-full max-w-2xl mx-auto font-regular mb-10 opacity-30 transition-all">
+    <span class="text-center block text-gray-400 text-sm font-semibold">
+        <i class="far fa-window-minimize animate-bounce text-pink-600"></i> <%= parseInt(index + 1) %> of <%= count %>
+    </span>
+
+    <section class="p-4 mb-5 flex flex-col items-center justify-center w-11/12 mx-auto sm:flex-row sm:shadow-lg sm:mt-5 sm:gap-x-4">
+        <img src="<%= movie.poster %>" alt="poster" class="w-1/2 object-scale-down shadow-xl sm:w-2/5 sm:shadow-none">
+        <div class="flex flex-col items-center justify-center text-center sm:items-start sm:w-3/5 sm:text-left sm:mb-auto">
+            <section class="flex flex-col items-center mt-1 sm:items-start sm:mb-2.5">
+                <small class="capitalize font-special font-semibold text-xs text-gray-500 mb-0.5">title</small>
+                <strong class="text-sm capitalize text-black">
+                    <%= movie.title %>
+                </strong>
+            </section>
+            <section class="flex flex-col items-center mt-1 sm:items-start sm:mb-2.5">
+                <small class="capitalize font-special font-semibold text-xs text-gray-500 mb-0.5">year</small>
+                <strong class="text-sm text-black">
+                    <%= movie.year %>
+                </strong>
+            </section>
+            <section class="flex flex-col items-center mt-1 sm:items-start sm:mb-2.5">
+                <small class="capitalize font-special font-semibold text-xs text-gray-500 mb-0.5">about series</small>
+                <p class="italic font-semibold font-special text-sm">
+                <% if (movie.desc) {%>
+                    <%= movie.desc %>
+                <% } else {%>
+                    No descriptions available
+                <% } %>
+                </p>
+            </section>
+        </div>
+    </section>
+
+    <ul class="flex items-center justify-center flex-col text-xs sm:flex-row w-full">
+        <li class="capitalize text-black hover:text-pink-600 sm:mx-2">
+            <a href="" class="outline-none focus:outline-none">
+                <i class="fas fa-edit"></i>
+                <span>
+                    Edit item
+                </span>
+            </a>
+        </li>
+        <li class="capitalize text-black hover:text-pink-600 sm:mx-2">
+            <a href="" class="outline-none focus:outline-none">
+                <i class="fas fa-trash-alt"></i>
+                <span>
+                    delete from list
+                </span>
+            </a>
+        </li>
+    </ul>
+</article>

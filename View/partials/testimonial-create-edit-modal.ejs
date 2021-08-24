@@ -1,0 +1,42 @@
+<section id="testimonialModal" class="h-screen fixed z-50 w-full top-0 left-0 grid place-items-center opacity-0 transform transition-all origin-center scale-0">
+    <div class="bg-gray-50 w-full h-full absolute top-0 left-0 z-0 opacity-95">
+    </div>
+    <article class="w-5/6 max-w-lg bg-white filter drop-shadow-lg relative p-4 overflow-hidden"> 
+        <div class="h-4 block text-right absolute top-2 right-4 w-full">
+            <i class="testimonialEditorToggler fas fa-times hover:text-pink-600 cursor-pointer"></i>
+        </div>
+        <form action="/edit" class="my-auto h-5/6 flex flex-col items-start justify-center gap-1">
+            <!-- logged in user image-->
+            <div class="flex items-center gap-2 mb-2">
+                <img src="https://images-cdn.9gag.com/photo/aZ3wA59_700b.jpg" class="h-10 w-10 block rounded-full p-1 bg-white filter drop-shadow-md object-cover" alt="">
+                <!-- logged in user name -->
+                <strong class="text-pink-600 font-special font-semibold capitalize text-lg">
+                    Julia
+                </strong>
+            </div>
+            <!-- logged in user rating -->
+            <label for="testimonial" class="block text-left text-xs font-regular w-full mx-auto text-black font-semibold mt-4 mb-1">
+                Rating
+            </label>
+            <ul class="flex items-center justify-center gap-1">
+                <li><button><i class="far fa-star"></i><span class="hidden">dummy text</span></button></li>
+                <li><button><i class="far fa-star"></i><span class="hidden">dummy text</span></button></li>
+                <li><button><i class="far fa-star"></i><span class="hidden">dummy text</span></button></li>
+                <li><button><i class="far fa-star"></i><span class="hidden">dummy text</span></button></li>
+                <li><button><i class="far fa-star"></i><span class="hidden">dummy text</span></button></li>
+            </ul>
+            <label for="testimonial" class="block text-left text-xs font-regular w-full mx-auto text-black font-semibold mt-4 mb-1">
+                Feedback
+            </label>
+            <textarea name="testimonial" id="testimonial" class="resize-none h-full w-full mx-auto outline-none focus:outline-none font-semibold rounded border border-current p-1.5 mb-4" required placeholder="How did you like the review?" maxlength="100"></textarea>
+            <button type="submit" class="uppercase text-xs text-white bg-black py-2 px-5">
+                post
+            </button>
+        </form>
+        <form action="/delete" class="block p-2 mt-10">
+            <button type="submit" class="w-max block mx-auto outline-none focus:outline-none text-xs capitalize text-gray-400 hover:border-current border-b border-transparent hover:text-pink-600 font-semibold">
+                delete testimonial
+            </button>
+        </form>
+    </article>
+</section>

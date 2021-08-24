@@ -1,0 +1,29 @@
+<header class="h-screen flex flex-col items-center justify-center pt-28 p-10 box-border">
+    <h1 class="capitalize sm:text-xl font-regular mb-4 text-black break-words text-center font-semibold">
+        <%= title %>
+    </h1>
+    <p class="w-full mx-auto max-w-lg mt-2 font-special text-gray-600 italic text-center">
+        <% if(desc) { %>
+            <%= desc %>
+        <% } else { %>
+            No description available
+        <% } %>
+    </p>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Hayao_Miyazaki_cropped_3_Hayao_Miyazaki_201211.jpg/800px-Hayao_Miyazaki_cropped_3_Hayao_Miyazaki_201211.jpg" 
+        class="h-20 w-20 sm:h-28 sm:w-28 object-cover block p-2 shadow-sm rounded-full my-2"
+    alt="">
+    <div class="flex flex-col items-center justify-center mb-2">
+        <small class="text-xs text-gray-400 capitalize">Created By</small>
+        <a href="/reviewers/<%= user.id %>" class="text-sm font-semibold text-pink-600 font-regular capitalize"><%= user.name %></a>
+    </div>
+    <div class="flex flex-col items-center justify-center">
+        <small class="text-xs text-gray-400 capitalize">Created On</small>
+        <small class="text-xs text-gray-600 font-semibold capitalize">
+            <%= date.date %>-<%= date.month %>-<%= date.year %>
+        </small>
+    </div>
+    <a href="" class="text-sm outline-none focus:outline-none my-10 py-2 px-5 border border-dashed border-black hover:text-white hover:bg-black">
+        <i class="fas fa-stethoscope"></i>
+        <span class="capitalize font-special font-semibold">open in dashboard</span>
+    </a>
+</header>
