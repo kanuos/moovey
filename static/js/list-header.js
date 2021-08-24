@@ -26,7 +26,6 @@ function setActiveSortType(type = null) {
     // inactive classes : text-pink-600 hover:text-gray-400
 
     type = type ?? sortOptions[0]?.dataset["sorttype"]
-    console.log(type);
     sortOptions?.forEach(li => {
         li.classList.remove("active", optionClasses.ACTIVE);
         li.classList.add(optionClasses.INACTIVE, optionClasses["INACTIVE:HOVER"]);

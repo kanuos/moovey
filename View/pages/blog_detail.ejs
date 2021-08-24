@@ -1,0 +1,270 @@
+<%- include('../partials/head') %>
+<body class="overflow-x-hidden custom-scrollbar">
+    <!-- page fixed top navbar start -->
+    <%- include('../partials/navbar') %>
+    
+    <!-- background image -->
+    <%- include('../partials/bg_image') %>
+    
+    <!-- header -->
+    <header class="flex flex-col items-center justify-center pt-28 mb-8 h-screen relative">
+        <!-- review date -->
+        <p class="flex items-center gap-1 font-semibold text-gray-400">
+            <i class="far fa-calendar text-xs"></i> 
+            <small class="capitalize text-xs">
+                <%= blog.created.date %>-<%= blog.created.month %>-<%= blog.created.year %>
+            </small>
+        </p>
+        <!-- movie/show name -->
+        <h2 class="w-5/6 mx-auto max-w-xl font-special capitalize text-transparent bg-gradient-to-r from-black to-pink-600 bg-clip-text break-words text-center text-2xl sm:text-3xl font-light mt-4 mb-8 md:mb-12 md:text-4xl">
+            <small class="text-xs border-b border-gray-300">review of</small>
+            <br>
+            <%= blog.metadata.title %>
+        </h2>
+        <!-- profile pic -->
+        <img
+            class="h-20 w-20 block p-1.5 bg-white rounded-full shadow-xl md:h-32 md:w-32"
+             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_pwCgmTMLtWz9zNust1p1E-CGBacPcKL8EwV4U8gzCSRKp5hUBt2DHtr8oPN7N1lIgHM&usqp=CAU" alt="">
+        <!-- reviewer name -->
+        <a href="" class="font-special capitalize text-sm mt-2 font-semibold text-black hover:text-pink-600 focus:text-pink-600 transition-all outline-none focus:outline-none">
+            <%= blog.name %>
+        </a>
+        <!-- review duration -->
+        <p class="font-regular mt-2 text-gray-400 transition-all">
+            <i class="far fa-clock text-xs"></i>
+            <small class="text-xs">
+                <span id="duration">5</span> mins read
+            </small>
+        </p>
+        <!-- dashboard link -->
+        <a href="" class="text-sm outline-none focus:outline-none my-10 py-2 px-5 border border-dashed border-black hover:text-white hover:bg-black">
+            <i class="fas fa-stethoscope"></i>
+            <span class="capitalize font-special font-semibold">open in dashboard</span>
+        </a>
+        <!-- social icons -->
+        <%- include('../partials/social-share') %>
+    
+        <a href="#main" class="mt-auto mb-4 text-sm font-regular capitalize text-center outline-none focus:outline-none hover:border-current border-transparent border-b transition-all">read review</a>
+    </header>
+
+    <!-- side drawer for metadata -->
+    <aside id="asideDrawer" class="flex fixed top-0 left-0 h-screen w-full max-w-xl bg-gray-900 pb-4 justify-center items-end transform transition-all -translate-x-full z-30">
+        <button class="sidebarToggler z-30 absolute top-4 right-4 text-2xl text-gray-500 hover:text-white transition-all outline-none focus:outline-none focus:text-white">
+            <i class="far fa-caret-square-left"></i>
+            <span class="hidden">close sidebar</span>
+        </button>
+        <section data-modal="img" class="aside-section transition-all absolute top-0 left-0 h-full w-full flex flex-col items-center justify-center gap-2">
+            <strong class="text-gray-200 text-lg">
+                Official Poster
+            </strong>
+            <img
+                class="h-4/5 w-4/5 object-scale-down block p-2.5 bg-white filter drop-shadow-lg" 
+                src="<%= blog.metadata.poster%>" alt="">
+            <small class="text-gray-400 text-xs">
+                Image courtesy OMDB API
+            </small>
+        </section>
+        <section data-modal="info" class="aside-section transition-all absolute top-0 left-0 h-full w-full p-10 opacity-0">
+            <strong class="my-2 text-white capitalize text-lg text-center block">
+                <%= blog.metadata.type %> Info
+            </strong>
+            <div class="flex flex-col items-start gap-1 my-3">
+                <span class="text-xs text-pink-600 font-semibold capitalize font-regular">title</span>
+                <strong class="font-special text-sm capitalize text-gray-200 leading-relaxed">
+                    <%= blog.metadata.title %>
+                </strong>
+            </div>
+            <div class="flex flex-col items-start gap-1 my-3">
+                <span class="text-xs text-pink-600 font-semibold capitalize font-regular">year</span>
+                <strong class="font-special text-sm capitalize text-gray-200 leading-relaxed">
+                    <%= blog.metadata.year %>
+                </strong>
+            </div>
+            <div class="flex flex-col items-start gap-1 my-3">
+                <span class="text-xs text-pink-600 font-semibold capitalize font-regular">genre</span>
+                <strong class="font-special text-sm capitalize text-gray-200 leading-relaxed">
+                    <%= blog.metadata.genre %>
+                </strong>
+            </div>
+            <div class="flex flex-col items-start gap-1 my-3">
+                <span class="text-xs text-pink-600 font-semibold capitalize font-regular">director</span>
+                <strong class="font-special text-sm capitalize text-gray-200 leading-relaxed">
+                    <%= blog.metadata.director %>
+                </strong>
+            </div>
+            <div class="flex flex-col items-start gap-1 my-3">
+                <span class="text-xs text-pink-600 font-semibold capitalize font-regular">actors</span>
+                <strong class="font-special text-sm capitalize text-gray-200 leading-relaxed">
+                    <%= blog.metadata.actors %>
+                </strong>
+            </div>
+            <div class="flex flex-col items-start gap-1 my-3">
+                <span class="text-xs text-pink-600 font-semibold capitalize font-regular">plot</span>
+                <strong class="font-special text-sm capitalize text-gray-200 leading-relaxed">
+                    <%= blog.metadata.plot %>
+                </strong>
+            </div>
+            <div class="flex flex-col items-start gap-1 mt-8">
+                <span class="text-xs text-pink-600 font-semibold capitalize font-regular">IMDB Rating</span>
+                <ul class="flex items-center gap-2">
+                    <li>
+                        <strong class="font-special text-sm capitalize text-gray-200 leading-relaxed">
+                            <%= blog.metadata.imdbrating %>/10
+                        </strong>
+                    </li>
+                    <li>
+                        <small class="font-special text-xs capitalize text-gray-200 leading-relaxed">
+                            (<%= blog.metadata.imdbvotes %> votes)
+                        </small>
+                    </li>
+                </ul>
+            </div>
+        </section>
+        <ul class="hidden md:flex items-center gap-2">
+            <li class="asidePanelToggler h-2.5 w-2.5 rounded-full bg-pink-600 transition-all transform hover:scale-105 cursor-pointer">
+            </li>
+            <li class="asidePanelToggler h-2.5 w-2.5 rounded-full bg-gray-200 transition-all transform hover:scale-105 cursor-pointer">
+            </li>
+        </ul>
+    </aside>
+
+    <!-- main content -->
+    <main id="main" class="min-h-screen w-5/6 pt-14 pb-4 px-2 my-6 max-w-5xl mx-auto relative md:px-4">
+        <!-- review title -->
+        <h1 class="font-special font-semibold text-3xl lg:text-4xl">
+            Weird funny whacky! A perfect sitcom for millenials
+        </h1>
+        
+        <!-- stats section -->
+        <ul class="flex items-center justify-start gap-4 my-4 text-pink-600 opacity-0 animateOnScroll transition-all transform scale-0">
+            <li class="text-sm">
+                <i class="far fa-eye"></i>
+                <small class="font-semibold font-regular">150 Views</small>
+            </li>
+            <li class="text-sm">
+                <i class="fas fa-star"></i>
+                <small class="font-semibold font-regular">3.5/5 (14 Testimonials)</small>
+            </li>
+        </ul>
+        
+        <!-- review section -->
+        <p class="text-lg font-regular text-gray-700 mt-6 mb-4 opacity-0 animateOnScroll transition-all transform">
+            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ad obcaecati magni aut eligendi ipsum doloribus iure quisquam assumenda dolores quis incidunt, maiores consequuntur suscipit recusandae cumque tempora totam, nemo veniam molestiae voluptatibus! Illo odio veritatis voluptates quas deserunt fuga laborum eum a nisi! Repellat ea facere delectus tenetur maxime, magnam asperiores, eligendi nam quis architecto voluptatibus illum. Ex, quas id quo itaque sunt accusantium aperiam omnis, non sed consequuntur quos delectus labore, aliquid quidem ad ea consequatur sapiente quia recusandae voluptatibus rerum. Qui tempore ipsum laborum sit quia ullam debitis nesciunt at? Perferendis voluptatum, possimus autem dolorem aliquid atque cum architecto optio unde et dignissimos aspernatur qui aut dolores fuga tempora deleniti modi ratione tenetur, consequuntur eos. Recusandae deserunt autem tenetur quos illum porro culpa ullam rerum? Sit magni porro dolore maxime alias, est ab facere ullam repudiandae. Rerum vel, eius unde dolorem explicabo earum, suscipit dolores sit dolorum maiores necessitatibus magnam repellendus architecto saepe maxime labore, quibusdam tempore vero? Labore nesciunt, inventore dolorem perferendis, temporibus enim libero omnis explicabo, quis eveniet dicta. Cum, neque. Excepturi soluta necessitatibus perferendis alias placeat, nobis earum similique sequi ex iusto rem reprehenderit laboriosam facere quam optio natus. Architecto inventore, eum velit deleniti quisquam quaerat incidunt, quas odio iure ut voluptas blanditiis. Suscipit tempora sapiente dignissimos, voluptates sit praesentium vitae dolore, quod quisquam voluptate, fugit voluptatibus provident placeat repellat! Doloribus iste voluptate veniam culpa commodi perspiciatis alias beatae vitae dicta officiis omnis doloremque, totam ipsa nihil incidunt accusantium quaerat odit, dignissimos placeat? Vel, quisquam.
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eligendi quidem temporibus, obcaecati cupiditate quod neque voluptatibus nam placeat sed error doloribus? Dignissimos ipsam enim eaque ea obcaecati dolorum quis adipisci rerum eum vel, placeat modi dolorem unde veritatis repellat porro esse similique iste non aut. Hic qui reiciendis magnam cum aliquam numquam nihil error illo natus, dicta sed ratione perspiciatis quos sint dolore? Voluptatibus temporibus harum repellat maiores tempore assumenda enim quaerat, nulla beatae error cupiditate at, sequi dignissimos exercitationem quis nisi mollitia veritatis dicta molestiae consectetur. Cupiditate cumque molestiae voluptates vitae ipsa vero sequi nisi officiis quod necessitatibus in, corrupti possimus delectus sunt facere pariatur perspiciatis. Esse dolores ipsum aut recusandae dolorum architecto tenetur dignissimos! Labore deserunt illo reiciendis, dolor sapiente obcaecati, ducimus quae libero quod suscipit aspernatur ad tempore odio, nemo quaerat soluta rem sed natus ipsum excepturi vero. Illo tenetur ea possimus ullam accusantium veritatis deleniti neque vitae enim esse laborum ducimus maxime necessitatibus in blanditiis quibusdam similique eaque, quas commodi cum temporibus. Perferendis sint repellendus quos dignissimos hic tempora rerum quidem eos quas expedita a molestias ducimus, commodi perspiciatis nulla at maxime culpa? Nesciunt dolorem veniam nam ab numquam soluta distinctio, non harum culpa in id.
+            Et mentitum copiosae invenire pri, pro vide accusam no. Has at ullum delectus concludaturque, dicat ubique suavitate cum in. Te scripta explicari signiferumque mea, vix at cetero scaevola tractatos, vis ne ludus graeci. Ad nam periculis sadipscing, laudem graece vis ea.
+
+Ne scripta aperiri accommodare cum. Elitr audire ancillae mea no. Quo ex adhuc nonumy, est te impetus iuvaret cotidieque. Vim an tempor probatus erroribus, lorem nonumes concludaturque qui te.
+
+Debet laoreet inimicus sed no, sit nobis atomorum cu. Lorem soluta eos eu, per dolorum adipiscing ut. Moderatius inciderint sit ei, sit facilis vivendo appellantur et. Mel ei verear eligendi salutatus. Mollis consetetur at quo.
+
+Eum te dicit platonem. Eu cum tantas verterem tincidunt, id pri utroque explicari urbanitas, no cum malis eloquentiam. Pri errem dissentias disputando eu, ius id alii assum abhorreant, est utamur habemus voluptatibus te. Vel paulo tantas ut. Populo option has at, nam tempor aperiri civibus id, sea utinam impetus hendrerit ei.
+
+Sea et dicit verterem molestiae, pro et novum persecuti intellegam. Usu an prompta dolorem, no quas legendos sea, invidunt elaboraret vis ea. Aperiam accumsan quo in, eu eum forensibus maiestatis assueverit, nam te cotidieque appellantur. Et mea invidunt detraxit. Eu habemus copiosae sed, an cotidieque signiferumque his, nec cu stet erat ludus.
+
+Ut atomorum praesent sed. Et sit modo iuvaret, vidit sapientem adipiscing ex eum. Usu cu probo mentitum menandri, eam an brute suavitate. Habeo mutat causae mei ne, eam animal noluisse an. Liber ullamcorper sed cu, platonem intellegat adversarium te nam, ea viris inermis usu. Eos ne viris eirmod. An populo legendos quo, ius ne cibo etiam.
+
+Pro at nonumy aliquando necessitatibus. Brute epicurei ullamcorper duo no. Nam ex eruditi corrumpit signiferumque. Ridens persequeris cu quo. Scripta evertitur percipitur eum et, graeci audiam eleifend pri te.
+
+Quo reque abhorreant an. Nobis tempor perpetua his cu, regione theophrastus cu mel. Ad feugait omittantur eos, fabellas lucilius te sed. Natum laudem volumus te mei, nec audiam atomorum ea. Quas sententiae ut vel, ea has nemore sensibus persequeris.
+
+In suas ullum intellegebat pro, eum ad affert consetetur. Sed iriure phaedrum no, te dicam munere causae cum. Labores delicata reprimique mea ne. Per ut primis adversarium. Wisi recusabo ex vim. Iriure fuisset officiis id est.
+
+Mel nobis iisque vulputate ex, ad iuvaret conclusionemque vim, per cibo vivendum explicari eu. An aliquip meliore tractatos eum. Vel albucius singulis adipiscing an, mazim intellegat assueverit pro at. Has etiam consul probatus in. Eu eum amet iuvaret, ex duo nulla tollit tamquam.
+        </p>
+        
+        <!-- spoiler section -->
+        <details id="spoiler" class="mt-6 mb-4 opacity-0 animateOnScroll transition-all transform scale-0">
+            <summary class="flex items-center w-max">
+                <h3 class="font-special font-semibold text-xl capitalize inline-flex items-center">
+                    spoilers &nbsp;
+                    <span class="det-icon text-gray-400 text-xs cursor-pointer">
+                        <i class="fa fa-caret-down"></i>
+                        (Show Spoilers)
+                    </span> 
+                    <span class="det-icon text-gray-400 text-xs cursor-pointer hidden">
+                        <i class="fa fa-caret-up"></i>
+                        (Hide Spoilers)
+                    </span> 
+                </h3>
+            </summary>
+            <p class="text-lg font-regular text-gray-700 mt-6 mb-4">
+                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Itaque omnis rem architecto blanditiis vitae ut, laborum officia ratione odio, odit aspernatur, aut accusamus autem adipisci alias repellat. Delectus rem quam magni voluptate odit temporibus dolore impedit. Inventore aliquam iste voluptatibus delectus natus nobis obcaecati enim assumenda optio laudantium eos maxime mollitia, id doloribus fugit aut rerum asperiores suscipit unde consequatur aliquid! At repudiandae dolor iste mollitia ducimus eius blanditiis error expedita quasi qui sint in sapiente impedit voluptate quo quam illo fuga suscipit debitis, ad saepe ut magni? Ea voluptatem, rerum a facere laboriosam quidem minima provident nulla quos amet maiores sit eos totam eveniet harum sed aliquid. Enim libero earum repudiandae voluptate officiis modi? Ipsum, optio. Consequatur debitis quidem eos eius veniam odio modi aut, autem beatae qui optio maxime ipsum expedita eveniet earum architecto eligendi quo officia ipsa reiciendis? Aut saepe accusantium itaque repellendus ipsa voluptates quas sint vitae repellat quibusdam dicta nemo a, molestiae, natus facilis cum reiciendis dignissimos temporibus rerum quam expedita? Doloremque voluptatum quod blanditiis eos hic nisi, odio voluptates aliquid odit, laudantium ipsam inventore mollitia architecto quis distinctio nihil voluptatem cupiditate nesciunt numquam dignissimos! Expedita id laborum temporibus corrupti eaque provident, fugit minus iusto eos aliquid optio consectetur nobis quaerat veritatis culpa ullam atque aliquam deleniti incidunt voluptas illum? Soluta error dolores voluptas reprehenderit. Unde ratione rerum nesciunt doloremque omnis veritatis praesentium. Illo iusto, culpa itaque porro expedita, non earum animi nemo facilis a optio? Hic, id sint quasi praesentium ducimus nemo tempora. Porro!
+            </p>
+        </details>
+
+        <!-- rating section -->
+        <div class="mt-6 mb-4 opacity-0 animateOnScroll transition-all transform scale-0">
+            <h3 class="font-special font-semibold text-xl capitalize inline-flex items-center">
+                my rating
+            </h3>
+            <p class="text-lg font-regular text-gray-700 mt-6 mb-4">
+                This rating is based on three parameters viz the plot, the direction and the acting. Overall ratings are decided as an average of the three parameters. Here's how the author has rated.
+                <br>
+                <strong class="block font-special font-semibold capitalize mt-4">
+                    plot
+                </strong>
+                <span class="italic font-special mb-4 mt-1 block">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                </span>
+                <strong class="block font-special font-semibold capitalize">
+                    direction
+                </strong>
+                <span class="italic font-special mb-4 mt-1 block">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                </span>
+                <strong class="block font-special font-semibold capitalize">
+                    acting
+                </strong>
+                <span class="italic font-special mb-4 mt-1 block">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                </span>
+            </p>
+            <h3 class="font-special font-semibold text-xl capitalize inline-flex items-center">
+                overall rating
+            </h3>
+            <p class="italic font-special text-pink-600 font-semibold my-4">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+            </p>
+            <span class="text-lg to-gray-500">
+                It is one of my favorite movies. I recommend watching it.
+            </span>
+        </div>
+        <!-- fixed btns -->
+        <ul class="flex flex-col h-auto w-auto items-center gap-4 fixed bottom-10 md:bottom-20 right-2 md:right-4">
+            <li class="md:hidden" title="Official Poster">
+                <button id="picToggler" class="h-8 w-8  outline-none focus:outline-none bg-black rounded-full text-white transition-all transform hover:scale-110 focus:scale-110">
+                    <i class="far fa-image text-xs"></i>
+                </button>
+            </li>
+            <li class="md:hidden" title="Information">
+                <button id="infoToggler" class="h-8 w-8 outline-none focus:outline-none bg-black rounded-full text-white transition-all transform hover:scale-110 focus:scale-110">
+                    <i class="fas fa-info text-xs"></i>
+                </button>
+            </li>
+            <li title="Testimonials">
+                <button class="testimonialToggler h-8 w-8 outline-none focus:outline-none bg-black rounded-full text-white transition-all transform hover:scale-110 focus:scale-110">
+                    <i class="fas fa-comment-alt text-xs"></i>
+                </button>
+            </li>
+        </ul>
+
+        <div class="flex flex-col items-center fixed top-1/2 left-4 gap-2">
+            <button id="asideToggler" class="sidebarToggler hidden md:block text-4xl text-black transition-all outline-none focus:outline-none focus:scale-105 hover:scale-105 animate-bounce 
+            ">
+                <i class="fas fa-caret-square-right"></i>
+                <span class="hidden">close sidebar</span>
+            </button>
+            
+        </div>
+    </main>
+
+    <!-- testimonials -->
+    <%- include('../partials/testimonial-list') %>
+    <%- include('../partials/testimonial-create-edit-modal') %>
+
+
+    <script src="/static/js/navbar.js"></script>
+    <script src="/static/js/testimonial-sidebar.js"></script>
+    <script src="/static/js/blog-detail.js"></script>
+</body>
+</html>
