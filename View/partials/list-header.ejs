@@ -1,0 +1,42 @@
+<header class="font-special h-72 w-full px-1 pt-16 grid place-items-center sm:px-2">
+    <section class="w-11/12 max-w-xl">
+        <h3 class="font-special text-gray-700 text-base sm:text-xl capitalize font-semibold text-center mb-4">
+            header text sentence goes here    
+        </h3>
+        <form action="" method="POST" autocomplete="off">
+            <section class="relative w-full mb-0.5">
+                <input name="keyword" type="text" class="w-full mr-auto p-0.5 sm:p-1.5 pr-6 border-2 border-gray-400 focus:border-gray-600 rounded-md outline-none focus:outline-none">
+                <button class="outline-none focus:outline-none absolute right-0 top-1/2 transform -translate-y-1/2 -translate-x-1/2 text-xs sm:text-sm">
+                    <i class="fas fa-search"></i>
+                </button>
+            </section>
+            <input type="hidden" name="sort">
+            <section class="relative">
+                <button type="button" id="toggleSortByBtn" class="text-xs sm:text-sm capitalize font-semibold font-special outline-none focus:outline-none opacity-50 hover:opacity-100 transition-all">
+                    sort by <span id="sortByText" class="text-pink-600"></span>
+                </button>
+                <ul id="sortList" class="absolute top-0 left-0 flex flex-col items-start w-max py-2 pr-4 pl-2 bg-black -translate-y-full pointer-events-none transform scale-0 transition-transform origin-top">
+                    <li data-sortType="name" class="p-2 text-sm cursor-pointer text-white active">
+                        <i class="far fa-check-circle"></i>
+                        <span class="capitalize">Name</span>
+                    </li>
+                    <li data-sortType="title" class="p-2 text-sm cursor-pointer text-gray-500 hover:text-gray-300">
+                        <i class="far fa-check-circle invisible"></i>
+                        <span class="capitalize">title</span>
+                    </li>
+                    <li data-sortType="rating" class="p-2 text-sm cursor-pointer text-gray-500 hover:text-gray-300">
+                        <i class="far fa-check-circle invisible"></i>
+                        <span class="capitalize">rating</span>
+                    </li>
+                    <li data-sortType="views" class="p-2 text-sm cursor-pointer text-gray-500 hover:text-gray-300">
+                        <i class="far fa-check-circle invisible"></i>
+                        <span class="capitalize">views</span>
+                    </li>
+                </ul>
+            </section>
+        </form>
+        <p class="my-8 text-center italic font-special font-semibold text-gray-500 text-xs sm:text-sm">
+            Showing <span class="text-black">18</span> results for <span class="text-pink-600">Lorem, ipsum.</span>
+        </p>
+    </section>
+</header>

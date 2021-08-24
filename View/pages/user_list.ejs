@@ -1,38 +1,22 @@
 <%- include('../partials/head') %>
-<body class="min-h-screen font-regular relative bg-gradient-to-r from-pink-600 to-purple-700">    
-<video 
-    oncontextmenu="return false" 
-    class="fixed top-0 left-0 h-screen w-screen object-cover opacity-10" 
-    poster="../poster.jpg"  
-    autoplay 
-    muted 
-    loop>
-    <source src="/static/assets/video.mp4" type="video/mp4">
-</video>
+<body class="min-h-screen font-regular relative custom-scrollbar">    
+
 <%- include('../partials/navbar')%>
 
-<!-- header -->
-<header class="my-4 p-2 flex flex-col items-center">
-    <h1 class="font-special text-3xl mt-9 lg:mt-12 capitalize text-center text-white">
-        meet our reviwers
-    </h1>
-    <form action="/reviewers?" class="w-11/12 my-2 max-w-lg mx-auto flex items-center justify-self-center relative">
-        <input type="text" name="q"
-        placeholder="Search User"
-        class="p-2.5 pr-8 text-sm w-full block rounded-md shadow-md outline-none focus:outline-none focus:shadow-2xl focus:scale-x-105 transform transition-all duration-200 focus:text-gray-600 focus:placeholder-gray-600">
-        <button type="submit" class="text-gray-700 z-10 absolute right-2 top-1/2 transform 
-        -translate-y-1/2 outline-none focus:outline-none focus:scale-125 hover:scale-125">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-        </button>
-    </form>
-</header>
+<%- include('../partials/list-header') %>
 <!-- user list -->
 <% if (reviewers?.length > 0) { %>
-<main class="profileCardContainer min-h-screen max-w-6xl my-4 mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-    <% reviewers.forEach(reviewer => { %>
-        <%- include('../partials/profile-card', {user : reviewer})%>
+<main class="min-h-screen w-full max-w-4xl mx-auto p-6">
+    <% reviewers.forEach((reviewer, index) => { %>
+        <%- include('../partials/profile-card', 
+            {
+                user : reviewer, 
+                isEven: index % 2 === 0
+            }
+        )%>
     <% }) %>
 </main>
+<%- include('../partials/pagination') %>
 <% } else {%>
     <main class="min-h-screen max-w-6xl my-4 mx-auto flex items-center justify-center">
         <%= notFound %>
@@ -40,7 +24,10 @@
 <% } %>
 
 
-<script src="/static/js/index.js"></script>
 
-    <%- include('../partials/footer') %>
+<script src="/static/js/navbar.js"></script>
+<script src="/static/js/list-header.js"></script>
+<script src="/static/js/scroll-animation.js"></script>
+
+<%- include('../partials/footer') %>
     

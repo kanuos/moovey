@@ -1,23 +1,54 @@
-<a href="/reviewers/<%= user.uid %>">
-<article class="mx-auto my-4 h-80 w-64 relative flex flex-col shadow-lg  md:hover:scale-110 md:hover:shadow-2xl transform transition-all">
-    <span class="absolute top-2 -left-3 bg-pink-600 capitalize font-special rounded text-white text-xs p-2 shadow-md z-10">
-        <%= user.blogs %> reviews
-    </span>
-    <img 
-    class="h-full w-full block object-cover absolute top-0 left-0 rounded-tr-md rounded-tl-md md:rounded-md"
-    src="<% if (!user.picture || user.picture !== 'N/A') { %>/static/assets/placeholder.jpg <% } else { %>user.picture <% } %>" alt="">
-    <div class="flex flex-col items-center z-10 absolute bottom-0 p-2 bg-gradient-to-r from-pink-600 to-purple-700 left-0 w-full text-white rounded-b">
-        <strong class="capitalize text-sm tracking-wider font-light">
+<% if (!isEven) { %>
+<article data-animate="opacity-0" class="scrollArticle origin-bottom transition-all opacity-0 grid grid-cols-4 mb-16 max-w-md lg:gap-x-4 lg:max-w-3xl mx-auto lg:grid-cols-3 lg:max-h-52">
+    <figure class="col-start-2 col-end-4 grid place-content-center rounded-full shadow-2xl bg-white aspect-w-1 aspect-h-1 lg:col-start-1 lg:col-end-2">
+        <img 
+            class="object-cover block h-full w-full p-2 rounded-full object-center"
+            src="https://i.ndtvimg.com/i/2016-11/sheldon_640x480_41478610926.jpg" 
+            alt="Sheldon Cooper" >
+    </figure>
+    <section class="col-start-1 col-end-5 flex flex-col items-center justify-center mt-2 lg:items-start lg:col-start-2 lg:col-end-5 lg:row-end-1">
+        <h3 class="text-lg capitalize break-words font-semibold text-gray-600 sm:text-xl">
             <%= user.name %>
-        </strong>
-        <% if(user.location) {%>
-        <div class="flex items-center">
-            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-            <span class="font-light uppercase text-xs">
-                <%= user.location %>
+        </h3>
+        <div class="flex items-center text-gray-400">
+            <i class="fa fa-map-marker-alt text-xs"></i>
+            <span class="ml-1 capitalize text-sm">
+                texas
             </span>
         </div>
-        <% } %>
-    </div>
+        <p class="italic text-gray-600 text-xs text-center w-5/6 max-w-lg mx-auto mt-2.5 sm:text-sm lg:text-left lg:mx-0 lg:border-b border-gray-200 lg:pb-2">
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ipsam culpa tempore voluptatum, eius nisi quod itaque earum libero laborum ipsa accusantium modi dolore porro rem quos! Quis distinctio provident ea!
+        </p>
+        <a href="/reviewers/<%= user.uid %>" class="text-gray-600 font-regular font-semibold capitalize my-3 text-sm outline-none focus:outline-none hover:text-black focus:text-black">
+            view profile
+        </a>
+    </section>
 </article>
-</a>
+<% } else { %>
+<!-- user card even -->
+<article data-animate="opacity-0" class="scrollArticle origin-bottom transition-all opacity-0 grid grid-cols-4 mb-16 max-w-md lg:gap-x-4 lg:max-w-3xl mx-auto lg:grid-cols-3 lg:max-h-52">
+    <figure class="col-start-2 col-end-4 grid place-content-center rounded-full shadow-2xl bg-white aspect-w-1 aspect-h-1 lg:col-start-3 lg:col-end-4">
+        <img 
+            class="object-cover block h-full w-full p-2 rounded-full object-center"
+            src="https://i.pinimg.com/originals/5e/41/52/5e4152a1526947373833983e9e0b3aff.jpg" 
+            alt="Howard" >
+    </figure>
+    <section class="col-start-1 col-end-5 flex flex-col items-center justify-center mt-2 lg:items-start lg:col-start-1 lg:col-end-3 lg:row-end-1">
+        <h3 class="text-lg capitalize break-words font-semibold text-gray-600 sm:text-xl">
+            <%= user.name %>
+        </h3>
+        <div class="flex items-center text-gray-400">
+            <i class="fa fa-map-marker-alt text-xs"></i>
+            <span class="ml-1 capitalize text-sm">
+                california
+            </span>
+        </div>
+        <p class="italic text-gray-600 text-xs text-center mx-auto mt-2.5 sm:text-sm lg:text-left lg:mx-0 lg:border-b border-gray-200 lg:pb-2">
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ipsam culpa tempore voluptatum, eius nisi quod itaque earum libero laborum ipsa accusantium modi dolore porro rem quos! Quis distinctio provident ea!
+        </p>
+        <a href="/reviewers/<%= user.uid %>" class="text-gray-600 font-regular font-semibold capitalize my-3 text-sm outline-none focus:outline-none hover:text-black focus:text-black">
+            view profile
+        </a>
+    </section>
+</article>
+<% } %>
