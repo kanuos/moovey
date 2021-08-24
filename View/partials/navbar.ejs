@@ -68,8 +68,9 @@
                 </article>
             </section>
             <ul class="w-full h-2/3 gap-y-4 justify-evenly flex flex-col md:w-1/2">
+                <% if (loggedIn) { %>
                 <li class="w-full text-sm py-2 relative text-gray-400 transition-all transform hover:scale-105 origin-center hover:text-black font-semibold">
-                    <div class="relative w-full">
+                    <a href="/dashboard" class="block relative w-full">
                         <ul class="hidden items-center justify-start w-1/3 absolute top-1/2 transform -translate-y-1/2 left-0">
                             <i class="h-0.5 w-5/6 bg-pink-600 "></i>   
                             <i class="text-pink-600 fas fa-dot-circle text-xs"></i>
@@ -77,45 +78,47 @@
                         <h6 class="w-2/3 block pl-3 ml-auto font-regular uppercase">
                             dashboard
                         </h6>
-                    </div>
+                    </a>
                 </li>
+                <% } %>
                 <li data-target="articles" class="active navlink-desc w-full text-2xl py-2 relative text-black">
-                    <div class="relative w-full">
+                    <a href="/moovey" class="block relative w-full">
                         <ul class="flex items-center justify-start w-1/3 absolute top-1/2 transform -translate-y-1/2 left-0">
                             <i class="h-0.5 w-5/6 bg-pink-600 "></i>   
                             <i class="text-pink-600 fas fa-dot-circle text-xs"></i>
                         </ul>
                         <h6 class="w-2/3 block pl-3 ml-auto font-regular uppercase">articles</h6>
-                    </div>
+                    </a>
                 </li>
                 <li data-target="lists" class="navlink-desc w-full text-sm py-2 relative text-gray-400 transition-all transform hover:scale-105 origin-center hover:text-black font-semibold">
-                    <div class="relative w-full">
+                    <a href="/moovey/list" class="block relative w-full">
                         <ul class="hidden items-center justify-start w-1/3 absolute top-1/2 transform -translate-y-1/2 left-0">
                             <i class="h-0.5 w-5/6 bg-pink-600 "></i>   
                             <i class="text-pink-600 fas fa-dot-circle text-xs"></i>
                         </ul>
                         <h6 class="w-2/3 block pl-3 ml-auto font-regular uppercase">lists</h6>
-                    </div>
+                    </a>
                 </li>
                 <li data-target="users" class="navlink-desc w-full text-sm py-2 relative text-gray-400 transition-all transform hover:scale-105 origin-center hover:text-black font-semibold">
-                    <div class="relative w-full">
+                    <a href="/reviewers" class="block relative w-full">
                         <ul class="hidden items-center justify-start w-1/3 absolute top-1/2 transform -translate-y-1/2 left-0">
                             <i class="h-0.5 w-5/6 bg-pink-600 "></i>   
                             <i class="text-pink-600 fas fa-dot-circle text-xs"></i>
                         </ul>
                         <h6 class="w-2/3 block pl-3 ml-auto font-regular uppercase">reviewers</h6>
-                    </div>
+                    </a>
                 </li>
+                <% if (loggedIn) {%>
                 <li class="w-full text-sm py-2 relative text-gray-400 transition-all transform hover:scale-105 origin-center hover:text-black font-semibold">
-                    <div class="relative w-full">
+                    <a href="" class="block relative w-full">
                         <ul class="hidden items-center justify-start w-1/3 absolute top-1/2 transform -translate-y-1/2 left-0">
                             <i class="h-0.5 w-5/6 bg-pink-600 "></i>   
                             <i class="text-pink-600 fas fa-dot-circle text-xs"></i>
                         </ul>
                         <h6 class="w-2/3 block pl-3 ml-auto font-regular uppercase">log out</h6>
-                    </div>
+                    </a>
                 </li>
-            
+                <% } %>
             
             </ul>
         </div>
