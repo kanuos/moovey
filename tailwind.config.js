@@ -17,6 +17,7 @@ module.exports = {
     extend: {
       display: ["group-hover","group-focus"],
       translate : ["group-hover"],
+      scale : ["group-hover"]
     },
   },
   plugins: [
