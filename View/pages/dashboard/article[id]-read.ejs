@@ -1,0 +1,99 @@
+<%- include('../../partials/head') %>
+<body class="relative">
+    <!-- navbar partial -->
+    <%- include('../../partials/navbar') %>
+    
+    <!-- sidebar partial -->
+    <%- include('../../partials/dashboard/dashboard-sidebar') %>
+       
+    <!-- main body for the article page s-->
+    <main class="w-full relative h-screen flex items-start">
+    
+
+        <!-- page specific data -->
+        <section class="h-full w-full overflow-y-auto custom-scrollbar pt-14 md:pt-0 md:pl-14">
+            <ul class="flex items-start justify-start gap-4 w-11/12 mx-auto md:mx-0 md:mr-auto max-w-5xl xl:max-w-7xl 2xl:max-w-full px-4 mb-5 capitalize md:sticky top-8 bg-white md:py-4 md:z-10">
+                <li class="text-pink-600 font-semibold font-special cursor-pointer" data-tab="article">article</li>
+                <li class="text-gray-400 font-semibold font-special cursor-pointer" data-tab="testimonial">testimonials</li>
+                <li class="text-gray-400 font-semibold font-special cursor-pointer" data-tab="delete">delete article</li>
+            </ul>
+            <!-- article view -->
+            <article data-target="article" class="tabTarget md:pt-14 min-h-screen w-11/12 mx-auto md:mx-0 md:mr-auto max-w-5xl xl:max-w-7xl p-4 relative">
+
+                <p class="mb-4 w-full max-w-5xl mr-auto text-sm font-special text-gray-500 font-semibold">
+                        Review of
+                    <strong class="font-semibold capitalize text-pink-600 ml-1">
+                        dr strangelove or how i learned to love the bomb and stop worrying
+                    </strong>
+                </p>
+                <p class="mb-4 w-full max-w-5xl mr-auto text-sm font-special text-gray-500 font-semibold">
+                        Written on
+                    <strong class="font-semibold capitalize text-black ml-1">
+                        15-October-2017
+                    </strong>
+                </p>
+                <section class="mb-4 w-full max-w-5xl mr-auto">
+                    <small class="text-sm font-special text-gray-500 font-semibold capitalize">
+                        title
+                    </small>
+                    <p class="mt-0.5 font-regular font-semibold block text-black-600 w-full text-lg">
+                        A classic satire by Stanley Kubrik. Dark humor at its best
+                    </p>
+                </section>
+                <section class="mb-4 w-full max-w-5xl mr-auto">
+                    <small class="text-sm font-special text-gray-500 font-semibold capitalize">
+                        review
+                    </small>
+                    <p class="mt-0.5 font-regular block text-black w-full text-lg">
+                        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae, consequuntur repellat ducimus doloribus consectetur rerum reprehenderit eum cum aliquid nesciunt nulla laudantium nostrum dolorem! Est exercitationem enim velit quasi delectus. <br><br>
+
+                        Lorem ipsum dolor sit, amet consectetur <strong>Lorem, ipsum dolor.</strong> adipisicing elit. Debitis voluptatum pariatur voluptate vero quas at odit ratione asperiores molestiae quidem excepturi necessitatibus vel sint modi, ad doloribus error nam aperiam architecto corporis reprehenderit quo reiciendis nesciunt. Tenetur, adipisci, saepe repellat earum sequi inventore nisi iste aliquid ad deserunt sapiente incidunt? <br><br>
+
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia amet inventore rem blanditiis beatae sit aut ipsam dolore corporis maiores provident illum saepe architecto, libero in facere autem distinctio. Totam velit fuga alias <i>Lorem ipsum, dolor sit amet consectetur adipisicing.</i> nihil nobis recusandae quaerat omnis, possimus soluta. Suscipit quia dignissimos amet iste rerum aut omnis consequuntur, veniam adipisci unde dolor assumenda odit, temporibus placeat dolore earum at numquam corporis? Voluptates blanditiis cumque consectetur vitae, voluptatibus qui impedit porro. Dolore quae, et repellendus cumque repellat modi magni voluptate, labore in rerum illum corrupti reiciendis! Voluptatum magni nostrum, labore omnis quo accusamus molestias numquam? Est soluta repellendus assumenda doloribus.
+                    </p>
+                </section>
+                <section class="mb-4 w-full max-w-5xl mr-auto">      
+                    <small class="text-sm font-special text-gray-500 font-semibold capitalize">
+                        rating
+                    </small>
+                    <table class="border-separate table table-auto w-full max-w-xl mt-2 mb-4">
+                        <tr>
+                            <td class="p-2 border border-gray-400 text-sm font-special text-gray-500 font-semibold capitalize">direction</td>
+                            <td class="p-2 border border-gray-400 text-sm font-special text-gray-700 font-semibold capitalize">bing bong bang boom</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2 border border-gray-400 text-sm font-special text-gray-500 font-semibold capitalize">performance</td>
+                            <td class="p-2 border border-gray-400 text-sm font-special text-gray-700 font-semibold capitalize">bing bong bang boom</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2 border border-gray-400 text-sm font-special text-gray-500 font-semibold capitalize">plot</td>
+                            <td class="p-2 border border-gray-400 text-sm font-special text-gray-700 font-semibold capitalize">bing bong bang boom</td>
+                        </tr>
+                    </table>
+                    <p class="mt-0.5 font-regular font-semibold block text-black w-full text-lg">
+                       Dark humor at its best
+                    </p>
+                </section>
+                    
+                <a href="" class="text-sm text-pink-600 mt-10 inline-flex gap-0.5 outline-none focus:outline-none focus:border-current border-b border-transparent hover:shadow-md">
+                    <i class="far fa-edit"></i>
+                    <span class="font-semibold font-special">Edit article</span>
+                </a>
+            </article>       
+            <!-- testimonial view -->
+            <%- include('../../partials/dashboard/testimonials-table') %>
+            <!-- delete view -->
+            <%- include('../../partials/dashboard/item[id]-delete') %>
+            
+        </section>
+    </main>
+
+
+    
+    <script src="/static/js/dashboard-sidebar.js"></script>
+    <script src="/static/js/navbar.js"></script>
+    <script src="/static/js/dashboard-item[id].js"></script>
+    <script src="/static/js/item[id]-delete-confirm.js"></script>
+
+</body>
+</html>

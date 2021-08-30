@@ -1,0 +1,86 @@
+<%- include('../../partials/head') %>
+<body>
+    <%- include('../../partials/navbar') %>    
+    <%- include('../../partials/dashboard/dashboard-sidebar') %>    
+   
+
+
+    <main class="w-full relative h-screen flex items-start pt-6 md:pt-0">
+    
+
+        <!-- page specific data -->
+        <section class="h-screen w-full flex flex-col items-center justify-center">
+        
+            <p class="mb-4 w-11/12 md:w-5/6 md:text-center text-xs font-special text-gray-500 font-semibold">
+                    Review of
+                <strong class="font-semibold capitalize text-pink-600 ml-1">
+                    dr strangelove or how i learned to love the bomb and stop worrying
+                </strong>
+            </p>
+            <!-- article view -->
+            <form autocomplete="off" class="tabTarget h-5/6 bg-white shadow-xl w-11/12 md:w-5/6 md:ml-10 md:p-4 p-2 relative">
+                <!-- review title -->
+                <section class="mb-4 w-full max-w-3xl mr-auto md:pb-2 border-b border-gray-200">
+                    <label for="title">
+                        <small class="text-xs font-special text-gray-500 font-semibold capitalize">
+                            title
+                        </small>
+                    </label>
+                    <div class="absolute pointer-events-none invisible"></div>
+                    <textarea
+                        type="text" 
+                        name="title" 
+                        id="title" 
+                        maxlength="100"
+                        class="autoHeightInput resize-none mt-0.5 font-special font-semibold block text-gray-600 w-full text-xs md:text-sm outline-none focus:outline-none focus:text-black p-1 h-auto whitespace-pre-wrap">A classic satire by Stanley Kubrik. Dark humor at its best</textarea>
+                </section>
+                <!-- review body -->
+                <section class="w-full max-w-3xl mr-auto h-auto">
+                    <label for="review">
+                        <small class="text-xs font-special text-gray-500 font-semibold capitalize">
+                            review
+                        </small>
+                    </label>
+                    <div class="absolute pointer-events-none invisible"></div>
+                    <textarea id="review" name="review" class="autoHeightInput resize-none mt-0.5 font-special block text-gray-600 w-full text-xs md:text-sm outline-none focus:outline-none focus:text-black p-1 whitespace-pre-wrap">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae, consequuntur repellat ducimus doloribus consectetur rerum reprehenderit eum cum aliquid nesciunt nulla laudantium nostrum dolorem! Est exercitationem enim velit quasi delectus. <br><br>
+
+                        Lorem ipsum dolor sit, amet consectetur <strong>Lorem, ipsum dolor.</strong> adipisicing elit. Debitis voluptatum pariatur voluptate vero quas at odit ratione asperiores molestiae quidem excepturi necessitatibus vel sint modi, ad doloribus error nam aperiam architecto corporis reprehenderit quo reiciendis nesciunt. Tenetur, adipisci, saepe repellat earum sequi inventore nisi iste aliquid ad deserunt sapiente incidunt? <br><br>
+
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia amet inventore rem blanditiis beatae sit aut ipsam dolore corporis maiores provident illum saepe architecto, libero in facere autem distinctio. Totam velit fuga alias <i>Lorem ipsum, dolor sit amet consectetur adipisicing.</i> nihil nobis recusandae quaerat omnis, possimus soluta. Suscipit quia dignissimos amet iste rerum aut omnis consequuntur, veniam adipisci unde dolor assumenda odit, temporibus placeat dolore earum at numquam corporis? Voluptates blanditiis cumque consectetur vitae, voluptatibus qui impedit porro. Dolore quae, et repellendus cumque repellat modi magni voluptate, labore in rerum illum corrupti reiciendis! Voluptatum magni nostrum, labore omnis quo accusamus molestias numquam? Est soluta repellendus assumenda doloribus.</textarea>
+                </section>
+                <!-- review rating -->
+                <section class="mb-4 w-full max-w-3xl mr-auto">      
+                    <small class="text-xs font-special text-gray-500 font-semibold capitalize">
+                        rating
+                    </small>
+                    <table class="border-separate table table-auto w-full max-w-xl mt-2 mb-4">
+                        <tr>
+                            <td class="p-2 border border-gray-400 text-xs font-special text-gray-500 font-semibold capitalize">direction</td>
+                            <td class="p-2 border border-gray-400 text-xs font-special text-gray-700 font-semibold capitalize">bing bong bang boom</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2 border border-gray-400 text-xs font-special text-gray-500 font-semibold capitalize">performance</td>
+                            <td class="p-2 border border-gray-400 text-xs font-special text-gray-700 font-semibold capitalize">bing bong bang boom</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2 border border-gray-400 text-xs font-special text-gray-500 font-semibold capitalize">plot</td>
+                            <td class="p-2 border border-gray-400 text-xs font-special text-gray-700 font-semibold capitalize">bing bong bang boom</td>
+                        </tr>
+                    </table>
+                    <p class="mt-0.5 font-regular font-semibold block text-black w-full text-sm">
+                       Dark humor at its best
+                    </p>
+            </form>
+                    
+            </article>       
+            
+        </section>
+    </main>
+
+    
+    <script src="/static/js/navbar.js"></script>
+    <script src="/static/js/dashboard-sidebar.js"></script>
+    <script src="/static/js/dashboard-create-edit.js"></script>
+
+</body>
+</html>

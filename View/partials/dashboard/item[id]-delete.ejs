@@ -1,0 +1,21 @@
+<article data-target="delete" class="tabTarget md:pt-14 hidden min-h-screen w-11/12 mx-auto md:mx-0 md:mr-auto max-w-5xl xl:max-w-7xl 2xl:max-w-full p-4">
+    <!-- form to delete content -->
+    <form id="deleteForm" action="" method="POST" class="mb-4 mt-auto w-full max-w-xl">
+        <p class="text-black text-sm font-semibold font-special">
+            Are you sure you want to delete this review?
+        </p>
+        <small class="text-sm font-regular text-gray-500">
+            Note that this action cannot be reversed. All the views, testimonials and rating will be removed. This deletion will impact in your overall rating as a reviewer.
+        </small>
+        
+        <small class="text-sm font-regular text-gray-500 block mt-4 mb-2">
+            Enter the code <span class="text-black lowercase font-semibold">l1o15r342e15m7</span> to confirm your action
+        </small>
+
+        <input data-value="l1o15r342e15m7" type="text" id="confirmationCode" class="border border-black outline-none focus:outline-none rounded p-0.5">
+
+        <button type="submit" class="block mt-10 outline-none focus:outline-none capitalize font-special font-semibold text-white text-sm shadow bg-black rounded-sm py-2 px-4 hover:-translate-y-px focus:-translate-y-px transform transition-all hover:shadow-xl focus:shadow-xl opacity-50 cursor-not-allowed">
+                delete review
+        </button>
+    </form>
+</article>

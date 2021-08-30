@@ -1,12 +1,19 @@
-const dashBoardRoutes = require('express').Router();
-const {getMovieDetailFromAPI} = require("../_Controller/blogController")
+const {Router} = require("express");
+const dashboardRoutes = Router();
 
-dashBoardRoutes.get('/', (req, res) => res.render("pages/dashboard/profile", {title: "hello"}))
+const controller = require("../_Controller/dashboardController");
 
-dashBoardRoutes.get('/profile', (req, res) => res.render("pages/dashboard/profile", {title: "hello"}))
+dashboardRoutes.get("/", controller.dashboard__getAllArticles)
 
-dashBoardRoutes.post("/updateMovie", (req, res) => getMovieDetailFromAPI(req,res))
 
-dashBoardRoutes.use("/list", require('../_Routes/listRoutes'))
+dashboardRoutes.get("/articles/new", controller.dashboard__getArticleByID_CU)
+dashboardRoutes.get("/articles/:id/edit", controller.dashboard__getArticleByID_CU)
 
-module.exports = dashBoardRoutes;
+dashboardRoutes.get("/search", controller.dashboard__getMovieSearchPage)
+
+dashboardRoutes.get("/:id", controller.dashboard__getArticleByID_RD)
+
+
+
+
+module.exports = dashboardRoutes

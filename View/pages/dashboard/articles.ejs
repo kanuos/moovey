@@ -1,0 +1,135 @@
+<%- include('../../partials/head') %>
+<body class="font-special relative w-full h-full">
+
+<%- include('../../partials/navbar') %>
+
+
+<%- include('../../partials/dashboard/dashboard-sidebar') %>
+
+
+
+    <main id="main" class="pl-4 md:pl-8 filter flex flex-col w-11/12 mx-auto h-full min-h-screen">
+
+        <h1 class="text-2xl my-16 w-5/6 mx-auto">
+            list header goes here with sort options
+        </h1>
+
+        <!-- items list -->
+        <table class="table w-full table-auto md:table-fixed border-separate max-w-6xl">
+            <thead class="capitalize text-pink-600">
+                <tr>
+                    <th class="text-sm md:text-base font-semibold font-special text-left w-4/5 md:w-4/6">title</th>
+                    <th class="text-sm md:text-base font-semibold font-special text-left w-1/5 md:w-1/6">created on</th>
+                    <th class="hidden md:table-cell text-sm md:text-base font-semibold font-special text-left md:w-1/6">action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- table row element -->
+                <tr class="table-row-group md:pb-6">
+                    <!-- row metadata -->
+                    <tr>
+                        <td class="text-sm md:text-base p-2 font-special font-semibold border capitalize border-gray-300 md:w-4/6">My favorite animes of 2020</td>
+                        <td class="text-sm md:text-base p-2 font-special font-semibold border border-gray-300 md:w-1/6">20-Oct-2020</td>
+                        <td class="hidden md:table-cell text-sm md:text-base p-2 font-special font-semibold border border-gray-300 md:w-1/6">go to list</td>
+                    </tr>
+                    <!-- row description -->
+                    <tr class="hidden md:table-row md:w-3/5">
+                        <td class="text-sm md:text-base font-special font-semibold text-gray-500 md:pb-4">
+                            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ducimus adipisci sint velit eligendi, cum alias pariatur modi qui dicta...
+                        </td>
+                    </tr>
+                    <!-- row description for mobile only -->
+                    <tr class="md:hidden">
+                        <td class="pb-6 block text-center text-sm md:text-base text-black font-semibold capitalize w-full">
+                            <details class="w-full mt-2">
+                                <summary class="text-left w-max font-semibold">
+                                    show more
+                                </summary>
+                                <p class="w-full text-left mt-2 mb-4 text-gray-500">
+                                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ducimus adipisci sint velit eligendi, cum alias pariatur modi qui dicta...
+                                </p>
+                                <a href="" class="font-semibold font-regular capitalize">
+                                    go to list
+                                </a>
+                            </details> 
+                        </td>
+                    </tr>                          
+                </tr>
+                <!-- table row element end -->
+                <!-- table row element -->
+                <tr class="table-row-group md:pb-6">
+                    <!-- row metadata -->
+                    <tr>
+                        <td class="text-sm md:text-base p-2 font-special font-semibold border border-gray-300 md:w-4/6">best superhero movies of all times</td>
+                        <td class="text-sm md:text-base p-2 font-special font-semibold border border-gray-300 md:w-1/6">2016</td>
+                        <td class="hidden md:table-cell text-sm md:text-base p-2 font-special font-semibold border border-gray-300 md:w-1/6">go to list</td>
+                    </tr>
+                    <!-- row description -->
+                    <tr class="hidden md:table-row md:w-full">
+                        <td class="text-sm md:text-base font-special font-semibold text-gray-500 md:pb-4">
+                            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ducimus adipisci sint velit eligendi, cum alias pariatur...
+                        </td>
+                    </tr>
+                    <!-- row description for mobile only -->
+                    <tr class="md:hidden">
+                        <td class="pb-6 block text-center text-sm md:text-base text-black font-semibold capitalize w-full">
+                            <details class="w-full mt-2">
+                                <summary class="text-left w-max font-semibold">
+                                    show more
+                                </summary>
+                                <p class="w-full text-left mt-2 mb-4 text-gray-500">
+                                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ducimus adipisci sint velit eligendi, cum alias pariatur...
+                                </p>
+                                <a href="" class="font-semibold font-regular capitalize">
+                                    go to list
+                                </a>
+                            </details> 
+                        </td>
+                    </tr>                          
+                </tr>
+                <!-- table row element end -->
+
+                <!-- table row element -->
+                <tr class="table-row-group md:pb-6">
+                    <!-- row metadata -->
+                    <tr>
+                        <td class="text-sm md:text-base p-2 font-special font-semibold border border-gray-300 md:w-4/6">movies and shows with worst CGI</td>
+                        <td class="text-sm md:text-base p-2 font-special font-semibold border border-gray-300 md:w-1/6">2020</td>
+                        <td class="hidden md:table-cell text-sm md:text-base p-2 font-special font-semibold border border-gray-300 md:w-1/6">go to list</td>
+                    </tr>
+                    <!-- row description -->
+                    <tr class="hidden md:table-row md:w-3/5">
+                        <td class="text-sm md:text-base font-special font-semibold text-gray-500 md:pb-4">
+                            No description available
+                        </td>
+                    </tr>
+                    <!-- row description for mobile only -->
+                    <tr class="md:hidden">
+                        <td class="pb-6 block text-center text-sm md:text-base text-black font-semibold capitalize w-full">
+                            <details class="w-full mt-2">
+                                <summary class="text-left w-max font-semibold">
+                                    show more
+                                </summary>
+                                <p class="w-full text-left mt-2 mb-4 text-gray-500">
+                                    No description available
+                                </p>
+                                <a href="" class="font-semibold font-regular capitalize">
+                                    go to list
+                                </a>
+                            </details> 
+                        </td>
+                    </tr>                          
+                </tr>
+                <!-- table row element end -->
+
+            </tbody>
+        </table>
+
+<div class="mt-auto">
+    <%- include('../../partials/pagination') %>
+</div>
+        
+    </main>
+
+</body>
+</html>
