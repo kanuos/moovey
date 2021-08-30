@@ -125,14 +125,7 @@ function selectTab(currentTabName) {
 
 function toggleDashboardMenu() {
     const dashboardMenu = document.querySelector("#dashboardMenu");
-    const {innerWidth} = window;
-    if (innerWidth <= 1440) {
-        dashboardMenu.classList.toggle(dashboardMenu.dataset["class"])
-        return
-    }
-    if (dashboardMenu.classList.contains(dashboardMenu.dataset["class"])) {
-        dashboardMenu.classList.add(dashboardMenu.dataset["class"])
-    }
+    dashboardMenu.classList.toggle(dashboardMenu.dataset["class"])
 }
 
 
