@@ -1,0 +1,9 @@
+<% const options = ["bad","average", "decent", "good", "great"] %>
+
+<select name="<%= name %>" id="<%= name %>" class="w-full outline-none focus:outline-none capitalize">
+    <% options.forEach((opt, index) => { %>
+    <option class="bg-pink-600 text-black capitalize font-semibold font-special" value="<%= opt %>" <% if(index === Math.floor(options.length /2)) {%> selected <% }%> >
+        <%= opt %>
+    </option>
+    <% }) %>
+</select>
