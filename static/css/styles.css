@@ -32841,6 +32841,50 @@ video {
   --tw-brightness: brightness(2);
 }
 
+.group:hover .group-hover\:brightness-0 {
+  --tw-brightness: brightness(0);
+}
+
+.group:hover .group-hover\:brightness-50 {
+  --tw-brightness: brightness(.5);
+}
+
+.group:hover .group-hover\:brightness-75 {
+  --tw-brightness: brightness(.75);
+}
+
+.group:hover .group-hover\:brightness-90 {
+  --tw-brightness: brightness(.9);
+}
+
+.group:hover .group-hover\:brightness-95 {
+  --tw-brightness: brightness(.95);
+}
+
+.group:hover .group-hover\:brightness-100 {
+  --tw-brightness: brightness(1);
+}
+
+.group:hover .group-hover\:brightness-105 {
+  --tw-brightness: brightness(1.05);
+}
+
+.group:hover .group-hover\:brightness-110 {
+  --tw-brightness: brightness(1.1);
+}
+
+.group:hover .group-hover\:brightness-125 {
+  --tw-brightness: brightness(1.25);
+}
+
+.group:hover .group-hover\:brightness-150 {
+  --tw-brightness: brightness(1.5);
+}
+
+.group:hover .group-hover\:brightness-200 {
+  --tw-brightness: brightness(2);
+}
+
 .contrast-0 {
   --tw-contrast: contrast(0);
 }
@@ -65248,6 +65292,50 @@ html {
     --tw-brightness: brightness(2);
   }
 
+  .group:hover .sm\:group-hover\:brightness-0 {
+    --tw-brightness: brightness(0);
+  }
+
+  .group:hover .sm\:group-hover\:brightness-50 {
+    --tw-brightness: brightness(.5);
+  }
+
+  .group:hover .sm\:group-hover\:brightness-75 {
+    --tw-brightness: brightness(.75);
+  }
+
+  .group:hover .sm\:group-hover\:brightness-90 {
+    --tw-brightness: brightness(.9);
+  }
+
+  .group:hover .sm\:group-hover\:brightness-95 {
+    --tw-brightness: brightness(.95);
+  }
+
+  .group:hover .sm\:group-hover\:brightness-100 {
+    --tw-brightness: brightness(1);
+  }
+
+  .group:hover .sm\:group-hover\:brightness-105 {
+    --tw-brightness: brightness(1.05);
+  }
+
+  .group:hover .sm\:group-hover\:brightness-110 {
+    --tw-brightness: brightness(1.1);
+  }
+
+  .group:hover .sm\:group-hover\:brightness-125 {
+    --tw-brightness: brightness(1.25);
+  }
+
+  .group:hover .sm\:group-hover\:brightness-150 {
+    --tw-brightness: brightness(1.5);
+  }
+
+  .group:hover .sm\:group-hover\:brightness-200 {
+    --tw-brightness: brightness(2);
+  }
+
   .sm\:contrast-0 {
     --tw-contrast: contrast(0);
   }
@@ -97626,6 +97714,50 @@ html {
   }
 
   .md\:brightness-200 {
+    --tw-brightness: brightness(2);
+  }
+
+  .group:hover .md\:group-hover\:brightness-0 {
+    --tw-brightness: brightness(0);
+  }
+
+  .group:hover .md\:group-hover\:brightness-50 {
+    --tw-brightness: brightness(.5);
+  }
+
+  .group:hover .md\:group-hover\:brightness-75 {
+    --tw-brightness: brightness(.75);
+  }
+
+  .group:hover .md\:group-hover\:brightness-90 {
+    --tw-brightness: brightness(.9);
+  }
+
+  .group:hover .md\:group-hover\:brightness-95 {
+    --tw-brightness: brightness(.95);
+  }
+
+  .group:hover .md\:group-hover\:brightness-100 {
+    --tw-brightness: brightness(1);
+  }
+
+  .group:hover .md\:group-hover\:brightness-105 {
+    --tw-brightness: brightness(1.05);
+  }
+
+  .group:hover .md\:group-hover\:brightness-110 {
+    --tw-brightness: brightness(1.1);
+  }
+
+  .group:hover .md\:group-hover\:brightness-125 {
+    --tw-brightness: brightness(1.25);
+  }
+
+  .group:hover .md\:group-hover\:brightness-150 {
+    --tw-brightness: brightness(1.5);
+  }
+
+  .group:hover .md\:group-hover\:brightness-200 {
     --tw-brightness: brightness(2);
   }
 
@@ -130010,6 +130142,50 @@ html {
     --tw-brightness: brightness(2);
   }
 
+  .group:hover .lg\:group-hover\:brightness-0 {
+    --tw-brightness: brightness(0);
+  }
+
+  .group:hover .lg\:group-hover\:brightness-50 {
+    --tw-brightness: brightness(.5);
+  }
+
+  .group:hover .lg\:group-hover\:brightness-75 {
+    --tw-brightness: brightness(.75);
+  }
+
+  .group:hover .lg\:group-hover\:brightness-90 {
+    --tw-brightness: brightness(.9);
+  }
+
+  .group:hover .lg\:group-hover\:brightness-95 {
+    --tw-brightness: brightness(.95);
+  }
+
+  .group:hover .lg\:group-hover\:brightness-100 {
+    --tw-brightness: brightness(1);
+  }
+
+  .group:hover .lg\:group-hover\:brightness-105 {
+    --tw-brightness: brightness(1.05);
+  }
+
+  .group:hover .lg\:group-hover\:brightness-110 {
+    --tw-brightness: brightness(1.1);
+  }
+
+  .group:hover .lg\:group-hover\:brightness-125 {
+    --tw-brightness: brightness(1.25);
+  }
+
+  .group:hover .lg\:group-hover\:brightness-150 {
+    --tw-brightness: brightness(1.5);
+  }
+
+  .group:hover .lg\:group-hover\:brightness-200 {
+    --tw-brightness: brightness(2);
+  }
+
   .lg\:contrast-0 {
     --tw-contrast: contrast(0);
   }
@@ -162391,6 +162567,50 @@ html {
     --tw-brightness: brightness(2);
   }
 
+  .group:hover .xl\:group-hover\:brightness-0 {
+    --tw-brightness: brightness(0);
+  }
+
+  .group:hover .xl\:group-hover\:brightness-50 {
+    --tw-brightness: brightness(.5);
+  }
+
+  .group:hover .xl\:group-hover\:brightness-75 {
+    --tw-brightness: brightness(.75);
+  }
+
+  .group:hover .xl\:group-hover\:brightness-90 {
+    --tw-brightness: brightness(.9);
+  }
+
+  .group:hover .xl\:group-hover\:brightness-95 {
+    --tw-brightness: brightness(.95);
+  }
+
+  .group:hover .xl\:group-hover\:brightness-100 {
+    --tw-brightness: brightness(1);
+  }
+
+  .group:hover .xl\:group-hover\:brightness-105 {
+    --tw-brightness: brightness(1.05);
+  }
+
+  .group:hover .xl\:group-hover\:brightness-110 {
+    --tw-brightness: brightness(1.1);
+  }
+
+  .group:hover .xl\:group-hover\:brightness-125 {
+    --tw-brightness: brightness(1.25);
+  }
+
+  .group:hover .xl\:group-hover\:brightness-150 {
+    --tw-brightness: brightness(1.5);
+  }
+
+  .group:hover .xl\:group-hover\:brightness-200 {
+    --tw-brightness: brightness(2);
+  }
+
   .xl\:contrast-0 {
     --tw-contrast: contrast(0);
   }
@@ -194769,6 +194989,50 @@ html {
   }
 
   .\32xl\:brightness-200 {
+    --tw-brightness: brightness(2);
+  }
+
+  .group:hover .\32xl\:group-hover\:brightness-0 {
+    --tw-brightness: brightness(0);
+  }
+
+  .group:hover .\32xl\:group-hover\:brightness-50 {
+    --tw-brightness: brightness(.5);
+  }
+
+  .group:hover .\32xl\:group-hover\:brightness-75 {
+    --tw-brightness: brightness(.75);
+  }
+
+  .group:hover .\32xl\:group-hover\:brightness-90 {
+    --tw-brightness: brightness(.9);
+  }
+
+  .group:hover .\32xl\:group-hover\:brightness-95 {
+    --tw-brightness: brightness(.95);
+  }
+
+  .group:hover .\32xl\:group-hover\:brightness-100 {
+    --tw-brightness: brightness(1);
+  }
+
+  .group:hover .\32xl\:group-hover\:brightness-105 {
+    --tw-brightness: brightness(1.05);
+  }
+
+  .group:hover .\32xl\:group-hover\:brightness-110 {
+    --tw-brightness: brightness(1.1);
+  }
+
+  .group:hover .\32xl\:group-hover\:brightness-125 {
+    --tw-brightness: brightness(1.25);
+  }
+
+  .group:hover .\32xl\:group-hover\:brightness-150 {
+    --tw-brightness: brightness(1.5);
+  }
+
+  .group:hover .\32xl\:group-hover\:brightness-200 {
     --tw-brightness: brightness(2);
   }
 
