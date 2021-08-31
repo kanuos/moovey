@@ -33629,6 +33629,10 @@ html {
   height: 60vh;
 }
 
+.h-11\/12 {
+  width: 91.666667%;
+}
+
 @media (min-width: 640px) {
   .sm\:container {
     width: 100%;

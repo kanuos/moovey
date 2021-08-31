@@ -1,0 +1,15 @@
+<% if (sortMode) { %>
+<legend class="text-sm text-gray-500 capitalize font-special mt-2 mb-1">
+    sort by
+</legend>
+<% } %>
+<div class="flex flex-col sm:flex-row items-start md:items-center justify-start gap-3">
+    <% optionsArray.forEach(el => { %>
+    <div class="flex items-center gap-2">
+        <input id="<%= name %><%= el %>" name="<%= name %>" type="radio" class="focus:ring-pink-600 h-3 w-3 text-pink-600 border-pink-600">
+        <label for="<%= name %><%= el %>" class="block text-black capitalize font-special font-semibold text-xs md:text-sm">
+            <%= el %>
+        </label>
+    </div>
+    <% }) %>
+</div>
