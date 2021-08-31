@@ -19,6 +19,7 @@ module.exports = {
       translate : ["group-hover"],
       scale : ["group-hover"],
       brightness : ["group-hover"],
+      grayscale : ["group-hover"]
     },
   },
   plugins: [
