@@ -64,6 +64,7 @@ visibleInputFields?.forEach(field => field.addEventListener("blur", unHighlightI
 let passwordError, nameError, emailError;
 
 function checkInput(e) {
+
     const inputType = e.target.id;
     const hintEl = e.target.parentElement.nextElementSibling;
     if (inputType === "password") {
@@ -86,7 +87,7 @@ function passwordCheck(enteredPassword, passwordHintEl) {
         passwordError = true;
         return
     }
-    if (enteredPassword.length > 0 && enteredPassword.length < 8) {
+    if (enteredPassword.length > 0 && enteredPassword.length < 6) {
         passwordHintEl.textContent = 'Password too short.'
         passwordError = true;
         return
@@ -141,25 +142,25 @@ function nameCheck(enteredName, nameHintEl) {
     nameHintEl.textContent = ''
 }
 
-let popupMsg;
-
-function emptyFieldsCheck(formEl) {
-    const formData = new FormData(formEl);
-    for (let [key, value] of formData) {
-        if (!value || !value.trim()){
-            const globalErrorEl = document.querySelector("#accountGlobalError");
-            globalErrorEl.innerHTML = `<small>Please fill in <span class="text-pink-600 uppercase">${key}&nbsp;</span>field</small>`
-            popupMsg = setTimeout(()=> globalErrorEl.innerHTML = '', 1500)
-            return true
-        }
-    }
-    return false;
-}
 
 document.forms[0].addEventListener("submit", function(e) {
-    if (passwordError || nameError || emailError || emptyFieldsCheck(this)) {
+    if (passwordError || nameError || emailError) {
         e.preventDefault()
-        return () => clearTimeout(popupMsg)
+        return
     }
     this.submit()
+    // show a loading icon
+    const submitBtn = document.querySelector("button[type='submit']");
+    submitBtn.classList.add("cursor-not-allowed", "opacity-70", "pointer-events-none")
+    submitBtn.innerHTML = `<i class="fas fa-spinner animate-spin"></i>
+    <span class="ml-1.5">please wait</span>`
+})
+
+window.addEventListener("load", () => {
+    const errorEl = document.querySelector("#accountGlobalError");
+    const timer = setTimeout(() => {
+        errorEl.remove()
+    }, 3000)
+
+    return () => clearTimeout(timer)
 })
