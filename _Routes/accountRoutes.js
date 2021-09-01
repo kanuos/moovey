@@ -8,8 +8,6 @@ const {
     submitLoginForm, 
     submitRegisterForm, 
     handleLogOut, 
-    showEditProfilePage,
-    submitEditProfile,
     forgotPasswordPage,
     resetPassword,
     updatePassword
@@ -71,13 +69,6 @@ accountRoutes.post("/reset-password", preventLoginRoute, updatePassword)
 accountRoutes.get("/reviewers", reviewerList)
 
 accountRoutes.get("/reviewers/:id", reviewerProfile)
-
-accountRoutes.get("/edit-profile", redirectToLogin, showEditProfilePage)
-
-accountRoutes.post("/edit-profile", redirectToLogin, submitEditProfile)
-
-accountRoutes.get("/testimonial", (req, res) => res.render("pages/testimonial"))
-
 
 
 module.exports = accountRoutes;

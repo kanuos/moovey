@@ -7,7 +7,6 @@ const {
     titleCase
 } = require("../functions");
 
-const imdBB = require("imgbb-uploader");
 const pool = require("../_Database")
 const bcrypt = require("bcryptjs");
 const {v4 : uuid} = require("uuid");
@@ -43,8 +42,8 @@ exports.renderDisplayRoute = async function(req, res) {
 
 exports.submitLoginForm = async function(req, res) {
     try {
-        let {loginEmail, loginPassword} = req.body;
-        const email = loginEmail.trim(), password = loginPassword.trim();
+        let {email, password} = req.body;
+        email = email.trim(), password = password.trim();
         
         // valid email
         if(!minimumLength(email, 6))
@@ -80,7 +79,7 @@ exports.submitLoginForm = async function(req, res) {
         req.session.uid = existingUser.uid;
         req.session.email = existingUser.email;
         req.session.name = existingUser.name.split(" ")[0];  
-        return res.redirect(301, "/dashboard")
+        return res.redirect("/dashboard")
             
     }
     catch(err){
@@ -186,61 +185,6 @@ exports.showMyProfile = async function(req, res) {
     }
     catch(err){
         console.log(err);
-    }
-}
-
-exports.showEditProfilePage = async function(req, res) {
-    try {
-        const {rows} = await pool.query(`SELECT * FROM users JOIN profile ON profile.uid = users.uid WHERE users.uid = $1`, [req.session.uid]);
-        delete rows[0].password
-        rows[0].date_joined = readableDateStringFormat(rows[0].date_joined)
-        console.log("show edit page for ", rows[0]);
-        return res.render("pages/edit-profile", 
-            {
-                title : `${titleCase(req.session.userName)}'s Profile`, 
-                loggedIn : req.session?.name,
-                authorized : req.session.uid === rows[0].uid ? true: false,
-                profile: rows[0]
-            })
-    }
-    catch(er){
-        console.log("edit profile err, ", er);
-    }
-}
-
-exports.submitEditProfile = async function(req, res) {
-    //   {
-    //     new_name: '',
-    //     location: '',
-    //     bio: '',
-    //     facebook: '',
-    //     twitter: '',
-    //     'your instagram account link': 'sounak.theone@gmail.com',
-    //     current_password: '1234',
-    //     new_password: '',
-    //     confirm_password: ''
-    //   } null
-    console.log(req.body, req.files);
-
-    const valuesArray = [...Object.values(req.body)?.map(el => el.trim() ?? "")]
-    try {
-        if (req.files?.picture?.name) {
-            await req.files.picture.mv(req.tempPath)
-            const data = await imdBB(process.env.IMGBB, req.tempPath)
-            valuesArray.push(data.url);
-            fs.rm(req.tempPath, {
-                force : true
-            })
-            valuesArray.push(req.session.email);
-            await pool.query(`UPDATE users SET name = $1, location = $2, quote = $3, bio = $4, picture = $5 WHERE email = $6`, valuesArray);
-        } 
-        else {
-            valuesArray.push(req.session.email);
-            await pool.query(`UPDATE users SET name = $1, location = $2, quote = $3, bio = $4 WHERE email = $5`, valuesArray);
-        }   
-        return res.status(302).json("")
-    } catch (error) {
-        return res.status(400).json("Something went wrong! pls try again")
     }
 }
 
