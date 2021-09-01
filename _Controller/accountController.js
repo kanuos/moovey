@@ -11,6 +11,7 @@ const pool = require("../_Database")
 const bcrypt = require("bcryptjs");
 const {v4 : uuid} = require("uuid");
 const mailer = require("nodemailer");
+const deepEmailValidator = require("deep-email-validator");
 const { renderEmailHtml } = require("./emailTemplate");
 const {
     MAIL_USER, MAIL_PASSWORD, MAIL_PORT, MAIL_HOST
@@ -83,22 +84,18 @@ exports.submitLoginForm = async function(req, res) {
             
     }
     catch(err){
-        return res.render("pages/landing", 
+        return res.render("pages/login", 
         {
-            loggedIn : req.session?.name,
-            title: "Welcome to your personal movie blog", 
-            redirect : undefined, 
-            isLoginMode : true, 
-            isRegisterMode : false,
-            errorMsg : err.message
+            title: "Login to your Moovey account", 
+            accountError : err.message
         })
     }
 }
 
 exports.submitRegisterForm = async function(req, res) {
     try {
-        let {registerName, registerEmail, registerPassword} = req.body;
-        const name = registerName.trim(), email = registerEmail.trim(), password = registerPassword.trim();
+        let {name, email, password} = req.body;
+        name = name.trim(), email = email.trim(), password = password.trim();
         
         // check whether valid req.body
         if(!minimumLength(name, 2))
@@ -120,6 +117,20 @@ exports.submitRegisterForm = async function(req, res) {
         if(!maximumLength(password, 20))
             throw new Error("Password cannot be more than twenty characters long")
 
+        // check whether email is legit and not just follows a valid format
+        const {valid} = await deepEmailValidator.validate({
+            email,
+            validateMx : true,
+            validateDisposable : true,
+            validateSMTP: true, 
+            validateRegex : true,
+            validateTypo : true
+        })
+
+        if (!valid) {
+            throw new Error("Faulty email ID")
+        }
+
         // check whether email unique
         const {rows} = (await pool.query("SELECT * FROM users WHERE email = $1", [email.trim()]));
         if(rows.length > 0)
@@ -138,15 +149,10 @@ exports.submitRegisterForm = async function(req, res) {
         return res.redirect(301, `/?success=${userProfile.uid}`)        
     }
     catch(err){
-        return res.render("pages/landing", 
+        return res.render("pages/register", 
         {
-            title: "Welcome to your personal movie blog", 
-            redirect : undefined, 
-            isLoginMode : false, 
-            isRegisterMode : true,
-            errorMsg : err.message,
-            loggedIn : req.session?.name,
-
+            title: "Register with Moovey", 
+            accountError : err.message,
         })
     }
 }
@@ -336,7 +342,7 @@ exports.updatePassword = async function(req, res) {
 
 exports.showLoginPage = async (req, res) => {
     try {
-        return res.render("pages/login", {title: "Login"})
+        return res.render("pages/login", {title: "Login", accountError : null})
     } catch (error) {
         console.log("login error");
         console.log(error);
@@ -345,7 +351,7 @@ exports.showLoginPage = async (req, res) => {
 
 exports.showRegisterPage = async (req, res) => {
     try {
-        return res.render("pages/register", {title: "Register"})
+        return res.render("pages/register", {title: "Register", accountError : null})
     } catch (error) {
         console.log("register error");
         console.log(error);
