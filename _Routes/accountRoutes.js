@@ -8,7 +8,6 @@ const {
     submitLoginForm, 
     submitRegisterForm, 
     handleLogOut, 
-    showMyProfile,
     showEditProfilePage,
     submitEditProfile,
     forgotPasswordPage,
@@ -72,8 +71,6 @@ accountRoutes.post("/reset-password", preventLoginRoute, updatePassword)
 accountRoutes.get("/reviewers", reviewerList)
 
 accountRoutes.get("/reviewers/:id", reviewerProfile)
-
-accountRoutes.get("/dashboard", redirectToLogin, showMyProfile)
 
 accountRoutes.get("/edit-profile", redirectToLogin, showEditProfilePage)
 
