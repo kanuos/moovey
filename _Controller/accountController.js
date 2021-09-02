@@ -17,27 +17,16 @@ const {
     MAIL_USER, MAIL_PASSWORD, MAIL_PORT, MAIL_HOST
 } = process.env;
 
-exports.renderDisplayRoute = async function(req, res) {
-    let redirect = undefined, isLoginMode = false, isRegisterMode = false, errorMsg = null;
-    if(req.route.path === "/login"){
-        isLoginMode = true
-    }
-    else if (req.query?.success) {
-        const {rows} = await pool.query(`SELECT * FROM users`);
-        if (rows[rows.length - 1]?.uid === req.query.success) {
-            redirect = "Account created successfully. Log in to continue"
-            isLoginMode = true
-        } 
-    } 
-    else if (req.query?.redirect) {
-        redirect = "You are not logged in or your session has expired. Please log in to continue."
-        isLoginMode = true
+exports.showLandingPage = async function(req, res) {
+    const {name} = req.session;
+
+    if (name) {
+        return res.redirect(301, "/dashboard")
     }
     return res.render("pages/landing", 
     {   
-        loggedIn : req.session?.name,
-        title: "Welcome to your personal movie blog", 
-        redirect, isLoginMode, isRegisterMode, errorMsg
+        title: "A place for cinephiles",
+        loggedIn : req.session?.name
     })
 }
 
@@ -146,7 +135,7 @@ exports.submitRegisterForm = async function(req, res) {
         let profile = await pool.query("INSERT INTO profile (uid) VALUES ($1) RETURNING *", [user.rows[0].uid]);         
         const userProfile = {...user.rows[0], ...profile.rows[0]}
         console.log(userProfile);
-        return res.redirect(301, `/?success=${userProfile.uid}`)        
+        return res.redirect(301, `/login?q=${userProfile.uid}`)        
     }
     catch(err){
         return res.render("pages/register", 
@@ -160,14 +149,10 @@ exports.submitRegisterForm = async function(req, res) {
 exports.handleLogOut = function(req, res) {
     req.session.destroy();
     res.clearCookie(process.env.SESSION_NAME)
-    return res.render("pages/landing", 
+    return res.render("pages/login", 
     {   
-        loggedIn : req.session?.name,
-        title: "Welcome to your personal movie blog", 
-        redirect : "You have been logged out successfully.", 
-        isLoginMode : true, 
-        isRegisterMode : false, 
-        errorMsg : false
+        title: "Login to Moovey", 
+        accountError : "logged out successfully."
     })
 }
 
@@ -342,7 +327,23 @@ exports.updatePassword = async function(req, res) {
 
 exports.showLoginPage = async (req, res) => {
     try {
-        return res.render("pages/login", {title: "Login", accountError : null})
+        let errorMsg = null;
+        const {q} = req.query;
+        switch(q) {
+            case "login-required" : 
+                errorMsg = "You are not logged in or your session has expired. Please log in to continue."
+                break
+            case null:
+            case  undefined:
+                errorMsg = null
+                break
+            default:
+                const {rows} = await pool.query(`SELECT * FROM users`);
+                if (rows[rows.length - 1]?.uid === q) {
+                    errorMsg = "Account created successfully. Log in to continue"
+                } 
+        }
+        return res.render("pages/login", {title: "Login", accountError : errorMsg})
     } catch (error) {
         console.log("login error");
         console.log(error);

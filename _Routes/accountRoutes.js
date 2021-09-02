@@ -2,7 +2,7 @@ const accountRoutes = require('express').Router();
 const {
     reviewerProfile,
     reviewerList,
-    renderDisplayRoute, 
+    showLandingPage, 
     showLoginPage,
     showRegisterPage,
     submitLoginForm, 
@@ -23,7 +23,7 @@ const {redirectToLogin, preventLoginRoute} = require("../sessionMiddleware")
 // ACCESS   :   PUBLIC
 // METHODS  :   [GET]
 
- accountRoutes.get("/", preventLoginRoute, renderDisplayRoute)
+ accountRoutes.get("/", preventLoginRoute, showLandingPage)
  accountRoutes.get("/login", preventLoginRoute, showLoginPage)
  accountRoutes.get("/register", preventLoginRoute, showRegisterPage)
  

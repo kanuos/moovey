@@ -3,7 +3,7 @@ exports.redirectToLogin = function(req, res, next) {
         next();
     }
     else {
-        return res.redirect("/?redirect=True")
+        return res.redirect("/login?q=login-required")
     }
 }
 
