@@ -11,7 +11,8 @@ const pool = require("../_Database")
 const bcrypt = require("bcryptjs");
 const {v4 : uuid} = require("uuid");
 const mailer = require("nodemailer");
-const deepEmailValidator = require("deep-email-validator");
+const EmailValidator = require("email-deep-validator");
+const deepEmailValidator = new EmailValidator();
 const { renderEmailHtml } = require("./emailTemplate");
 const {
     MAIL_USER, MAIL_PASSWORD, MAIL_PORT, MAIL_HOST
@@ -65,7 +66,6 @@ exports.submitLoginForm = async function(req, res) {
         if (!isValidPassword)
             throw new Error("Login credentials invalid.")
 
-        console.log(existingUser);
         req.session.uid = existingUser.uid;
         req.session.email = existingUser.email;
         req.session.name = existingUser.name.split(" ")[0];  
@@ -107,17 +107,20 @@ exports.submitRegisterForm = async function(req, res) {
             throw new Error("Password cannot be more than twenty characters long")
 
         // check whether email is legit and not just follows a valid format
-        const {valid} = await deepEmailValidator.validate({
-            email,
-            validateMx : true,
-            validateDisposable : true,
-            validateSMTP: true, 
-            validateRegex : true,
-            validateTypo : true
-        })
+        // check for a maximum of 5s
+        deepEmailValidator.options.timeout = 5000
+        const {wellFormed, validDomain, validMailbox} = await deepEmailValidator.verify(email)
 
-        if (!valid) {
-            throw new Error("Faulty email ID")
+        if (!wellFormed) {
+            throw new Error("Invalid email syntax")
+        }
+
+        if (!validDomain) {
+            throw new Error("Invalid email domain")
+        }
+
+        if (!validMailbox) {
+            throw new Error("Blacklisted email address.")
         }
 
         // check whether email unique
