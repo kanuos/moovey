@@ -1,0 +1,88 @@
+<article class="fixed h-screen top-0 left-0 w-full bg-white flex flex-col items-center justify-center gap-6 md:p-4 z-50">
+    <!-- search error -->
+    <p id="searchError" class="bg-black text-white absolute top-0 left-0 w-full text-center">
+        <% if (searchError) { %>
+        <span class="p-2 text-sm md:text-base font-special capitalize block">
+            <i class="fas fa-exclamation-circle text-xs"></i> &nbsp; <%= searchError %>
+        </span>
+        <% } %>
+    </p>
+
+    <form action="<%= actionURL %>" 
+        method="POST" 
+        autocomplete="off" class="w-11/12 max-w-xl mx-auto bg-white filter md:drop-shadow-xl p-4 h-auto rounded relative">
+
+        <a href="/dashboard/my-articles" class="absolute -top-4 right-2 text-3xl outline-none focus:outline-none transform transition-all hover:scale-110 focus:scale-110"><i class="fas fa-times-circle"></i></a>
+
+        <p class="text-lg md:text-2xl mb-4 font-light font-special text-center">
+            Search Movie | TV shows | Web Shows 
+        </p>
+        <section class="mb-4">
+            <input type="hidden" name="step" value="1">
+            <label for="keyword" class="font-regular capitalize text-xs text-black mb-1 block">title</label>
+            <input 
+                type="search" 
+                name="keyword" 
+                placeholder="Search"
+                class="w-full border p-1 pr-4 rounded-md border-gray-400 bg-transparent text-sm outline-none focus:outline-none font-regular transition-all ring-0 focus:ring-0 ring-transparent focus:border-black ring-offset-transparent"
+                id="keyword">
+        </section>
+        <section class="mb-4">
+            <label for="year" class="font-regular capitalize text-xs text-black mb-1 block">
+                year  <small class="text-gray-500">(optional)</small>
+            </label>
+            <input 
+                type="number"
+                min="1900"
+                max="<%= new Date().getFullYear()%>"
+                name="year" 
+                placeholder="Search"
+                class="w-full border p-1 pr-4 rounded-md border-gray-400 bg-transparent text-sm outline-none focus:outline-none font-regular transition-all ring-0 focus:ring-0 ring-transparent focus:border-black ring-offset-transparent"
+                id="year">
+        </section>
+        <section>
+            <legend class="font-regular capitalize text-xs text-black mb-1 block">
+                sort by
+            </legend>
+            <div class="flex items-start md:items-center justify-start gap-3">
+                <div class="flex items-center gap-2">
+                    <input id="movie" value="movie" name="type" type="radio" class="focus:ring-pink-600 h-3 w-3 text-pink-600 border-pink-600" checked>
+                    <label for="movie" class="block text-black capitalize font-regular text-sm">
+                        movie
+                    </label>
+                </div>
+                <div class="flex items-center gap-2">
+                    <input id="series" value="series" name="type" type="radio" class="focus:ring-pink-600 h-3 w-3 text-pink-600 border-pink-600">
+                    <label for="series" class="block text-black capitalize font-regular text-sm">
+                        series
+                    </label>
+                </div>
+            </div>
+        </section>
+
+        <button type="submit" class="text-sm py-1.5 px-5 bg-black text-white ring-0 ring-offset-transparent focus:ring-0 ring-transparent focus:ring-transparent capitalize block w-max mx-auto my-6 font-special">
+            <i class="fas fa-search text-xs"></i> search
+        </button>
+    </form>
+
+    <% if (conflictDetail.title && conflictDetail.created) {%>
+    <p class="font-special text-xs w-5/6 mx-auto max-w-md">
+        You already have a review of <span class="font-semibold"><%= conflictDetail.title %></span> created on <span class="font-semibold"><%= new Date(conflictDetail.created).toDateString() %></span>
+    </p>
+    <ul class="flex flex-col items-center gap-3 justify-center">
+        <li class="my-2">
+            <a href="/moovey/<%= conflictDetail.blog_id %>" class="text-sm outline-none focus:outline-none my-10 py-2 px-5 border border-dashed border-black hover:text-white hover:bg-black">
+                <i class="fas fa-stethoscope"></i>
+                <span class="capitalize font-special font-semibold">view as someone else</span>
+            </a>
+        </li>
+        <li>
+            <a href="/dashboard/my-articles/<%= conflictDetail.blog_id %>" class="text-sm outline-none focus:outline-none my-10 py-2 px-5 border border-dashed border-black hover:text-white hover:bg-black">
+                <i class="fas fa-stethoscope"></i>
+                <span class="capitalize font-special font-semibold">open in dashboard</span>
+            </a>
+        </li>
+    </ul>
+    <% } %>
+
+</article>
