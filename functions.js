@@ -50,7 +50,7 @@ const dbLikeQueryString = string => {
 }
 
 const reformatMovieURL = url => {
-    if (url.includes("._V1_SX300")){
+    if (url && url.includes("._V1_SX300")){
         url = url.replace("._V1_SX300", '');
     }
     return url;

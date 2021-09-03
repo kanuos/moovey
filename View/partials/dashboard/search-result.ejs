@@ -1,0 +1,40 @@
+<!-- search result modal -->
+<article class="fixed h-screen top-0 left-0 w-full bg-white flex items-center justify-center md:p-4 z-50 overflow-hidden">
+
+
+    <div class="w-full px-4 pt-10 h-full overflow-hidden relative">
+
+        <p class="text-lg font-light font-special text-center">
+            Select a movie/series to review 
+        </p>
+
+        <p class="text-xs md:text-sm mb-4 font-light font-special text-center text-gray-500">
+            Showing <span class="text-black font-semibold"><%= data.length %></span> result for <span class="text-black font-semibold underline capitalize"><%= keyword %></span> 
+        </p>
+        
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-8 custom-scrollbar h-5/6 overflow-y-auto overflow-x-hidden px-4 w-full mx-auto">
+
+            <% if (data.length) { %>
+                <% data.forEach(datum => { %>
+                    <%- include('../movie_thumbnail', {
+                        poster : datum.poster, 
+                        title : datum.title, 
+                        year : datum.year, 
+                        type : datum.type, 
+                        imdbid : datum.imdbid
+                    }) %>
+                <% })%>
+            <% } %>
+            
+        </section>
+
+        <form action="<%= actionURL %>" method="POST" class="block my-4 text-gray-500 font-special">
+            <input type="hidden" name="step" value="0">
+            <p class="flex text-center w-full items-center justify-center gap-1">
+                Don't see what you you are looking for? Refine your search. Click 
+                <button type="submit" class="inline outline-none focus:outline-none text-black font-semibold hover:underline">here</i></button>
+                to go back
+            </p>
+        </form>
+    </div>
+</article>

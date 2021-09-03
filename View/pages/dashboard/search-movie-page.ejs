@@ -2,20 +2,22 @@
 
 <body class="min-h-screen font-regular relative custom-scrollbar">
     <!-- navbar -->
-    <%- include('../../partials/navbar')%>
+    <%- include('../../partials/navbar') %>
     
     <!-- dashboard -->
-    <%- include('../../partials/dashboard/dashboard-sidebar')%>
+    <%- include('../../partials/dashboard/dashboard-sidebar') %>
+
+    <!-- list header -->
+    <%- include('../../partials/list-header') %>
     
     <main class="w-full relative h-screen flex items-start md:pl-10">
-        <div class="grid gap-4 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 w-11/12 mx-auto">
-            <%- include('../../partials/movie_thumbnail') %>
-            <%- include('../../partials/movie_thumbnail') %>
-            <%- include('../../partials/movie_thumbnail') %>
-            <%- include('../../partials/movie_thumbnail') %>
-            <%- include('../../partials/movie_thumbnail') %>
-        </div>
-        
+        <section class="w-11/12 max-w-7xl mx-auto md:pl-6 my-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-8 place-items-center pb-6">
+            
+            <% data.forEach(movie => { %>
+                <%- include('../../partials/movie_thumbnail', {...movie}) %>
+            <% }) %>
+        </section>
+    
     </main>
         
     
