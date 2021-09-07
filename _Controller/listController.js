@@ -39,6 +39,7 @@ exports.getAllList = async function(req, res) {
 }
 
 exports.showNewListCreationPage = async (req, res) => {
+    context.formTitle = ''
     try {
         context.loggedIn = req.session?.name
         context.defaultData = null;
@@ -247,6 +248,7 @@ exports.submitSearchData = async function(req, res) {
                     message : `Search result for "${keyword}"`,
                     actionUrl : `/moovey/list/${lid}/search`,
                     data : movieInDB,
+                    hiddenField : false,
                     title: 'Add to list #' + lid,
                     loggedIn : req.session?.name,
                     dbMode : true
@@ -271,7 +273,8 @@ exports.submitSearchData = async function(req, res) {
                     data,
                     title: 'Add to list #' + lid,
                     loggedIn : req.session?.name,
-                    dbMode : false
+                    dbMode : false,
+                    hiddenField : false
                 })
             }
         }
@@ -294,7 +297,8 @@ exports.submitSearchData = async function(req, res) {
                 data,
                 title: 'Add to list #' + lid,
                 loggedIn : req.session?.name,
-                dbMode : false
+                dbMode : false,
+                hiddenField : false
             })
         }
 
@@ -328,6 +332,7 @@ exports.showSearchMovieItemPage = async function(req, res) {
             message : `Search Movie to add to "${listMeta.title}"`,
             actionUrl : `/moovey/list/${lid}/search`,
             data : [],
+            hiddenField : false,
             title: 'Add to list ',
             loggedIn : req.session?.name,
             dbMode : false

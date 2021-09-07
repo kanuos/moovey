@@ -1,0 +1,89 @@
+<%- include('../../partials/head') %>
+<body class="custom-scrollbar relative">  
+
+    <main class="w-full relative h-screen flex items-start pt-10">
+        <%- include('../../partials/bg_image') %>
+        <article class="fixed h-screen top-0 left-0 w-full  flex flex-col items-center justify-center gap-6 md:p-4 z-50">
+            <!-- search error -->
+            <p id="searchError" class="bg-black text-white absolute top-0 left-0 w-full text-center">
+                <% if (pageError) { %>
+                <span class="p-2 text-sm md:text-base font-special capitalize block">
+                    <i class="fas fa-exclamation-circle text-xs"></i> &nbsp; <%= pageError%>
+                </span>
+                <% } %>
+            </p>
+                
+            <form action="<%= actionURL %>" 
+                method="POST" 
+                autocomplete="off" class="searchForm w-11/12 max-w-xl mx-auto bg-white filter md:drop-shadow-xl p-4 h-auto rounded relative">
+        
+                <a href="/dashboard/my-lists" class="absolute -top-4 right-2 text-3xl outline-none focus:outline-none transform transition-all hover:scale-110 focus:scale-110"><i class="fas fa-times-circle"></i></a>
+        
+                <p class="text-lg md:text-2xl mb-4 font-light font-special text-center">
+                    Create List
+                </p>
+                <section class="mb-4 w-11/12 max-w-3xl mx-auto md:pb-2 border-b border-gray-200">
+                    <label for="title">
+                        <span class="font-special text-gray-500 font-semibold capitalize text-sm md:text-base">
+                            title
+                        </span>
+                    </label>
+                    <div class="absolute pointer-events-none invisible"></div>
+                    <textarea
+                        type="text" 
+                        name="title" 
+                        id="title" 
+                        maxlength="50"
+                        placeholder="Eg. my favorite action movies of all time"
+                        class="textField ring-0 resize-none mt-0.5 font-regular font-semibold block text-gray-600 w-full text-lg outline-none focus:outline-none focus:text-black p-1 h-auto focus:ring-0 border-0"></textarea>
+                </section>
+                
+                <section class="w-11/12 max-w-3xl mx-auto h-auto">
+                    <label for="description">
+                        <span class="font-special text-gray-500 font-semibold capitalize text-sm md:text-base">
+                            description <small class="font-light">(optional)</small>
+                        </span>
+                    </label>
+                    <textarea 
+                        data-placeholder="Write your description here" 
+                        id="description" 
+                        name="description" 
+                        maxlength="150"
+                        placeholder="A brief description about the list you are creating"
+                        class="textField ring-0 h-40 resize-none mt-0.5 font-regular italic block text-gray-600 w-full text-sm md:text-base outline-none focus:outline-none focus:text-black p-1 focus:ring-0 border-0"></textarea>
+                </section>        
+                <button type="submit" class="text-sm py-1.5 px-5 bg-black text-white ring-0 ring-offset-transparent focus:ring-0 ring-transparent focus:ring-transparent capitalize block w-max mx-auto my-6 font-special">
+                    create my list
+                </button>
+            </form>
+        
+            <% if (conflictDetail) {%>
+                <p class="font-special text-xs w-5/6 mx-auto max-w-md">
+                    You already have a list titled <span class="font-semibold">Lorem, ipsum dolor.</span> created on <span class="font-semibold">20th DFe</span>
+                </p>
+                <ul class="flex  items-center gap-3 justify-center">
+                    <li class="my-2">
+                        <a href="/moovey/list/<%= conflictDetail.lid %>" class="text-sm outline-none focus:outline-none my-10 py-2 px-5 border border-dashed border-black hover:text-white hover:bg-black">
+                            <i class="fas fa-stethoscope"></i>
+                            <span class="capitalize font-special font-semibold">view as someone else</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/dashboard/my-lists/<%= conflictDetail.lid %>" class="text-sm outline-none focus:outline-none my-10 py-2 px-5 border border-dashed border-black hover:text-white hover:bg-black">
+                            <i class="fas fa-stethoscope"></i>
+                            <span class="capitalize font-special font-semibold">open in dashboard</span>
+                        </a>
+                    </li>
+                </ul>
+                <% } %>
+
+        </article>
+        
+    </main>
+
+    
+
+    <script src="/static/js/list-create-edit.js"></script>
+
+</body>
+</html>
