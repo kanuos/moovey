@@ -1,13 +1,19 @@
 <!-- blog thumbnail -->
-<article data-animate="opacity-25" class="scrollArticle hover:scale-105 transform transition-all opacity-25 w-80 mx-auto relative break-words vh-60 group bg-white shadow-2xl group flex flex-col overflow-hidden">
+<article data-animate="opacity-25" class="scrollArticle hover:scale-105 transform transition-all opacity-25 w-72  mx-auto relative break-words vh-50 group bg-white group flex flex-col overflow-hidden rounded-md filter drop-shadow-2xl">
     <section class="w-full h-5/6 relative">
         <!-- blog image -->
         <img 
-            class="block absolute top-0 left-0 h-full w-full object-cover z-0 transition-all pointer-events-none object-top"
+            class="block absolute top-0 left-0 h-full w-full object-cover z-0 transition-all pointer-events-none object-top filter brightness-50 md:brightness-100 md:grayscale md:group-hover:grayscale-0"
             src="<%= blog.poster %>"
             alt="">  
         <!-- blog info -->
-        <section class="h-auto absolute bottom-0 left-0 w-full bg-white bg-opacity-95 p-4 flex flex-col items-center gap-2 transition-transform md:opacity-0 md:group-hover:opacity-100 transform md:translate-y-full md:group-hover:translate-y-0">
+        <section class="h-auto absolute bottom-0 left-0 w-full bg-white p-4 flex flex-col items-center gap-2 transition-transform md:opacity-0 md:group-hover:opacity-100 transform md:translate-y-full md:group-hover:translate-y-0">
+            <h4 class="text-pink-600 font-regular font-semibold w-11/12 text-center mx-auto text-xs inline-flex flex-col items-center justify-center">
+                <small class="text-gray-500">Review of </small>
+                <span>
+                    <%= blog.title %>
+                </span>
+            </h4>
             <strong class="text-sm text-center">
                 <%= blog.blog_title %>
             </strong>
