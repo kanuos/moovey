@@ -1,9 +1,18 @@
 // CONSTANTS AND ENUMS
 const errorEl = document.querySelector("#formError");
+const submitBtn = document.getElementById("submitBtn")
+const submitBtnText = document.getElementById("submitBtnText")
+const loaderIcon = document.getElementById("loaderIcon")
+
 const INPUT_NAMES = {
     currentPassword : "Current Password",
     newPassword : "New Password",
     confirmPassword : "Confirm Password",
+}
+
+const LOAD_STATUS = {
+    "start" : true,
+    "end" : false
 }
 
 // DOM elements
@@ -25,6 +34,7 @@ window.addEventListener("hide-popup", hidePageMsgs)
 async function handleFormSubmit(e) {
     try {
         e.preventDefault();
+        submissionLoaderStyle(LOAD_STATUS.start)
         const actionURL = this.getAttribute("action")
         const formData = new FormData(this);
         
@@ -38,6 +48,8 @@ async function handleFormSubmit(e) {
         })
 
         const data = await response.json()
+
+        submissionLoaderStyle(LOAD_STATUS.end)
 
         if (!data.success) {
             throw new Error(data.error)
@@ -70,4 +82,20 @@ function checkFormValidity(fd) {
             throw new Error(`"${INPUT_NAMES[name]}" is required`)
         }
     }
+}
+
+// submission animation and loaders
+function submissionLoaderStyle(status) {
+    // start animations 
+    const {text, load} = submitBtnText.dataset
+    if (status === LOAD_STATUS.start) {
+        loaderIcon?.classList.remove("hidden")
+        submitBtn?.classList.add("opacity-50", "cursor-not-allowed", "pointer-events-none")
+        submitBtnText.textContent = load;    
+        return
+    }
+    // hide animations
+    loaderIcon?.classList.add("hidden")
+    submitBtn?.classList.remove("opacity-50", "cursor-not-allowed", "pointer-events-none")
+    submitBtnText.textContent = text;    
 }

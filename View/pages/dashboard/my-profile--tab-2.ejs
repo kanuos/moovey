@@ -78,8 +78,11 @@
                     <p id="formError" class="text-center font-regular font-semibold text-gray-600">
                     </p>
                     <section class="mx-auto max-w-md my-10 w-full">
-                        <button type="submit" class="outline-none focus:outline-none py-2 px-5 bg-black text-white text-xs capitalize font-special mx-auto block w-max md:text-sm">
-                            update password
+                        <button type="submit" id="submitBtn" class="outline-none focus:outline-none py-2 px-5 bg-black text-white text-xs capitalize font-special mx-auto block w-max md:text-sm">
+                            <i id="loaderIcon" class="fas fa-spinner animate-spin hidden"></i>
+                            <span data-text="update password" data-load="updating" id="submitBtnText">
+                                update password
+                            </span>
                         </button>
                     </section>
 
