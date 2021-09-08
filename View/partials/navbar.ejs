@@ -14,7 +14,28 @@
             </span>
         </p>
     <% } %>
-    <i class="navMenuToggler fas fa-stream text-xs hover:text-pink-600 transition-all cursor-pointer"></i>
+    <ul class="flex items-center justify-end gap-4">
+        <% if(loggedIn) { %>
+            <% if (!dashboard) {%>
+            <li>
+                <a href="/dashboard" class="text-sm font-semibold text-gray-500 hover:text-black font-regular capitalize border-b-2 border-transparent hover:border-current transition-all outline-none focus:outline-none focus:text-black focus:border-current"><%= loggedIn %>'s Dashboard</a>
+            </li>
+            <% } %>
+            <li>
+                <a href="/logout" class="text-sm font-semibold text-gray-500 hover:text-black font-regular capitalize border-b-2 border-transparent hover:border-current transition-all outline-none focus:outline-none focus:text-black focus:border-current">Logout</a>
+            </li>
+        <% } else { %>
+            <li>
+                <a href="/login" class="text-sm font-semibold text-gray-500 hover:text-black font-regular capitalize border-b-2 border-transparent hover:border-current transition-all outline-none focus:outline-none focus:text-black focus:border-current">Login</a>
+            </li>
+            <li>
+                <a href="/register" class="text-sm font-semibold text-gray-500 hover:text-black font-regular capitalize border-b-2 border-transparent hover:border-current transition-all outline-none focus:outline-none focus:text-black focus:border-current">Register</a>
+            </li>
+        <% }  %>
+        <li>
+            <i class="navMenuToggler fas fa-stream text-xs hover:text-pink-600 transition-all cursor-pointer"></i>
+        </li>
+    </ul>
 
     <section id="navMenu" class="fixed top-0 left-0 w-full h-screen transform transition-all -translate-y-full bg-white z-50 flex items-center justify-center">
         <!-- menu close btn -->
@@ -78,19 +99,7 @@
                 </article>
             </section>
             <ul class="w-full h-2/3 gap-y-4 justify-evenly flex flex-col md:w-1/2">
-                <% if (loggedIn) { %>
-                <li class="w-full text-sm py-2 relative text-gray-400 transition-all transform hover:scale-105 origin-center hover:text-black font-semibold">
-                    <a href="/dashboard" class="block relative w-full">
-                        <ul class="hidden items-center justify-start w-1/3 absolute top-1/2 transform -translate-y-1/2 left-0">
-                            <i class="h-0.5 w-5/6 bg-pink-600 "></i>   
-                            <i class="text-pink-600 fas fa-dot-circle text-xs"></i>
-                        </ul>
-                        <h6 class="w-2/3 block pl-3 ml-auto font-regular uppercase">
-                            dashboard
-                        </h6>
-                    </a>
-                </li>
-                <% } %>
+                
                 <li data-target="articles" class="active navlink-desc w-full text-2xl py-2 relative text-black">
                     <a href="/moovey" class="block relative w-full">
                         <ul class="flex items-center justify-start w-1/3 absolute top-1/2 transform -translate-y-1/2 left-0">
@@ -118,32 +127,6 @@
                         <h6 class="w-2/3 block pl-3 ml-auto font-regular uppercase">reviewers</h6>
                     </a>
                 </li>
-                <% if (loggedIn) {%>
-                <li class="w-full text-sm py-2 relative text-gray-400 transition-all transform hover:scale-105 origin-center hover:text-black font-semibold">
-                    <a href="/logout" class="block relative w-full">
-                        <ul class="hidden items-center justify-start w-1/3 absolute top-1/2 transform -translate-y-1/2 left-0">
-                            <i class="h-0.5 w-5/6 bg-pink-600 "></i>   
-                            <i class="text-pink-600 fas fa-dot-circle text-xs"></i>
-                        </ul>
-                        <h6 class="w-2/3 block pl-3 ml-auto font-regular uppercase">log out</h6>
-                    </a>
-                </li>
-                <% } else { %>
-                <li class="w-full text-xs py-2 relative text-black transition-all font-light uppercase">
-                    <ul class="flex items-center justify-center gap-8">
-                        <li>
-                            <a href="/login" class="block border-b w-max relative border-transparent hover:border-current">
-                                log in
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/register" class="block border-b w-max relative border-transparent hover:border-current">
-                                sign up
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <% }  %>
             
             </ul>
         </div>
