@@ -1,0 +1,101 @@
+<%- include('../../partials/head') %>
+<body class="font-special relative w-full h-full">
+
+<%- include('../../partials/navbar') %>
+
+
+<%- include('../../partials/dashboard/dashboard-sidebar') %>
+
+
+<main class="md:px-14 pt-14 h-screen overflow-y-scroll custom-scrollbar">
+    <ul class="flex items-center justify-start gap-4 text-xs capitalize mb-10 w-11/12 mx-auto max-w-4xl">
+        <li 
+            class="pageNav cursor-pointer text-gray-400 font-regular border-b border-transparent transition-all hover:text-gray-500">
+            <a href="/dashboard/my-profile?tab=1" class="outline-none focus:outline-none">
+                <%= user.name %>'s profile
+            </a>
+        </li>
+        <li 
+            class="pageNav cursor-pointer text-black font-regular border-b border-current transition-all hover:shadow-md">
+            manage password
+        </li>
+    </ul>
+    
+    <!-- password management tab -->
+    <section class="w-11/12 mx-auto max-w-4xl">
+        <!-- password mgmt section -->
+        <div class="flex items-start justiyf-start w-full gap-4 md:mb-10">
+            <section class="mx-auto max-w-md mb-6 w-full md:w-3/5">
+                <form action="/dashboard/my-profile/change-password" method="post" enctype="multipart/form-data" id="passwordForm" class="flex flex-col w-full">
+                    <!-- social info section -->
+                    <div class="flex items-start justiyf-start w-full gap-4 md:mb-10">
+                        <section class="mx-auto max-w-md w-full">
+                            <legend class="capitalize text-xs font-special font-semibold text-gray-400 md:hidden">change password</legend>
+                        
+                            <article class="p-4 shadow-glass h-auto w-full rounded my-2 flex flex-col gap-2 items-start justify-start">
+                                <div class="w-full flex flex-col">
+                                    <section class="flex flex-col gap-1 items-start w-full">
+                                        <label for="currentPassword" class="text-gray-400 font-semibold font-special capitalize">
+                                            <small class="text-xs">
+                                                current password
+                                            </small>
+                                        </label>
+                                        <input
+                                            type="password" 
+                                            name="currentPassword" 
+                                            id="currentPassword" 
+                                            class="p-1.5 overflow-hidden mt-0.5 font-special font-semibold block text-gray-500 w-full text-xs outline-none focus:outline-none focus:text-black h-auto whitespace-pre-wrap rounded-sm ring-offset-transparent ring-0 focus:ring-0 border-gray-300 focus:border-black"/>
+                                    </section>
+                                    <section class="flex flex-col gap-1 items-start w-full">
+                                        <label for="newPassword" class="text-gray-400 font-semibold font-special capitalize">
+                                            <small class="text-xs">
+                                                new password
+                                            </small>
+                                        </label>
+                                        <input
+                                            type="password" 
+                                            name="newPassword" 
+                                            id="newPassword"
+                                            class="p-1.5 overflow-hidden mt-0.5 font-special font-semibold block text-gray-500 w-full text-xs outline-none focus:outline-none focus:text-black h-auto whitespace-pre-wrap rounded-sm ring-offset-transparent ring-0 focus:ring-0 border-gray-300 focus:border-black"/>
+                                    </section>
+                                    <section class="flex flex-col gap-1 items-start w-full">
+                                        <label for="confirmPassword" class="text-gray-400 font-semibold font-special capitalize">
+                                            <small class="text-xs">
+                                                confirm password
+                                            </small>
+                                        </label>
+                                        <input
+                                            type="password" 
+                                            name="confirmPassword" 
+                                            id="confirmPassword" 
+                                            maxlength="100"
+                                            class="p-1.5 overflow-hidden mt-0.5 font-special font-semibold block text-gray-500 w-full text-xs outline-none focus:outline-none focus:text-black h-auto whitespace-pre-wrap rounded-sm ring-offset-transparent ring-0 focus:ring-0 border-gray-300 focus:border-black"/>
+                                    </section>
+                                </div>
+                            </article>
+                        </section>
+                    </div>
+                    <p id="formError" class="text-center font-regular font-semibold text-gray-600">
+                    </p>
+                    <section class="mx-auto max-w-md my-10 w-full">
+                        <button type="submit" class="outline-none focus:outline-none py-2 px-5 bg-black text-white text-xs capitalize font-special mx-auto block w-max md:text-sm">
+                            update password
+                        </button>
+                    </section>
+
+                </form>
+            </section>
+            <h4 class="hidden md:block w-2/5 font-special capitalize font-semibold pb-1.5 text-right border-b-2 border-black text-black border-dashed">
+                change password
+            </h4>
+        </div>
+    </section>
+</main>
+
+
+<script src="/static/js/dashboard-sidebar.js"></script>
+<script src="/static/js/navbar.js"></script>
+<script src="/static/js/dashboard-profile-password.js"></script>
+
+</body>
+</html>

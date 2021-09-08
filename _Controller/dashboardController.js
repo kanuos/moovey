@@ -21,8 +21,10 @@ const {
 
 const {convert} = require("html-to-text")
 const sharp = require("sharp");
-const { readableDateStringFormat } = require("../functions");
+const { readableDateStringFormat, minimumLength, maximumLength } = require("../functions");
 const imgbb = require("imgbb-uploader");
+const bcrypt = require("bcryptjs");
+
 
 const {IMGBB_MAX_FILE_SIZE, IMGBB} = process.env
 
@@ -48,8 +50,9 @@ async function dashboard__getMyProfile(req, res) {
         context.user = activeUser;
         context.user.joined = readableDateStringFormat(activeUser.joined)
         const {tab} = req.query;
-        if (tab === "2") 
+        if (tab === "2") {
             return res.render("pages/dashboard/my-profile--tab-2", context)
+        }
         return res.render("pages/dashboard/my-profile--tab-1", context)
     } catch (error) {
         console.log(error);
@@ -58,7 +61,7 @@ async function dashboard__getMyProfile(req, res) {
 
 
 
-// submit the EDIT profile data
+// submit the EDIT profile pic
 // REST type for AJAX req/res. No pages rendered
 async function dashboard__changeProfilePic(req, res) {
     try {
@@ -87,9 +90,55 @@ async function dashboard__changeProfilePic(req, res) {
         }
         return res.status(201).json(profile)
     } catch (error) {
-        return res.status(201).json({error : error.message})
+        return res.status(400).json({error : error.message})
     }
 }
+
+// submit the EDIT profile password
+// REST type for AJAX req/res. No pages rendered
+async function dashboard__changePassword(req, res) {
+    try {
+        let { currentPassword, newPassword, confirmPassword } = req.body;
+        currentPassword = currentPassword.trim(), newPassword = newPassword.trim(), confirmPassword = confirmPassword.trim()
+        // server side validation
+        if (!currentPassword || !newPassword || !confirmPassword) {
+            throw new Error("Please fill out all the fields")
+        }
+        if (confirmPassword !== newPassword) {
+            throw new Error("Passwords don't match")
+        }
+        
+        if(!minimumLength(newPassword, 6))
+            throw new Error("Password must be at least six characters long")
+        if(!maximumLength(newPassword, 20))
+            throw new Error("Password cannot be more than twenty characters long")
+
+        // get active user from DB
+        const activeUserID = req.session.uid;
+        const user = (await pool.query("SELECT * FROM users WHERE uid = $1", [activeUserID])).rows[0];
+
+        if (!user) {
+            throw new Error("Something went wrong!")
+        }
+
+        // check if currentPassword matches the user's password from DB
+        const isValidPassword = await bcrypt.compare(currentPassword, user.password)
+
+        if (!isValidPassword){
+            throw new Error("Incorrect password. Please try again")
+        }
+        // hash the new password and update the database for the active user
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword.trim(), salt);
+
+        await pool.query("UPDATE users SET password = $1 WHERE uid = $2", [hashedPassword, activeUserID])
+        return res.status(200).json({message: "Password updated successfully", success: true})
+
+    } catch (error) {
+        return res.status(400).json({error: error.message, success: false})
+    }
+}
+
 
 // submit the POST data to update the current user's data
 async function dashboard__submitProfileUpdate(req, res) {
@@ -393,7 +442,7 @@ module.exports = {
     dashboard__getMyProfile,
     dashboard__submitProfileUpdate,
     dashboard__changeProfilePic,
-
+    dashboard__changePassword,
 
     dashboard__getAllLists,
     dashboard__getCreateListPage,

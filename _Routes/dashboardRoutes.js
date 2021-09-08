@@ -13,17 +13,22 @@ dashboardRoutes.get("/my-profile", redirectToLogin, controller.dashboard__getMyP
 
 
 // URL          :   /dashboard/my-profile/update
-// description  :   Show logged in user's profile page
+// description  :   Update active user's profile
 // access       :   PRIVATE
 // method       :   POST
 dashboardRoutes.post("/my-profile/update", redirectToLogin, controller.dashboard__submitProfileUpdate)
 
 // URL          :   /dashboard/my-profile/update-profile
-// description  :   Show logged in user's profile page
+// description  :   Update active user's profile picture
 // access       :   PRIVATE
 // method       :   POST
 dashboardRoutes.post("/my-profile/update-picture", redirectToLogin, controller.dashboard__changeProfilePic)
 
+// URL          :   /dashboard/my-profile/change-password
+// description  :   Update active user's profile password
+// access       :   PRIVATE
+// method       :   POST
+dashboardRoutes.post("/my-profile/change-password", redirectToLogin, controller.dashboard__changePassword)
 
 // URL          :   /dashboard/my-articles
 // description  :   Show logged in user's articles in table format
