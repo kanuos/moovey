@@ -55,6 +55,14 @@ async function handlePictureUpdate() {
         // end file upload style
         loaderStyle(ANIMATION_STATS.end)
 
+        if (data.error) {
+            throw new Error(data.error)
+        }
+        
+        if (!data.picture) {
+            throw new Error("something went wrong")
+        }
+
         if (data.picture) {
             // if a picture url is sent as a response update the profile picture's src
             const profilePicEl = document.getElementById("profilePic");
@@ -102,6 +110,3 @@ function loaderStyle(status) {
     fileUploadMobileLabel?.classList.remove("hidden")
 }
 
-function endFileUploadStyle() {
-
-}

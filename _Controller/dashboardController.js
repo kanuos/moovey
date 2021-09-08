@@ -85,13 +85,9 @@ async function dashboard__changeProfilePic(req, res) {
         if (!profile) {
             throw new Error("Something went wrong. Please try again later")
         }
-
-        console.log(profile);
-
         return res.status(201).json(profile)
     } catch (error) {
-        console.log(error);
-        return res.status(201).json(error)
+        return res.status(201).json({error : error.message})
     }
 }
 
