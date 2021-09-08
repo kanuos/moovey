@@ -11,6 +11,20 @@ const {redirectToLogin} = require("../sessionMiddleware")
 dashboardRoutes.get("/", redirectToLogin, controller.dashboard__getMyProfile)
 dashboardRoutes.get("/my-profile", redirectToLogin, controller.dashboard__getMyProfile)
 
+
+// URL          :   /dashboard/my-profile/update
+// description  :   Show logged in user's profile page
+// access       :   PRIVATE
+// method       :   POST
+dashboardRoutes.post("/my-profile/update", redirectToLogin, controller.dashboard__submitProfileUpdate)
+
+// URL          :   /dashboard/my-profile/update-profile
+// description  :   Show logged in user's profile page
+// access       :   PRIVATE
+// method       :   POST
+dashboardRoutes.post("/my-profile/update-picture", redirectToLogin, controller.dashboard__changeProfilePic)
+
+
 // URL          :   /dashboard/my-articles
 // description  :   Show logged in user's articles in table format
 // access       :   PRIVATE
@@ -45,25 +59,33 @@ dashboardRoutes.get("/my-articles/:id", redirectToLogin, controller.dashboard__g
 
 // LIST BASED ROUTES
 
-// URL          :   /dashboard/my-articles
+// URL          :   /dashboard/my-lists
 // description  :   Show logged in user's lists in table format
 // access       :   PRIVATE
 // method       :   GET
 dashboardRoutes.get("/my-lists", redirectToLogin, controller.dashboard__getAllLists)
 
 
-// URL          :   /dashboard/my-articles
+// URL          :   /dashboard/my-lists/new
 // description  :   Show logged in user's create list page
 // access       :   PRIVATE
 // method       :   GET
 dashboardRoutes.get("/my-lists/new", redirectToLogin, controller.dashboard__getCreateListPage)
 
 
-// URL          :   /dashboard/my-articles
+// URL          :   /dashboard/my-lists/new
 // description  :   Submit logged in user's create list data
 // access       :   PRIVATE
 // method       :   POST
-dashboardRoutes.post("/my-lists/new", redirectToLogin, controller.dashboard__getCreateListPage)
+dashboardRoutes.post("/my-lists/new", redirectToLogin, controller.dashboard__submitNewListData)
+
+
+
+// URL          :   /dashboard/my-lists/[id]
+// description  :   Show logged in user's list with [id]
+// access       :   PRIVATE
+// method       :   GET
+dashboardRoutes.get("/my-lists/:id", redirectToLogin, controller.dashboard__getListByID)
 
 
 

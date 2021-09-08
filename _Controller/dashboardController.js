@@ -20,8 +20,11 @@ const {
 
 
 const {convert} = require("html-to-text")
+const sharp = require("sharp");
+const { readableDateStringFormat } = require("../functions");
+const imgbb = require("imgbb-uploader");
 
-
+const {IMGBB_MAX_FILE_SIZE, IMGBB} = process.env
 
 
 
@@ -34,18 +37,77 @@ async function dashboard__getMyProfile(req, res) {
             title : "My Dashboard",
             dashboardMode : true,
             dashboardPageName : req.session.name + "'s profile",
-            activeDashboardLink : DASHBOARD_LINKS.profile
+            activeDashboardLink : DASHBOARD_LINKS.profile,
+            fileUploadError : false
         }
-        return res.render("pages/dashboard/my-profile", context)
+        const activeUser = (await pool.query("SELECT name, email, date_joined AS joined, picture, location, u.uid, bio, facebook, twitter FROM users AS u LEFT JOIN profile AS p ON u.uid = p.uid WHERE u.uid = $1", [req.session.uid])).rows[0];
+
+        if (!activeUser) {
+            throw Error("User doesn't exist")
+        }
+        context.user = activeUser;
+        context.user.joined = readableDateStringFormat(activeUser.joined)
+        const {tab} = req.query;
+        if (tab === "2") 
+            return res.render("pages/dashboard/my-profile--tab-2", context)
+        return res.render("pages/dashboard/my-profile--tab-1", context)
     } catch (error) {
         console.log(error);
     }
 }
 
+
+
 // submit the EDIT profile data
-async function dashboard__postProfilePage(req, res) {
+// REST type for AJAX req/res. No pages rendered
+async function dashboard__changeProfilePic(req, res) {
     try {
-        // render the profile read page
+        const {picture : {mimetype, data, size}} = req.files;
+        // check if the received file is an image and adheres to the type of any of ["jpeg", "jpg", "png"]
+        if (!["image/png", "image/jpg", "image/jpeg"].includes(mimetype)) {
+            throw new Error("Profile picture must be a valid image")
+        }
+        // check if the image received is bigger than permitted size : 5MB
+        if (size > parseInt(IMGBB_MAX_FILE_SIZE)) {
+            throw new Error(`Profile picture can not be more than ${Math.floor(IMGBB_MAX_FILE_SIZE / 10**6)}}MB in size`)
+        }
+        // optimize image using sharp
+        const resized = await (await sharp(data).resize(250, 250).toBuffer()).toString("base64");
+        // uploading to imgbb server
+        const {image : {url}} = await imgbb({
+            apiKey : IMGBB,
+            base64string : resized
+        })
+
+        // store URL to db as logged in user's profile pic
+        const profile = (await pool.query("UPDATE profile SET picture = $1 WHERE uid = $2 RETURNING picture", [url, req.session.uid])).rows[0];
+    
+        if (!profile) {
+            throw new Error("Something went wrong. Please try again later")
+        }
+
+        console.log(profile);
+
+        return res.status(201).json(profile)
+    } catch (error) {
+        console.log(error);
+        return res.status(201).json(error)
+    }
+}
+
+// submit the POST data to update the current user's data
+async function dashboard__submitProfileUpdate(req, res) {
+    try {
+        const context = {
+            loggedIn : req.session?.name,
+            title : "My Dashboard",
+            dashboardMode : true,
+            dashboardPageName : req.session.name + "'s profile",
+            activeDashboardLink : DASHBOARD_LINKS.profile
+        }
+        
+        const {location, bio, credential, facebook, twitter, website} = req.body;
+        return res.json(req.body)
     } catch (error) {
         
     }
@@ -277,13 +339,44 @@ async function dashboard__submitNewListData(req, res) {
         [title.toLowerCase().trim(), description.toLowerCase().trim(), req.session.uid])).rows[0]
 
 
-        return res.redirect(201, `/dashboard/my-lists/${newListID}`)
+        return res.redirect(`/dashboard/my-lists/${newListID.lid}`)
     } catch (error) {
         context.pageError = error.message
         return res.render("pages/dashboard/create-edit-list", context)
     }
 }
 
+
+
+// create new list/edit list by the logged user
+// url : /dashboard/my-lists/[id]
+
+async function dashboard__getListByID(req, res) {
+    const context = {
+        loggedIn : req.session?.name,
+        title : "My Dashboard | My Lists",
+        dashboardMode : true,
+        dashboardPageName : "Create new list",
+        activeDashboardLink : DASHBOARD_LINKS.lists,
+        pageError : false,
+        actionURL : "/dashboard/my-lists/new",
+    }
+    try {
+        const {id} = req.params;
+        // check if list with same title by user already exists or not
+        const {rows} = (await pool.query("SELECT lm.lid, lm.date_created, lm.uid,  lm.description as list_desc, lm.title as list_title FROM list_meta AS lm LEFT JOIN list_item AS li ON lm.lid = li.lid WHERE lm.lid = $1 AND lm.uid = $2 LIMIT 1", [id, req.session.uid]))
+        
+        if (rows.length === 0) {
+            throw new Error("List with the same title already exists")
+        }
+        context.listData = rows[0];
+        context.listData.listDeleteURL = `/dashboard/my-lists/${context.row[0].lid}/delete`
+
+        return res.render("pages/dashboard/list[id]-read", context)
+    } catch (error) {
+        return res.redirect("/page-not-found")
+    }
+}
 
 
 
@@ -302,10 +395,14 @@ module.exports = {
 
 
     dashboard__getMyProfile,
+    dashboard__submitProfileUpdate,
+    dashboard__changeProfilePic,
 
 
     dashboard__getAllLists,
-    dashboard__getCreateListPage
+    dashboard__getCreateListPage,
+    dashboard__submitNewListData,
+    dashboard__getListByID
 }
 
 

@@ -22,12 +22,12 @@ async function initDB() {
         await pool.query(`CREATE TABLE IF NOT EXISTS profile (
             pid BIGSERIAL NOT NULL,
             picture TEXT,
-            default_picture TEXT DEFAULT '',
             location VARCHAR(100),
             bio TEXT,
+            credential TEXT,
             facebook VARCHAR(100),
             twitter VARCHAR(100),
-            instagram VARCHAR(100),
+            website VARCHAR(100),
             uid TEXT REFERENCES users(uid) ON DELETE CASCADE,
             PRIMARY KEY (uid, pid)
         )`);
@@ -48,12 +48,14 @@ async function initDB() {
         console.log("movies_detail table created");
         await pool.query(`CREATE TABLE IF NOT EXISTS blogs (
             blog_id BIGSERIAL NOT NULL UNIQUE,
-            blog_title TEXT NOT NULL,
-            blog_content TEXT NOT NULL,
+            blog_title VARCHAR(40),
+            blog_content TEXT,
             plot_rating INT CHECK (plot_rating >= 0 AND plot_rating <= 10) DEFAULT 5,
             acting_rating INT CHECK (acting_rating >= 0 AND acting_rating <= 10) DEFAULT 5,
             direction_rating INT CHECK (direction_rating >= 0 AND direction_rating <= 10) DEFAULT 5,
             created TIMESTAMPTZ DEFAULT Now(),
+            published BOOLEAN DEFAULT FALSE,
+            completed_step INT DEFAULT 0 CHECK(completed_step >= 0 AND completed_step <= 4),
             imdbID VARCHAR(20) NOT NULL REFERENCES movies_meta(imdbID) ON DELETE RESTRICT,
             uid TEXT NOT NULL REFERENCES users(uid) ON DELETE CASCADE,
             PRIMARY KEY (uid, imdbID)
@@ -65,6 +67,40 @@ async function initDB() {
             PRIMARY KEY (uid, imdbID)
             )`)
         console.log("recommendations table created");
+        await pool.query(`CREATE TABLE IF NOT EXISTS list_meta (
+            lid BIGSERIAL NOT NULL UNIQUE,
+            description VARCHAR(200),
+            title VARCHAR(50) NOT NULL,
+            uid TEXT NOT NULL REFERENCES users(uid) ON DELETE CASCADE,
+            date_created TIMESTAMPTZ DEFAULT Now(), 
+            PRIMARY KEY (uid, title)
+            )`)
+            console.log("list_meta table created");
+        await pool.query(`CREATE TABLE IF NOT EXISTS list_item (
+            itemid BIGSERIAL NOT NULL,
+            description VARCHAR(250),
+            lid BIGSERIAL NOT NULL REFERENCES list_meta(lid) ON DELETE CASCADE,
+            imdbid VARCHAR(20) NOT NULL REFERENCES movies_meta(imdbid) ON DELETE CASCADE,
+            uid TEXT NOT NULL REFERENCES users(uid) ON DELETE CASCADE,
+            PRIMARY KEY (uid, lid, imdbid)
+            )`)
+            console.log("list_item table created");
+        await pool.query(`CREATE TABLE IF NOT EXISTS watchlist (
+            imdbid VARCHAR(20) NOT NULL REFERENCES movies_meta(imdbid) ON DELETE CASCADE,
+            uid TEXT NOT NULL REFERENCES users(uid) ON DELETE CASCADE,
+            PRIMARY KEY (uid,imdbid))`)
+            console.log("watchlist table created");
+        await pool.query(`CREATE TABLE IF NOT EXISTS watched (
+            imdbid VARCHAR(20) NOT NULL REFERENCES movies_meta(imdbid) ON DELETE CASCADE,
+            uid TEXT NOT NULL REFERENCES users(uid) ON DELETE CASCADE,
+            PRIMARY KEY (uid,imdbid))`)
+            console.log("watched table created");
+        await pool.query(`CREATE TABLE IF NOT EXISTS recover (
+            uid TEXT PRIMARY KEY REFERENCES users(uid) ON DELETE CASCADE ,
+            token VARCHAR(150) NOT NULL,
+            request_sent TIMESTAMPTZ DEFAULT NOW(),
+            request_valid TIMESTAMPTZ DEFAULT NOW() + INTERVAL '10 min')`)
+            console.log("recover table created");
     }
     catch(err) {
         console.log("DB Creation error : ",err);

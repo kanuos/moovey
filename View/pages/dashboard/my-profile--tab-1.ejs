@@ -1,0 +1,226 @@
+<%- include('../../partials/head') %>
+<body class="font-special relative w-full h-full">
+
+<%- include('../../partials/navbar') %>
+
+
+<%- include('../../partials/dashboard/dashboard-sidebar') %>
+
+
+
+     <!-- main page -->
+     <main class="md:px-14 pt-14">
+        <ul class="flex items-center justify-start gap-4 text-xs capitalize mb-10 w-11/12 mx-auto max-w-4xl">
+            <li 
+                class="pageNav cursor-pointer text-black font-regular border-b border-current transition-all hover:shadow-md">
+                <%= user.name %>'s profile
+            </li>
+            <li 
+                class="pageNav cursor-pointer text-gray-400 font-regular border-b border-transparent transition-all hover:text-gray-500">
+                <a href="/dashboard/my-profile?tab=2" class="outline-none focus:outline-none">
+                    manage password
+                </a>
+            </li>
+        </ul>
+        <!-- main tab -->
+        <section class="w-11/12 mx-auto max-w-4xl">
+            <!-- profile info section -->
+            <div class="flex items-start justiyf-start w-full gap-4 md:mb-10">
+                <section class="mx-auto max-w-md mb-6 w-full md:w-1/2">
+                    <legend class="capitalize text-xs font-special font-semibold text-gray-400 md:hidden">account Information</legend>
+                    <article class="p-4 shadow-glass h-auto w-full rounded my-2 gap-2 flex-col items-center justify-center sm:flex-row sm:items-start sm:justify-start sm:gap-6 flex relative">
+                        <!-- file upload load animation start -->
+                        <div id="fileLoaderBox" class="absolute top-0 left-0 h-full w-full bg-white z-10 pointer-events-none transform flex flex-col items-center justify-center scale-0 origin-top">
+                            <small class="text-xs">
+                                Please wait
+                            </small>
+                            <h3 class="inline-flex items-center gap-1 bg-gradient-to-tr from-pink-600 to-black text-transparent bg-clip-text">
+                                <i class="fas fa-spinner animate-spin origin-center text-lg"></i>
+                                <span class="font-regular capitalize text-sm">
+                                    changing profile picture
+                                </span>
+                            </h3>
+
+                        </div>
+                        <!-- file upload load animation end -->
+
+                        <figure class="h-20 w-20 relative rounded-full bg-white shadow-glass grid place-items-center">
+                            <img 
+                                id="profilePic"
+                                <% if(user.picture) { %>
+                                    src = "<%= user.picture %>"
+                                <% } else { %>
+                                src="/static/assets/image-not-found.png"
+                                <% } %> 
+                                class="absolute top-0 left-0 p-1 h-full w-full block rounded-full bg-white object-cover"
+                                alt="">
+                        </figure>
+                        <section class="flex flex-col items-center gap-1 sm:items-start">
+                            <strong class="text-sm text-pink-600 font-semibold font-special capitalize">
+                                <%= user.name %>
+                            </strong>
+                            <small class="text-xs text-gray-500 font-semibold font-regular lowercase">
+                                <%= user.email %>
+                            </small>
+                            <span class="text-xs text-black font-special">
+                                <small>
+                                    Joined on <%= user.joined.date %><sup><%= user.joined.suffix %></sup> <span class="capitalize"> <%= user.joined.month %></span>, <%= user.joined.year %>
+                                </small>
+                            </span>
+                            <label for="picture" class="hidden capitalize text-xs text-gray-500 font-semibold md:block hover:text-black transition-colors cursor-pointer">
+                                <small>
+                                    change profile picture
+                                </small>
+                            </label>
+                        </section>
+                    </article>
+                    <form id="pictureForm" enctype="multipart/form-data">
+                        <input type="file" name="picture" id="picture" class="hidden"  accept=".png, .jpg, .jpeg">
+                        <label id="fileUploadMobileLabel" for="picture" class="capitalize text-xs text-gray-500 font-semibold block w-max mx-auto hover:text-black transition-colors md:hidden cursor-pointer">
+                            <small>
+                                change profile picture
+                            </small>
+                        </label>
+                    </form>
+                    <!-- file upload error -->
+                    <p id="fileUploadError" class="hidden text-center text-xs w-full font-regular font-semibold text-black capitalize my-4 md:my-2">
+                    </p>
+                </section>
+                <h4 class="hidden md:block w-1/2 font-special capitalize font-semibold pb-1.5 text-right border-b-2 border-black text-black border-dashed">
+                    account Information
+                </h4>
+            </div>
+
+            <form action="/dashboard/my-profile/update" method="post" class="flex flex-col w-full">
+                <!-- basic info section -->
+                <div class="flex items-start justiyf-start w-full mx-auto gap-4 md:flex-row-reverse">
+                    <div class="mx-auto mb-6 w-full md:col-start-2 md:col-end-4 h-auto">
+                        <legend class="capitalize text-xs font-special font-semibold text-gray-400 md:hidden">Basic Information</legend>
+        
+                        <article class="h-auto w-full rounded my-2 grid md:grid-cols-3 md:grid-rows-2">
+                            <div class="shadow-glass md:col-start-2 md:col-end-4 p-4">
+                                <section class="flex flex-col gap-1 items-start w-full box-shadow">
+                                    <label for="location" class="text-gray-400 font-semibold font-special capitalize">
+                                        <small class="text-xs">
+                                            location
+                                        </small>
+                                    </label>
+                                    <textarea
+                                        type="text" 
+                                        name="location" 
+                                        id="location" 
+                                        placeholder="Where are you from?"
+                                        maxlength="100"
+                                        class="autoHeightInputField placeholder-pink-600 placeholder-opacity-50 resize-none p-1.5 overflow-hidden mt-0.5 font-special font-semibold block text-gray-500 w-full text-xs outline-none focus:outline-none focus:text-black h-auto whitespace-pre-wrap rounded-sm ring-offset-transparent ring-0 focus:ring-0 border-gray-300 focus:border-black"><% if(user.location) { %><%= user.location %><% } %></textarea>
+                                </section>
+            
+                                <section class="flex flex-col gap-1 items-start w-full box-shadow">
+                                    <label for="credential" class="text-gray-400 font-semibold font-special capitalize">
+                                        <small class="text-xs">
+                                            profile credential
+                                        </small>
+                                    </label>
+                                    <textarea
+                                        type="text" 
+                                        name="credential" 
+                                        id="credential" 
+                                        maxlength="100"
+                                        placeholder="Eg. Watched all the James Bond movies ever made!"
+                                        class="autoHeightInputField placeholder-pink-600 placeholder-opacity-50 resize-none p-1.5 overflow-hidden mt-0.5 font-special font-semibold block text-gray-500 w-full text-xs outline-none focus:outline-none focus:text-black h-auto whitespace-pre-wrap rounded-sm ring-offset-transparent ring-0 focus:ring-0 border-gray-300 focus:border-black"><% if(user.credential) { %><%= user.credential %><% } %></textarea>
+                                </section>
+                            </div>
+        
+                            <section class="p-4 mt-6 shadow-glass flex flex-col gap-1 items-start w-full box-shadow md:col-start-1 md:col-end-4">
+                                <label for="bio" class="text-gray-400 font-semibold font-special capitalize">
+                                    <small class="text-xs">
+                                        about me
+                                    </small>
+                                </label>
+                                <textarea
+                                    type="text" 
+                                    name="bio" 
+                                    id="bio" 
+                                    placeholder="Tell us something about yourself"
+                                    maxlength="500"
+                                    class="autoHeightInputField placeholder-pink-600 placeholder-opacity-50 resize-none p-1.5 overflow-hidden mt-0.5 font-special font-semibold block text-gray-500 w-full text-xs outline-none focus:outline-none focus:text-black h-auto whitespace-pre-wrap rounded-sm ring-offset-transparent ring-0 focus:ring-0 border-gray-300 focus:border-black"><% if(user.bio) { %><%= user.bio %><% } %></textarea>
+                            </section>
+        
+                            <h4 class="hidden md:inline-block w-full font-special capitalize font-semibold pb-1.5 text-left text-black md:col-start-1 md:col-end-2 md:row-start-1">
+                                <span class="border-b-2 border-black w-11/12 mr-auto border-dashed block">
+                                    basic Information
+                                </span>
+                            </h4>
+                        </article>
+                    </div>
+                </div>
+                <!-- social info section -->
+                <div class="flex items-start justiyf-start w-full gap-4 md:my-10">
+                    <section class="mx-auto max-w-lg w-full">
+                        <legend class="capitalize text-xs font-special font-semibold text-gray-400 md:hidden">social media links</legend>
+                    
+                        <article class="p-4 shadow-glass h-auto w-full rounded my-2 flex flex-col gap-2 items-start justify-start">
+                            <div class="w-full flex flex-col">
+                                <section class="flex flex-col gap-1 items-start w-full">
+                                    <label for="facebook" class="text-gray-400 font-semibold font-special capitalize">
+                                        <small class="text-xs">
+                                            facebook
+                                        </small>
+                                    </label>
+                                    <textarea
+                                        type="url" 
+                                        name="facebook" 
+                                        id="facebook" 
+                                        maxlength="100"
+                                        class="autoHeightInputField placeholder-pink-600 placeholder-opacity-50 resize-none p-1.5 overflow-hidden mt-0.5 font-special font-semibold block text-gray-500 w-full text-xs outline-none focus:outline-none focus:text-black h-auto whitespace-pre-wrap rounded-sm ring-offset-transparent ring-0 focus:ring-0 border-gray-300 focus:border-black"><% if(user.facebook) { %><%= user.facebook %><% } %></textarea>
+                                </section>
+                                <section class="flex flex-col gap-1 items-start w-full">
+                                    <label for="twitter" class="text-gray-400 font-semibold font-special capitalize">
+                                        <small class="text-xs">
+                                            twitter
+                                        </small>
+                                    </label>
+                                    <textarea
+                                        type="url" 
+                                        name="twitter" 
+                                        id="twitter" 
+                                        maxlength="100"
+                                        class="autoHeightInputField placeholder-pink-600 placeholder-opacity-50 resize-none p-1.5 overflow-hidden mt-0.5 font-special font-semibold block text-gray-500 w-full text-xs outline-none focus:outline-none focus:text-black h-auto whitespace-pre-wrap rounded-sm ring-offset-transparent ring-0 focus:ring-0 border-gray-300 focus:border-black"><% if(user.twitter) { %><%= user.twitter %><% } %></textarea>
+                                </section>
+                                <section class="flex flex-col gap-1 items-start w-full">
+                                    <label for="website" class="text-gray-400 font-semibold font-special capitalize">
+                                        <small class="text-xs">
+                                            other website
+                                        </small>
+                                    </label>
+                                    <textarea
+                                        type="url" 
+                                        name="website" 
+                                        id="website" 
+                                        maxlength="100"
+                                        class="autoHeightInputField placeholder-pink-600 placeholder-opacity-50 resize-none p-1.5 overflow-hidden mt-0.5 font-special font-semibold block text-gray-500 w-full text-xs outline-none focus:outline-none focus:text-black h-auto whitespace-pre-wrap rounded-sm ring-offset-transparent ring-0 focus:ring-0 border-gray-300 focus:border-black"><% if(user.website) { %><%= user.website %><% } %></textarea>
+                                </section>
+                            </div>
+                        </article>
+                    </section>
+                    <h4 class="hidden md:block w-2/5 font-special capitalize font-semibold pb-1.5 text-right border-b-2 border-black text-black border-dashed">
+                        social media links
+                    </h4>
+                </div>
+
+                <section class="mx-auto max-w-md my-10 w-full">
+                    <button type="submit" class="outline-none focus:outline-none py-2 px-5 bg-black text-white text-xs capitalize font-special mx-auto block w-max md:text-sm">
+                        save changes
+                    </button>
+                </section>
+            </form>
+        </section>
+
+</main>
+
+
+<script src="/static/js/dashboard-sidebar.js"></script>
+<script src="/static/js/navbar.js"></script>
+<script src="/static/js/dashboard-profile-page.js"></script>
+
+</body>
+</html>
