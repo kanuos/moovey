@@ -15,7 +15,7 @@ const EmailValidator = require("email-deep-validator");
 const deepEmailValidator = new EmailValidator();
 const { renderEmailHtml } = require("./emailTemplate");
 const {
-    MAIL_USER, MAIL_PASSWORD, MAIL_PORT, MAIL_HOST
+    MAIL_USER, MAIL_PASSWORD, MAIL_PORT, MAIL_HOST, SESSION_DURATION, SESSION_NAME
 } = process.env;
 
 exports.showLandingPage = async function(req, res) {
@@ -151,7 +151,11 @@ exports.submitRegisterForm = async function(req, res) {
 
 exports.handleLogOut = function(req, res) {
     req.session.destroy();
-    res.clearCookie(process.env.SESSION_NAME)
+    res.clearCookie(SESSION_NAME, {
+        httpOnly: true,
+        maxAge : parseInt(SESSION_DURATION),
+        sameSite : true,
+    })
     return res.render("pages/login", 
     {   
         title: "Login to Moovey", 

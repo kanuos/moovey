@@ -4,6 +4,7 @@ const {
     REDIS_URL,
     SESSION_NAME,
     SESSION_SECRET,
+    SESSION_DURATION,
     PORT
 } = process.env
 
@@ -18,17 +19,18 @@ const app = express();
 const favicon = require("serve-favicon");
 const fileUpload = require("express-fileupload");
 const helmet = require("helmet");
+const noCache = require("nocache")
+
+// TODO: add compression
+// TODO: add rate limiter
 
 // SERVER CONFIGURATION
 
-app.use(helmet({
-    contentSecurityPolicy : {
-        directives : {
-            defaultSrc : ["*"],
-            imgSrc : ["http:","https:", "blob:"]
-        }
-    }
-}));
+app.use(helmet.hidePoweredBy());
+app.use(helmet.noSniff());
+app.use(helmet.xssFilter());
+app.use(noCache())
+
 app.set("view engine", "ejs");
 app.set('views', './View');
 app.use('/static',express.static(path.join(__dirname, 'static')));
@@ -36,11 +38,7 @@ app.disable('x-powered-by');
 app.use(express.json());
 app.use(express.urlencoded({extended : true}));
 app.use(favicon(path.join(__dirname, "static", "assets", "favicon.png")))
-app.use(fileUpload({
-    useTempFiles : true,
-    tempFileDir : '/TEMP_FILES'
-}))
-
+app.use(fileUpload())
 
 
 // MIDDLEWARES
@@ -52,7 +50,7 @@ app.use(session({
     saveUninitialized: false,
     cookie : {
         httpOnly: true,
-        maxAge : 1000 * 60 * 15,
+        maxAge : parseInt(SESSION_DURATION),
         sameSite : true,
     },
     // store
@@ -62,8 +60,11 @@ app.use(session({
     })
 }))
 
+
 // ROUTE MIDDLEWARES
 app.use('/', require('./_Routes/accountRoutes'))
+app.use('/dashboard', require('./_Routes/dashboardRoutes'))
+app.use('/moovey/list', require('./_Routes/listRoutes'))
 app.use('/moovey', require('./_Routes/blogRoutes'))
 
 app.get('*', (req, res) => res.render("pages/404", {title : 'Page Not Found'}))
