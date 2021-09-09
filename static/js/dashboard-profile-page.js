@@ -1,26 +1,8 @@
-const autoHeightInputFields = document.querySelectorAll(".autoHeightInputField");
-        
-// restrict users from using extra spaces and carriage returns
-autoHeightInputFields?.forEach(textarea => textarea.addEventListener("keydown", () => {
-    textarea.value = textarea.value.replaceAll("\n", " ").replaceAll("\r", " ").replaceAll("  ", " ")
-    calcualteFieldHeight(textarea)
-}))
-
-// function to calculate the input field based on their value
-function calcualteFieldHeight(textarea = undefined) {
-    if (textarea) {
-        textarea.style.height = "auto"
-        textarea.style.height = textarea.scrollHeight + "px"
-    }
-}
-
-// calculate the field heights on load
-window.addEventListener("load", () => {
-    autoHeightInputFields?.forEach(calcualteFieldHeight)
-})
-window.addEventListener("resize", () => {
-    autoHeightInputFields?.forEach(calcualteFieldHeight)
-})
+/**
+ * Section to change the profile picture
+ * --START
+ * ---------------------------------------------------------------------------------------------------
+ */
 
 
 // functionality to change profile picture asynchronously
@@ -110,3 +92,153 @@ function loaderStyle(status) {
     fileUploadMobileLabel?.classList.remove("hidden")
 }
 
+
+/**
+ * ---------------------------------------------------------------------------------------------------
+ * Section to change the profile picture
+ * --END
+ */
+
+
+
+
+
+/**
+ * Section to update profile details
+ * --START
+ * ---------------------------------------------------------------------------------------------------
+ */
+ const profileForm = document.querySelector("#profileForm")
+ const autoHeightInputFields = document.querySelectorAll(".autoHeightInputField");
+
+ // restrict users from using extra spaces and carriage returns
+ autoHeightInputFields?.forEach(textarea => textarea.addEventListener("keydown", () => {
+     textarea.value = textarea.value.replaceAll("\n", " ").replaceAll("\r", " ").replaceAll("  ", " ")
+     calcualteFieldHeight(textarea)
+ }))
+
+//  when text is copied and pasted into fields
+autoHeightInputFields?.forEach(field => field.addEventListener("paste", e => {
+    const {maxLength, name} = field;
+    // only the bio field allows text to be pasted
+    if (["bio", "facebook", "twitter", "website"].includes(name)) {
+        const value = (e.clipboardData || window.clipboardData).getData("text") 
+        field.value = value.replaceAll("\n", " ").replaceAll("\r", " ").replaceAll("  ", " ").slice(0, Math.min(maxLength, value.length))
+        calcualteFieldHeight(field)
+        return
+    }
+    e.preventDefault()
+}))
+ 
+ // function to calculate the input field based on their value
+ function calcualteFieldHeight(textarea = undefined) {
+     if (textarea) {
+         textarea.style.height = "auto"
+         textarea.style.height = textarea.scrollHeight + "px"
+     }
+ }
+ 
+ // calculate the field heights on load
+ window.addEventListener("load", () => {
+     autoHeightInputFields?.forEach(calcualteFieldHeight)
+ })
+ window.addEventListener("resize", () => {
+     autoHeightInputFields?.forEach(calcualteFieldHeight)
+ })
+ 
+
+profileForm?.addEventListener("submit", handleProfileUpdate)
+window.addEventListener("hide-url-error", hideURLError)
+
+
+
+async function handleProfileUpdate(e) {
+    e.preventDefault()
+    const fd =  new FormData(this);
+
+     try {
+        // client side URL validation
+        for (const [k,v] of fd) {
+            if (["facebook", "twitter", "website"].includes(k) && v.trim().length > 0) {
+                if (!checkValidURL(v)) {
+                    const errorEl = document.getElementById(`${k}-error`);
+                    errorEl.textContent = `${k} URL is invalid`
+                    window.dispatchEvent(new CustomEvent("hide-url-error" ,{ detail : k }))
+                    throw Error
+                }
+            }
+        }
+        
+        // check whether the form data has changed and needs to be sent to the server
+        let isFormUpdated = false;
+        autoHeightInputFields?.forEach(inputEl => {
+            let {value} = inputEl;
+            let existingvalue = inputEl.dataset?.["existingvalue"] ?? ""
+            value = value.trim(), existingvalue = existingvalue.trim()
+
+            if (!existingvalue && value.length > 0){
+                isFormUpdated = true;
+            }
+
+            // if both are non empty and same : means the value of the field has not been changed
+            else if (value.length > 0 && existingvalue.length > 0 && (Boolean(value) !== Boolean(existingvalue))) {
+                isFormUpdated = true;
+            }
+        })
+
+        if (isFormUpdated) {
+            // start loader animation
+            formSubmitLoader(ANIMATION_STATS.start)
+            this.submit()
+        }
+    } catch (error) {
+        // end loader animation
+        formSubmitLoader(ANIMATION_STATS.end)
+    }
+}
+
+function checkValidURL(inputURL) {
+    try {
+        const url = new URL(inputURL)
+        if (url) {
+            return true
+        }
+    } catch (error) {
+        return false
+    }
+}
+
+
+function hideURLError(e) {
+    // urlError
+    const timer = setTimeout(() => {
+        const urlMsgEls = document.querySelectorAll(".urlError");
+        urlMsgEls?.forEach(url => {
+            url.textContent = '';
+            if (url.classList.contains("hidden")){
+                url.classList.add("hidden")
+            }
+            const el = document.getElementById(e.detail);
+            el.value = ''
+            el.focus()
+        })
+    }, 3000)
+    return () => clearTimeout(timer)
+}
+
+function formSubmitLoader(status){
+    const loaderIcon = document.getElementById("submit-loader");
+    const loaderText = document.getElementById("submit-text");
+    const {text, load} = loaderText.dataset;
+    // start animation
+    if (status === ANIMATION_STATS.start) {
+        loaderIcon?.classList.remove("hidden")
+        loaderIcon?.classList.add("inline-block")
+        loaderText.textContent = load
+        return
+    }
+    loaderIcon?.classList.add("hidden")
+    loaderIcon?.classList.remove("inline-block")
+    loaderText.textContent = text
+    // end animation
+}

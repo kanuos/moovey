@@ -42,7 +42,7 @@ async function dashboard__getMyProfile(req, res) {
             activeDashboardLink : DASHBOARD_LINKS.profile,
             fileUploadError : false
         }
-        const activeUser = (await pool.query("SELECT name, email, date_joined AS joined, picture, location, u.uid, bio, facebook, twitter FROM users AS u LEFT JOIN profile AS p ON u.uid = p.uid WHERE u.uid = $1", [req.session.uid])).rows[0];
+        const activeUser = (await pool.query("SELECT name, email,credential, date_joined AS joined, picture, location, u.uid, bio, facebook, twitter, website FROM users AS u LEFT JOIN profile AS p ON u.uid = p.uid WHERE u.uid = $1", [req.session.uid])).rows[0];
 
         if (!activeUser) {
             throw Error("User doesn't exist")
@@ -143,18 +143,25 @@ async function dashboard__changePassword(req, res) {
 // submit the POST data to update the current user's data
 async function dashboard__submitProfileUpdate(req, res) {
     try {
-        const context = {
-            loggedIn : req.session?.name,
-            title : "My Dashboard",
-            dashboardMode : true,
-            dashboardPageName : req.session.name + "'s profile",
-            activeDashboardLink : DASHBOARD_LINKS.profile
+        let {location, bio, credential, facebook, twitter, website} = req.body;
+        
+        // check for valid URLS        
+        if (facebook && facebook.trim().length > 0) {
+            facebook = new URL(facebook).href;
         }
-        
-        const {location, bio, credential, facebook, twitter, website} = req.body;
-        return res.json(req.body)
-    } catch (error) {
-        
+        if (twitter && twitter.trim().length > 0) {
+            twitter = new URL(twitter).href;
+        }
+        if (website && website.trim().length > 0) {
+            website = new URL(website).href;
+        }
+        // store the new data to db
+        await pool.query("UPDATE profile SET credential = $1, bio = $2, location = $3, facebook = $4, twitter = $5, website = $6 WHERE uid = $7", [credential.trim(), bio.trim(), location.trim(), facebook, twitter, website, req.session.uid])
+
+        return res.redirect("/dashboard/my-profile")
+    } 
+    catch (error) {
+        return res.redirect("/dashboard/my-profile")
     }
 }
 
