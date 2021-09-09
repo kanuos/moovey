@@ -8,15 +8,15 @@ function navScrollStyle() {
             if (!entry.isIntersecting) {
                 navbar?.classList.remove("bg-opacity-0")
                 navbar?.classList.add("bg-opacity-100", "shadow-xl", "bg-white")
-                bgImg?.classList.remove("opacity-100", "sm:grayscale-0")
-                bgImg?.classList.add("opacity-10", "sm:grayscale")
+                bgImg?.classList.remove("opacity-50", "grayscale")
+                bgImg?.classList.add("opacity-20", "grayscale-0")
                 entry.target.classList.add("blur-sm", "opacity-50")
                 return
             }
             navbar?.classList.add("bg-opacity-0")
             navbar?.classList.remove("bg-opacity-100", "shadow-xl", "bg-white")
-            bgImg?.classList.add("opacity-100", "sm:grayscale-0")
-            bgImg?.classList.remove("opacity-10", "sm:grayscale")
+            bgImg?.classList.add("opacity-50", "grayscale")
+            bgImg?.classList.remove("opacity-20", "grayscale-0")
             entry.target.classList.remove("blur-sm", "opacity-50")
         })
     }, {
