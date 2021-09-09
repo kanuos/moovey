@@ -23679,11 +23679,11 @@ select {
 }
 
 .font-special {
-  font-family: Quicksand;
+  font-family: Quicksand, sans-serif;
 }
 
 .font-regular {
-  font-family: Poppins;
+  font-family: Poppins, monospace;
 }
 
 .text-xs {
@@ -56499,11 +56499,11 @@ html {
   }
 
   .sm\:font-special {
-    font-family: Quicksand;
+    font-family: Quicksand, sans-serif;
   }
 
   .sm\:font-regular {
-    font-family: Poppins;
+    font-family: Poppins, monospace;
   }
 
   .sm\:text-xs {
@@ -88932,11 +88932,11 @@ html {
   }
 
   .md\:font-special {
-    font-family: Quicksand;
+    font-family: Quicksand, sans-serif;
   }
 
   .md\:font-regular {
-    font-family: Poppins;
+    font-family: Poppins, monospace;
   }
 
   .md\:text-xs {
@@ -121365,11 +121365,11 @@ html {
   }
 
   .lg\:font-special {
-    font-family: Quicksand;
+    font-family: Quicksand, sans-serif;
   }
 
   .lg\:font-regular {
-    font-family: Poppins;
+    font-family: Poppins, monospace;
   }
 
   .lg\:text-xs {
@@ -153798,11 +153798,11 @@ html {
   }
 
   .xl\:font-special {
-    font-family: Quicksand;
+    font-family: Quicksand, sans-serif;
   }
 
   .xl\:font-regular {
-    font-family: Poppins;
+    font-family: Poppins, monospace;
   }
 
   .xl\:text-xs {
@@ -186231,11 +186231,11 @@ html {
   }
 
   .\32xl\:font-special {
-    font-family: Quicksand;
+    font-family: Quicksand, sans-serif;
   }
 
   .\32xl\:font-regular {
-    font-family: Poppins;
+    font-family: Poppins, monospace;
   }
 
   .\32xl\:text-xs {

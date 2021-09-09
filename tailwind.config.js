@@ -8,8 +8,8 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     fontFamily : {
-      "special" : ['Quicksand'],
-      "regular" : ['Poppins']
+      "special" : ['Quicksand', "sans-serif"],
+      "regular" : ['Poppins', "monospace"]
     },
     extend: {},
   },
