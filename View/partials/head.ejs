@@ -7,6 +7,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Quicksand&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css" integrity="sha384-SZXxX4whJ79/gErwcOYf+zWLeJdY/qpuqC4cAa9rOGUstPomtqpuNWT9wdPEn2fk" crossorigin="anonymous">
     <link rel="stylesheet" href="/static/css/styles.css">
+    <meta name="description" content="Moovey. A place for cinephiles">
+    <meta name="keywords" content="Moovey, Cinema, TV Shows, Web Shows, TV Series, Web Series">
+    <% if (locals?.meta_property) {%>
+        <% Object.entries(meta_property).forEach(([prop, content]) => {%>
+            <meta property="<%= prop %>" content="<%= content %>">
+        <% }) %>
+    <% } %>
     <title>
         Moovey 
         <% if(title) {%>

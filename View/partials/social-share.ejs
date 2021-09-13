@@ -1,5 +1,16 @@
+<% const safeTitle = title.split(' ').join('%20') %>
+
 <ul class="mt-10 relative flex items-center justify-center gap-4 md:fixed md:right-4 md:flex-col md:top-1/2 transform md:-translate-y-1/2">
-    <li title="facebook"><a href="" class="outline-none focus:outline-none text-white h-8 w-8 grid place-items-center bg-black rounded-full hover:scale-105 hover:shadow-md hover:-translate-y-px transition-all transform"><i class="fab fa-facebook-f transform transition-all group-hover:scale-105"></i></a></li>
-    <li title="twitter"><a href="" class="outline-none focus:outline-none text-white h-8 w-8 grid place-items-center bg-black rounded-full hover:scale-105 hover:shadow-md hover:-translate-y-px transition-all transform"><i class="fab fa-twitter transform transition-all group-hover:scale-105"></i></a></li>
-    <li title="email"><a href="" class="outline-none focus:outline-none text-white h-8 w-8 grid place-items-center bg-black rounded-full hover:scale-105 hover:shadow-md hover:-translate-y-px transition-all transform"><i class="far fa-envelope transform transition-all group-hover:scale-105"></i></a></li>
+    <li title="facebook">
+        <a href="https://www.facebook.com/sharer/sharer.php?u=<%= url %>&quote=<%= safeTitle %>" target="_blank" class="outline-none focus:outline-none text-white h-8 w-8 grid place-items-center bg-black rounded-full hover:scale-105 hover:shadow-md hover:-translate-y-px transition-all transform"><i class="fab fa-facebook-f transform transition-all group-hover:scale-105"></i>
+        </a>
+    </li>
+    <li title="twitter">
+        <a target="_blank" href="https://www.twitter.com/intent/tweet?text=<%= safeTitle %>&url=<%= url %>" class="outline-none focus:outline-none text-white h-8 w-8 grid place-items-center bg-black rounded-full hover:scale-105 hover:shadow-md hover:-translate-y-px transition-all transform"><i class="fab fa-twitter transform transition-all group-hover:scale-105"></i>
+        </a>
+    </li>
+    <li title="email">
+        <a href="mailto:?subject=<%= 'Read review of ' + title %>&body=<%= 'Read Review ' + url %>" class="outline-none focus:outline-none text-white h-8 w-8 grid place-items-center bg-black rounded-full hover:scale-105 hover:shadow-md hover:-translate-y-px transition-all transform"><i class="far fa-envelope transform transition-all group-hover:scale-105"></i>
+        </a>
+    </li>
 </ul>

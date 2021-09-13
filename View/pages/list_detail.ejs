@@ -15,7 +15,7 @@
     })%>
     <%- include('../partials/bg_image') %>
     
-    <%- include('../partials/social-share') %>
+    <%- include('../partials/social-share', {title, desc: data.list_desc, url: currentURL}) %>
     <% if (data.movies.length > 0) {%>
         <main id="main" class="min-h-screen py-6 place-content-around grid grid-cols-1  gap-y-6 xl:gap-y-0 w-full sm:w-11/12 mx-auto max-w-5xl relative">
             <% data.movies.forEach((movie, index) => { %>
@@ -25,7 +25,7 @@
         <!-- main section end -->
     <% } else {%>
         <main id="main" class="grid place-items-center">
-            <p class="font-semibold font-regular capitalize text-lg text-gray-500 mb-40">
+            <p class="font-semibold font-regular capitalize text-lg text-gray-500 my-20 md:mt-0 mb-40">
                 No items in the list.
             </p>
         </main>

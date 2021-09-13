@@ -73,9 +73,14 @@ const formatAPIResponse = obj => {
     return json
 }
 
+const getAbsoluteURL = async req => {
+    const {protocol, hostname, originalUrl} = req;
+    return `${protocol}://${hostname}${originalUrl}`
+}
 
 
 module.exports = {
+    getAbsoluteURL,
     formatAPIResponse,
     slugify,
     minimumLength,

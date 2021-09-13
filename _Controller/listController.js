@@ -35,7 +35,6 @@ exports.getAllList = async function(req, res) {
         return res.render("pages/list_list", context)
     }
     catch(err){
-        console.log(err);
         return res.redirect("/")
     }
 }
@@ -94,7 +93,16 @@ exports.getListByID = async function(req, res) {
                 }
             }
         })
-
+        context.title = formattedData.list_title
+        const url = await fn.getAbsoluteURL(req)
+        context.currentURL = url
+        context.meta_property = {
+            "og:url" : url,
+            "og:type" : "list",
+            "og:title" : formattedData.list_title,
+            "og:description" : formattedData.name + "'s list named " + formattedData.list_desc,
+            "og:image" : "https://www.google.com/search?q=random+image&rlz=1C1NHXL_enIN815IN815&sxsrf=AOaemvL93BGM2raZIj4ePqJluCZrqH5Iow:1631568022720&source=lnms&tbm=isch&sa=X&ved=2ahUKEwiH2q7D8PzyAhXTFlkFHXBUDP0Q_AUoAXoECAEQAw&biw=1536&bih=754&dpr=1.25#imgrc=EpwlzJ8ekN85kM"
+        }
         context.loggedIn = req.session?.name;
         context.authorized = req.session?.uid && (req.session?.uid === formattedData.uid)
         context.data = formattedData;
@@ -104,7 +112,6 @@ exports.getListByID = async function(req, res) {
         return res.render("pages/list_detail", {...context})
     }
     catch(err){
-        console.log("****",err);
         return res.redirect("/pageNotFound")
     }
 }
