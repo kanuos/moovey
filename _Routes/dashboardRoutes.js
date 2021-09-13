@@ -93,6 +93,29 @@ dashboardRoutes.post("/my-lists/new", redirectToLogin, controller.dashboard__sub
 dashboardRoutes.get("/my-lists/:id", redirectToLogin, controller.dashboard__getListByID)
 
 
+// URL          :   /dashboard/my-lists/[id]/edit
+// description  :   Show logged in user's list with [id] in edit mode
+// access       :   PRIVATE
+// method       :   GET
+dashboardRoutes.get("/my-lists/:id/edit", redirectToLogin, controller.dashboard__getListEditPage)
+
+
+
+
+// URL          :   /dashboard/my-lists/[id]/edit
+// description  :   Show logged in user's list with [id] in edit mode
+// access       :   PRIVATE
+// method       :   POST
+dashboardRoutes.post("/my-lists/:id/edit", redirectToLogin, controller.dashboard__submitListEditData)
+
+
+
+// URL          :   /dashboard/my-lists/[id]/edit
+// description  :   delete user's list/id
+// access       :   PRIVATE
+// method       :   POST
+dashboardRoutes.post("/my-lists/:id/delete", redirectToLogin, controller.dashboard__deleteList)
+
 
 
 

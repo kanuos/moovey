@@ -406,8 +406,9 @@ async function dashboard__getListByID(req, res) {
         if (!tab || tab === "1") {
             context.activeTab = 0
             // check if list with same title by user already exists or not
-            const {rows} = (await pool.query("SELECT lm.lid, lm.date_created, lm.uid,  lm.description as list_desc, lm.title as list_title, li.description as li_desc, itemid, mm.imdbid, mm.title as movie_title, mm.year as movie_year  FROM list_meta AS lm LEFT JOIN list_item AS li ON lm.lid = li.lid INNER JOIN movies_meta AS mm ON mm.imdbid = li.imdbid WHERE lm.lid = $1 AND lm.uid = $2", [id, req.session.uid]))
+            const {rows} = (await pool.query("SELECT lm.lid, lm.date_created, lm.uid,  lm.description as list_desc, lm.title as list_title, li.description as li_desc, itemid, mm.imdbid, mm.title as movie_title, mm.year as movie_year  FROM list_meta AS lm LEFT JOIN list_item AS li ON lm.lid = li.lid LEFT JOIN movies_meta AS mm ON mm.imdbid = li.imdbid WHERE lm.lid = $1 AND lm.uid = $2", [id, req.session.uid]))
             
+            console.log("get list by id 411", rows);
     
             if (rows.length === 0) {
                 throw new Error(`List #${id} does not exist`)
@@ -537,14 +538,17 @@ async function dashboard__submitListEditData(req, res) {
 async function dashboard__deleteList(req, res) {
     let {params : {id}, body : {code}, session : {uid}} = req;
     try {
+        // if confirmation code is not provided
+        if (!code) {
+            throw new Error("Please fill in the confirmation code")
+        }
        // check if list with same title by user already exists or not
         await pool.query("DELETE FROM list_meta WHERE lid = $1 AND uid = $2 AND title = $3", [id, uid, code.trim()])        
         // on success redirect to the same page with fresh data
         return res.redirect(`/dashboard/my-lists`)
     } 
     catch (error) {
-        console.log("dashbctrl 546 ", error.message);
-        return res.redirect("/dashboard/my-lists")
+        return res.redirect(`/dashboard/my-lists/${id}/delete`)
     }
 }
 

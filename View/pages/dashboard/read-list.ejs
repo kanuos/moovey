@@ -1,0 +1,239 @@
+<%- include('../../partials/head') %>
+<body class="relative">
+    <!-- navbar partial -->
+    <%- include('../../partials/navbar') %>
+    
+    <!-- sidebar partial -->
+    <%- include('../../partials/dashboard/dashboard-sidebar') %>
+       
+    <!-- main body for the article page s-->
+    <main class="w-full relative h-screen flex items-start">
+
+        <!-- page specific data -->
+        <!-- page specific data -->
+        <section class="h-full w-full max-w-5xl p-4 mx-auto py-14 md:pl-14">
+                        
+            <ul class="flex items-start justify-start gap-4 text-xs w-11/12 mx-auto md:mr-auto max-w-5xl mb-5 capitalize mt-2">
+                <li
+                    <% if (activeTab === 0) {%>
+                    class="text-black font-semibold font-special"
+                    <% } else { %>
+                    class="text-gray-400 font-semibold font-special"
+                    <% } %>>
+                    <a href="/dashboard/my-lists/<%= listData[0].lid %>" class="outline-none focus:outline-none">
+                        list content
+                    </a>
+                </li>
+                <li
+                <% if (activeTab === 1) {%>
+                    class="text-black font-semibold font-special"
+                    <% } else { %>
+                    class="text-gray-400 font-semibold font-special"
+                    <% } %>>
+                    <a href="/dashboard/my-lists/<%= listData[0].lid %>?tab=2" class="outline-none focus:outline-none">
+                        testimonials
+                    </a>
+                </li>
+                <li
+                    <% if (activeTab === 2) {%>
+                    class="text-black font-semibold font-special"
+                    <% } else { %>
+                    class="text-gray-400 font-semibold font-special"
+                    <% } %>>
+                    <a href="/dashboard/my-lists/<%= listData[0].lid %>?tab=3" class="outline-none focus:outline-none">
+                        delete list
+                    </a>
+                </li>
+            </ul>
+            
+
+            <header class="h-auto flex flex-col gap-4 mb-10 border-b border-gray-200 md:w-11/12 md:mx-auto md:gap-10">
+                <!--  -->
+                <article class="w-full md:relative md:flex md:items-center md:gap-2">
+                    <section class="shadow-glass p-2 w-full h-auto rounded overflow-hidden md:pb-4 md:w-3/5 md:text-center">
+                        <small class="text-xs font-special text-gray-500 font-semibold capitalize md:hidden">
+                            title
+                        </small>
+                        <p class="mt-0.5 font-regular font-semibold block text-black w-full text-xs md:text-sm capitalize">
+                            <%= listData[0].list_title %>
+                        </p>
+                    </section>
+                    <h4 class="hidden md:block md:w-2/5 text-right border-b-2 border-current border-dashed capitalize font-semibold font-special">
+                        title
+                    </h4>
+                </article>
+
+                <article class="w-full md:relative md:flex md:flex-row-reverse md:items-center md:gap-2">
+                    <section class="shadow-glass p-2 w-full h-auto rounded overflow-hidden md:w-2/5 md:ml-auto md:text-center">
+                        <small class="text-xs font-special text-gray-500 font-semibold capitalize md:hidden">
+                            written on
+                        </small>
+                        <p class="mt-0.5 font-regular block text-gray-700 w-full text-xs">
+                            <%= new Date(listData[0].date_created).toDateString() %>
+                        </p>
+                    </section>
+                    <h4 class="hidden md:block md:w-3/5 text-left border-b-2 border-current border-dashed capitalize font-semibold font-special">
+                        written on
+                    </h4>
+                </article>
+                
+                <article class="w-full md:relative md:flex md:items-center md:gap-2">
+                    <section class="shadow-glass p-2 w-full h-auto rounded overflow-hidden md:pb-4 md:w-3/5">
+                        <small class="text-xs font-special text-gray-500 font-semibold capitalize md:hidden">
+                            description
+                        </small>
+                        <p class="mt-0.5 font-regular italic font-semibold block text-gray-700 w-full text-xs leading-relaxed">
+                            <% if(listData[0]?.list_desc)  {%>
+                                <%= listData[0].list_desc %>
+                            <% } else {%>
+                                No description available
+                            <% } %>
+                        </p>
+                        <% if(listData[0]?.imdbid) { %>
+                        <p class="mt-2 font-regular font-semibold block text-gray-600 w-full text-xs">
+                            Contains <strong class="text-black">
+                                <%= listData.length %>
+                            </strong> items
+                        </p>
+                        <% } %>
+                    </section>
+                    <h4 class="hidden md:block md:w-2/5 text-right border-b-2 border-current border-dashed capitalize font-semibold font-special">
+                        description
+                    </h4>
+                </article>
+
+
+                <section class="w-full flex flex-col items-center justify-center gap-4 my-5">
+                    <a href="/moovey/lists/<%= listData[0].lid %>" class="px-5 py-1.5 outline-none focus:outline-none border-2 border-dashed border-black text-black  capitalize text-xs hover:bg-black hover:text-white filter drop-shadow-md">
+                        open as someone else
+                    </a>
+                    <a href="/dashboard/my-lists/<%= listData[0].lid %>/edit" class="px-5 py-1.5 outline-none focus:outline-none border-2 border-dashed border-black text-black  capitalize text-xs hover:bg-black hover:text-white filter drop-shadow-md">
+                        edit list
+                    </a>
+                    <a href="/dashboard/my-lists/<%= listData[0].lid %>/add-item" class="px-5 py-1.5 outline-none focus:outline-none border-2 border-dashed border-black text-black  capitalize text-xs hover:bg-black hover:text-white filter drop-shadow-md">
+                        add to list
+                    </a>
+                </section>
+            </header>
+
+            <section class="h-auto md:w-11/12 md:mx-auto pb-10">
+            <% if (listData.length > 0 && listData[0]?.imdbid) { %>
+                <small class="text-sm md:text-base font-special text-gray-500 md:text-black font-semibold capitalize">
+                    List items
+                </small>
+                <div class="my-10 flex flex-col gap-12">
+                    <% listData?.forEach((item, index) => {%>
+                        <% if (index % 2 === 0) {%>
+                    <!-- even article -->
+                    <section class="flex flex-col w-full gap-6">
+                        <article class="relative shadow-glass p-4 rounded-md w-full md:w-5/6 max-w-prose mr-auto">
+                            <span class="-top-4 absolute bg-black font-regular px-4 py-1.5 right-4 text-white text-xs">
+                                #<%= index + 1 %>
+                            </span>
+                            <section class="flex flex-col w-full gap-2">
+                                <small class="text-xs font-special text-gray-500 font-semibold capitalize">
+                                    title
+                                </small>
+                                <p class="font-regular font-semibold block text-black w-full text-xs leading-relaxed">
+                                    <%= item.movie_title %>
+                                </p>
+                            </section>
+                            <section class="flex flex-col w-full gap-2">
+                                <small class="text-xs font-special text-gray-500 font-semibold capitalize">
+                                    year
+                                </small>
+                                <p class="font-regular font-semibold block text-black w-full text-xs leading-relaxed">
+                                    <%= item.movie_year %>
+                                </p>
+                            </section>
+                            <section class="flex flex-col w-full gap-2">
+                                <small class="text-xs font-special text-gray-500 font-semibold capitalize">
+                                    description
+                                </small>
+                                <p class="font-regular italic font-semibold block text-black w-full text-xs leading-relaxed">
+                                    <% if (item?.li_desc?.length > 0) { %>
+                                        <%= item.li_desc %>
+                                    <% } else {%>
+                                        No description available
+                                    <% } %>
+                                </p>
+                            </section>
+                        </article>
+                        <ul class="flex flex-col gap-1 items-center justify-center md:flex-row md:justify-start px-2 md:gap-x-6">
+                            <li class="text-xs text-black capitalize font-special">
+                                edit item
+                            </li>
+                            <li class="text-xs text-black capitalize font-special">
+                                remove item
+                            </li>
+                        </ul>
+                    </section>
+                        <% } else {%>
+                    <!-- odd article -->
+                    <section class="flex flex-col w-full gap-6">
+                        <article class="relative shadow-glass p-4 rounded-md w-full md:w-5/6 max-w-prose ml-auto">
+                            <span class="-top-4 absolute bg-black font-regular px-4 py-1.5 right-4 text-white text-xs">
+                                #<%= index + 1 %>
+                            </span>
+                            <section class="flex flex-col w-full gap-2">
+                                <small class="text-xs font-special text-gray-500 font-semibold capitalize">
+                                    title
+                                </small>
+                                <p class="font-regular font-semibold block text-black w-full text-xs leading-relaxed">
+                                    <%= item.movie_title %>
+                                </p>
+                            </section>
+                            <section class="flex flex-col w-full gap-2">
+                                <small class="text-xs font-special text-gray-500 font-semibold capitalize">
+                                    year
+                                </small>
+                                <p class="font-regular font-semibold block text-black w-full text-xs leading-relaxed">
+                                    <%= item.movie_year %>
+                                    
+                                </p>
+                            </section>
+                            <section class="flex flex-col w-full gap-2">
+                                <small class="text-xs font-special text-gray-500 font-semibold capitalize">
+                                    description
+                                </small>
+                                <p class="font-regular italic font-semibold block text-black w-full text-xs leading-relaxed">
+                                    <% if (item?.li_desc.length > 0) { %>
+                                        <%= item.li_desc %>
+                                    <% } else {%>
+                                        No description available
+                                    <% } %>
+                                </p>
+                            </section>
+                        </article>
+                        <ul class="flex flex-col gap-1 items-center justify-center md:flex-row md:justify-end px-2 md:gap-x-6">
+                            <li class="text-xs text-black capitalize font-special">
+                                edit item
+                            </li>
+                            <li class="text-xs text-black capitalize font-special">
+                                remove item
+                            </li>
+                        </ul>
+                    </section>
+                        <% } %>
+                    <% })%>
+                </div>
+            <% } else { %>
+                <p class="text-center">
+                    No items in the list
+                </p>
+            <% }  %>
+
+            </section>
+
+        </section>
+        
+    </main>
+
+    <% console.log(listData) %>
+
+    
+    <script src="/static/js/dashboard-sidebar.js"></script>
+    <script src="/static/js/navbar.js"></script>
+
+</body>
+</html>
