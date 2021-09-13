@@ -11,10 +11,16 @@
         <% } %>
     </small>
 
+    <% console.log(locals) %>
+
     <section class="flex items-center justify-center flex-col gap-1 mx-auto my-3">
         <img 
             class="h-14 w-14 block object-cover rounded-full p-0.5 shadow-md bg-white sm:h-16 sm:w-16 object-center"
-            src="https://miro.medium.com/max/2000/1*4lw9VAqPd8HCtaa9Gm5P8Q.jpeg"
+            <% if(list.picture) {%>
+            src="<%= list.picture %>"
+            <% } else { %>
+            src="/static/assets/image-not-found.png"
+            <% } %>
             alt="">
         <small class="text-pink-600 text-xs font-semibold font-special">
             <%= list.name %>

@@ -15,13 +15,21 @@
     })%>
     <%- include('../partials/bg_image') %>
     
-    <main id="main" class="min-h-screen py-6 place-content-around grid grid-cols-1  gap-y-6 xl:gap-y-0 w-full sm:w-11/12 mx-auto max-w-5xl relative">
-        <%- include('../partials/social-share') %>
-        <% data.movies.forEach((movie, index) => { %>
-            <%- include('../partials/testimonial', {movie, index, count : data.movies.length}) %>    
-        <% }) %>
-    <!-- main section end -->
-    </main>
+    <%- include('../partials/social-share') %>
+    <% if (data.movies.length > 0) {%>
+        <main id="main" class="min-h-screen py-6 place-content-around grid grid-cols-1  gap-y-6 xl:gap-y-0 w-full sm:w-11/12 mx-auto max-w-5xl relative">
+            <% data.movies.forEach((movie, index) => { %>
+                <%- include('../partials/testimonial', {movie, index, count : data.movies.length}) %>    
+            <% }) %>
+        </main>
+        <!-- main section end -->
+    <% } else {%>
+        <main id="main" class="grid place-items-center">
+            <p class="font-semibold font-regular capitalize text-lg text-gray-500 mb-40">
+                No items in the list.
+            </p>
+        </main>
+    <% } %>
     <!-- testimonial section start -->
     <ul class="flex flex-col h-auto w-auto items-center gap-4 fixed bottom-10 right-4">
         <li>
