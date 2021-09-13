@@ -166,24 +166,6 @@ async function dashboard__submitProfileUpdate(req, res) {
 }
 
 
-// // get the movie search result/ search page
-// async function dashboard__searchMovieMeta(req, res){
-//     try {
-//         const context = {
-//             loggedIn : req.session?.name,
-//             title : "My Dashboard",
-//             dashboardMode : true,
-//             dashboardPageName : "Search Movies | TV shows",
-//             activeDashboardLink : DASHBOARD_LINKS.watchlist,
-//         }
-//         return res.render("pages/dashboard/article[id]-write-edit", context)
-        
-//     } catch (error) {
-//         console.log(error.message);
-//     }
-// }
-
-
 // get all articles of the logged user
 // url : /dashboard/my-articles
 async function dashboard__getAllArticles(req, res) {
@@ -328,6 +310,8 @@ async function dashboard__getAllLists(req, res) {
             dashboardPageName : req.session?.name + " lists",
             activeDashboardLink : DASHBOARD_LINKS.lists
         }
+        const listsByUser = (await pool.query("select l.lid,l.title, l.description as l_desc, date_created, l.uid, (select count(*) as li from list_item where lid = l.lid) from list_meta as l where l.uid = $1", [req.session.uid])).rows;
+        context.lists = listsByUser
         return res.render("pages/dashboard/lists", context)
     } catch (error) {
         console.log(error);
@@ -337,7 +321,7 @@ async function dashboard__getAllLists(req, res) {
 
 
 // show the create new list/edit list page for the logged user
-// url : /dashboard/articles
+// url : /dashboard/my-lists
 async function dashboard__getCreateListPage(req, res) {
     const context = {
         loggedIn : req.session?.name,
@@ -347,7 +331,8 @@ async function dashboard__getCreateListPage(req, res) {
         activeDashboardLink : DASHBOARD_LINKS.lists,
         pageError : false,
         actionURL : "/dashboard/my-lists/new",
-        conflictDetail : false
+        conflictDetail : false,
+        listData: null
     }
     try {
         return res.render("pages/dashboard/create-edit-list", context)
@@ -369,7 +354,8 @@ async function dashboard__submitNewListData(req, res) {
         activeDashboardLink : DASHBOARD_LINKS.lists,
         pageError : false,
         actionURL : "/dashboard/my-lists/new",
-        conflictDetail : false
+        conflictDetail : false,
+        listData : null
     }
     try {
         const {title, description} = req.body;
@@ -379,10 +365,10 @@ async function dashboard__submitNewListData(req, res) {
         }
         
         // check if list with same title by user already exists or not
-        const {rows} = (await pool.query("SELECT lid, title, date_created FROM list_meta WHERE title = $1 AND uid = $2 LIMIT 1", [title.toLowerCase(), req.session.uid]))
-        
+        const {rows} = (await pool.query("SELECT lid as id, title, date_created FROM list_meta WHERE title = $1 AND uid = $2 LIMIT 1", [title.toLowerCase(), req.session.uid]))
+
         if (rows.length === 1) {
-            context.conflictDetail = row[0]
+            context.conflictDetail = rows[0]
             throw new Error("List with the same title already exists")
         }
 
@@ -390,6 +376,7 @@ async function dashboard__submitNewListData(req, res) {
         const newListID = (await pool.query("INSERT INTO list_meta (title, description, uid) VALUES ($1, $2, $3) RETURNING lid", 
         [title.toLowerCase().trim(), description.toLowerCase().trim(), req.session.uid])).rows[0]
 
+        console.log(newListID);
 
         return res.redirect(`/dashboard/my-lists/${newListID.lid}`)
     } catch (error) {
@@ -402,7 +389,6 @@ async function dashboard__submitNewListData(req, res) {
 
 // create new list/edit list by the logged user
 // url : /dashboard/my-lists/[id]
-
 async function dashboard__getListByID(req, res) {
     const context = {
         loggedIn : req.session?.name,
@@ -411,22 +397,154 @@ async function dashboard__getListByID(req, res) {
         dashboardPageName : "Create new list",
         activeDashboardLink : DASHBOARD_LINKS.lists,
         pageError : false,
-        actionURL : "/dashboard/my-lists/new",
+        activeTab : 0
     }
     try {
-        const {id} = req.params;
+        const {params : {id}, query : {tab}} = req;
+        
+        // show the main tab
+        if (!tab || tab === "1") {
+            context.activeTab = 0
+            // check if list with same title by user already exists or not
+            const {rows} = (await pool.query("SELECT lm.lid, lm.date_created, lm.uid,  lm.description as list_desc, lm.title as list_title, li.description as li_desc, itemid, mm.imdbid, mm.title as movie_title, mm.year as movie_year  FROM list_meta AS lm LEFT JOIN list_item AS li ON lm.lid = li.lid INNER JOIN movies_meta AS mm ON mm.imdbid = li.imdbid WHERE lm.lid = $1 AND lm.uid = $2", [id, req.session.uid]))
+            
+    
+            if (rows.length === 0) {
+                throw new Error(`List #${id} does not exist`)
+            }
+            // for tab = 1 or no tab query param
+            context.title = `${rows[0].list_title}`
+            context.dashboardPageName = `My Lists  >  ${rows[0].list_title}`
+            context.listData = rows;
+        }
+        // show the testimonials for list
+        else if (tab === "2") {
+            context.activeTab = 1
+            // TODO: testimonial
+            context.listData = []
+        }
+        // show the delete list tab
+        else if (tab === "3") {
+            context.activeTab = 2
+            const {rows} = (await pool.query("SELECT lid, date_created, title, description FROM list_meta AS lm WHERE lm.lid = $1 AND lm.uid = $2", [id, req.session.uid]))
+            
+    
+            if (rows.length === 0) {
+                throw new Error(`List #${id} does not exist`)
+            }
+            // for tab = 1 or no tab query param
+            context.actionURL = `/dashboard/my-lists/${id}/delete`
+            context.type = "list"
+            context.title = `Delete "${rows[0].list_title}"`
+            context.dashboardPageName = `Delete List #${rows[0].lid}`
+            context.data = rows;
+            
+            return res.render("pages/dashboard/delete-list", context) 
+        }
+        return res.render("pages/dashboard/read-list", context)
+    } catch (error) {
+        console.log(error);
+        return res.redirect("/page-not-found")
+    }
+}
+
+
+
+// show edit list [id] page by the logged user
+// url : /dashboard/my-lists/[id]/edit
+async function dashboard__getListEditPage(req, res) {
+    const {id} = req.params;
+    const context = {
+        loggedIn : req.session?.name,
+        title : "My Dashboard | My Lists",
+        dashboardMode : true,
+        dashboardPageName : "Create new list",
+        activeDashboardLink : DASHBOARD_LINKS.lists,
+        pageError : false,
+        actionURL : `/dashboard/my-lists/${id}/edit`,
+        conflictDetail : false
+    }
+    try {
         // check if list with same title by user already exists or not
-        const {rows} = (await pool.query("SELECT lm.lid, lm.date_created, lm.uid,  lm.description as list_desc, lm.title as list_title FROM list_meta AS lm LEFT JOIN list_item AS li ON lm.lid = li.lid WHERE lm.lid = $1 AND lm.uid = $2 LIMIT 1", [id, req.session.uid]))
+        const {rows} = (await pool.query("SELECT * FROM list_meta WHERE lid = $1 AND uid = $2 LIMIT 1", [id, req.session.uid]))
         
         if (rows.length === 0) {
-            throw new Error("List with the same title already exists")
+            throw new Error("List does not exist")
         }
         context.listData = rows[0];
-        context.listData.listDeleteURL = `/dashboard/my-lists/${context.row[0].lid}/delete`
+        return res.render("pages/dashboard/create-edit-list", context)
+    } 
+    catch (error) {
+        context.pageError = error.message
+        return res.render("pages/dashboard/create-edit-list", context)
+    }
+}
 
-        return res.render("pages/dashboard/list[id]-read", context)
-    } catch (error) {
-        return res.redirect("/page-not-found")
+
+
+// submit the list/[id]/edit by logged user data
+// url : /dashboard/my-lists/[id]/edit
+async function dashboard__submitListEditData(req, res) {
+    const context = {
+        loggedIn : req.session?.name,
+        title : "My Dashboard | My Lists",
+        dashboardMode : true,
+        dashboardPageName : "Create new list",
+        activeDashboardLink : DASHBOARD_LINKS.lists,
+        pageError : false,
+        actionURL : "/dashboard/my-lists/new",
+        conflictDetail : false,
+        listData : null
+    }
+    let {params : {id}, body : {title, description}} = req;
+    title = title.trim() || "", description = description.trim() || ""
+    const {uid} = req.session;
+    try {
+        // server side input validation
+        if (title.trim().length === 0) {
+            throw new Error("Title is required.")
+        }
+        // check if list with same title by user already exists or not
+        const validList = (await pool.query("SELECT * FROM list_meta WHERE lid = $1 AND uid = $2 LIMIT 1", [id, uid])).rows
+        if (validList.length === 0) {
+            throw new Error("List does not exist")
+        }
+        
+        // check if list of "title" by logged user already exists or not
+        const existingList = (await pool.query("SELECT * FROM list_meta WHERE title = $1 AND uid = $2 AND lid != $3 LIMIT 1", [title, uid, id])).rows
+
+        if (existingList.length !== 0) {
+            context.conflictDetail = existingList[0]
+            throw new Error(`List with the title "${existingList[0].title}" already exists`)
+        }
+
+        // update the list meta 
+        await pool.query("UPDATE list_meta SET title = $1, description = $2 WHERE LID = $3 AND uid = $4", [title, description, id, uid])
+
+        // on success redirect to the same page with fresh data
+        return res.redirect(`/dashboard/my-lists/${id}`)
+    } 
+    catch (error) {
+        console.log("dashbctrl 500 ", error.message);
+        context.pageError = error.message
+        return res.render("pages/dashboard/create-edit-list", context)
+    }
+}
+
+
+// delete list/[id]/edit by logged user data
+// url : /dashboard/my-lists/[id]/delete
+async function dashboard__deleteList(req, res) {
+    let {params : {id}, body : {code}, session : {uid}} = req;
+    try {
+       // check if list with same title by user already exists or not
+        await pool.query("DELETE FROM list_meta WHERE lid = $1 AND uid = $2 AND title = $3", [id, uid, code.trim()])        
+        // on success redirect to the same page with fresh data
+        return res.redirect(`/dashboard/my-lists`)
+    } 
+    catch (error) {
+        console.log("dashbctrl 546 ", error.message);
+        return res.redirect("/dashboard/my-lists")
     }
 }
 
@@ -454,7 +572,10 @@ module.exports = {
     dashboard__getAllLists,
     dashboard__getCreateListPage,
     dashboard__submitNewListData,
-    dashboard__getListByID
+    dashboard__getListByID,
+    dashboard__getListEditPage,
+    dashboard__submitListEditData,
+    dashboard__deleteList
 }
 
 
