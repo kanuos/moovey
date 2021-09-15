@@ -9,11 +9,13 @@ const {
     submitRegisterForm, 
     handleLogOut, 
     forgotPasswordPage,
-    resetPassword,
-    updatePassword
+    submitForgotPassword,
+    getResetPasswordPage,
+    submitNewPassword
     } = require("../_Controller/accountController");
     
 const {redirectToLogin, preventLoginRoute} = require("../sessionMiddleware")
+
 /**
  * ROUTES = /, /login, /register, /logout, /profile
  */
@@ -23,9 +25,9 @@ const {redirectToLogin, preventLoginRoute} = require("../sessionMiddleware")
 // ACCESS   :   PUBLIC
 // METHODS  :   [GET]
 
- accountRoutes.get("/", preventLoginRoute, showLandingPage)
- accountRoutes.get("/login", preventLoginRoute, showLoginPage)
- accountRoutes.get("/register", preventLoginRoute, showRegisterPage)
+ accountRoutes.get("/",   preventLoginRoute, showLandingPage)
+ accountRoutes.get("/login",   preventLoginRoute, showLoginPage)
+ accountRoutes.get("/register",   preventLoginRoute, showRegisterPage)
  
  
  // LOGIN ROUTES
@@ -33,7 +35,7 @@ const {redirectToLogin, preventLoginRoute} = require("../sessionMiddleware")
  // ACCESS   :   PUBLIC
  // METHODS  :   [POST, GET]
  
- accountRoutes.post("/login", preventLoginRoute, submitLoginForm)
+ accountRoutes.post("/login",   preventLoginRoute, submitLoginForm)
  
  
  // REGISTER ROUTES
@@ -41,7 +43,7 @@ const {redirectToLogin, preventLoginRoute} = require("../sessionMiddleware")
  // ACCESS   :   PUBLIC
  // METHODS  :   [POST, GET]
  
- accountRoutes.post("/register", preventLoginRoute, submitRegisterForm)
+ accountRoutes.post("/register",   preventLoginRoute, submitRegisterForm)
 
 
  // LOGOUT ROUTES
@@ -49,16 +51,19 @@ const {redirectToLogin, preventLoginRoute} = require("../sessionMiddleware")
 // ACCESS   :   PRIVATE
 // METHODS  :   [POST]
 
-accountRoutes.get("/logout", redirectToLogin, handleLogOut)
+accountRoutes.get("/logout",  redirectToLogin, handleLogOut)
 
 // FORGOT PASSWORD ROUTES
 // URL      :   /forgot-password
 // ACCESS   :   PUBLIC
 // METHODS  :   [GET]
 
-accountRoutes.get("/forgot-password", preventLoginRoute, forgotPasswordPage)
-accountRoutes.post("/forgot-password", preventLoginRoute, resetPassword)
-accountRoutes.post("/reset-password", preventLoginRoute, updatePassword)
+accountRoutes.get("/forgot-password",   preventLoginRoute, forgotPasswordPage)
+accountRoutes.post("/forgot-password",   preventLoginRoute, submitForgotPassword)
+
+// when the token link is clicked
+accountRoutes.get("/reset-password", preventLoginRoute, getResetPasswordPage)
+accountRoutes.post("/reset-password", preventLoginRoute, submitNewPassword)
 
 
  // USERS LIST ROUTES
@@ -68,7 +73,7 @@ accountRoutes.post("/reset-password", preventLoginRoute, updatePassword)
 
 accountRoutes.get("/reviewers", reviewerList)
 
-accountRoutes.get("/reviewers/:id", reviewerProfile)
+accountRoutes.get("/reviewers/:id",  reviewerProfile)
 
 
 module.exports = accountRoutes;

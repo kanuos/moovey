@@ -2,22 +2,29 @@ const {
     minimumLength,
     validEmail, 
     maximumLength, 
-    dbLikeQueryString,
-    readableDateStringFormat, 
-    titleCase
+    dbLikeQueryString
 } = require("../functions");
 
 const pool = require("../_Database")
 const bcrypt = require("bcryptjs");
+const path = require("path")
+const ejs = require("ejs")
 const {v4 : uuid} = require("uuid");
 const mailer = require("nodemailer");
 const EmailValidator = require("email-deep-validator");
 const deepEmailValidator = new EmailValidator();
-const { renderEmailHtml } = require("./emailTemplate");
 const {
     MAIL_USER, MAIL_PASSWORD, MAIL_PORT, MAIL_HOST, SESSION_DURATION, SESSION_NAME
 } = process.env;
 
+
+/**
+ * @param name          session will have a name property when logged in else null/undefined
+ * @description         shows the landing page if not logged in. if logged in shows the logged in user's dashboard
+ * @method              get
+ * @URL :               /
+ * @access              public
+ */
 exports.showLandingPage = async function(req, res) {
     const {name} = req.session;
 
@@ -31,6 +38,63 @@ exports.showLandingPage = async function(req, res) {
     })
 }
 
+
+/**
+ * @description         shows the login page if not logged in.
+ * @method              get
+ * @URL :               /login
+ * @access              public
+ */
+exports.showLoginPage = async (req, res) => {
+    try {
+        let errorMsg = null;
+        const {q} = req.query;
+        switch(q) {
+            case "login-required" : 
+                errorMsg = "You are not logged in or your session has expired. Please log in to continue."
+                break
+            case null:
+            case  undefined:
+                errorMsg = null
+                break
+            default:
+                const {rows} = await pool.query(`SELECT * FROM users`);
+                if (rows[rows.length - 1]?.uid === q) {
+                    errorMsg = "Account created successfully. Log in to continue"
+                } 
+        }
+        return res.render("pages/login", {title: "Login", accountError : errorMsg})
+    } catch (error) {
+        return res.redirect("/")
+    }
+}
+
+
+/**
+ * @description         shows the register page if not logged in.
+ * @method              get
+ * @URL :               /register
+ * @access              public
+ */
+exports.showRegisterPage = async (_, res) => {
+    try {
+        return res.render("pages/register", {title: "Register", accountError : null})
+    } catch (error) {
+        return res.redirect("/")
+    }
+}
+
+
+/**
+ * @param email         the request must have a valid email
+ * @param password      the request must have a valid password
+ * @description         Users submit their email and password combination to login
+ *                      The input is validated. The password is then compared to the hashed password.
+ *                      On success a user object is added to the session object 
+ * @method              post
+ * @URL :               /login
+ * @access              public
+ */
 exports.submitLoginForm = async function(req, res) {
     try {
         let {email, password} = req.body;
@@ -52,7 +116,7 @@ exports.submitLoginForm = async function(req, res) {
 
 
         // check whether user with email id exists
-        const {rows} = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
+        const {rows} = await pool.query("SELECT * FROM users WHERE email = $1 LIMIT 1", [email]);
 
         if(rows.length === 0)
             throw new Error("User with credentials doesn't exist")
@@ -81,6 +145,18 @@ exports.submitLoginForm = async function(req, res) {
     }
 }
 
+
+/**
+ * @param name          the request must have a valid name
+ * @param email         the request must have a valid email
+ * @param password      the request must have a valid password
+ * @description         Users submit their [email, password, name] combination to create an account
+ *                      The input is validated. If no conflict of email occurs, the password is then hashed.
+ *                      On success the user with hashed password is stored in database and is then redirected to /login route 
+ * @method              post
+ * @URL :               /register
+ * @access              public
+ */
 exports.submitRegisterForm = async function(req, res) {
     try {
         let {name, email, password} = req.body;
@@ -134,13 +210,21 @@ exports.submitRegisterForm = async function(req, res) {
         
         // insert user to DB
         const uid = uuid()
-        let user = await pool.query("INSERT INTO users (uid, name, email, password) VALUES ($1, $2, $3, $4) RETURNING *", [uid, name, email, hashedPassword]);         
-        let profile = await pool.query("INSERT INTO profile (uid) VALUES ($1) RETURNING *", [user.rows[0].uid]);         
-        const userProfile = {...user.rows[0], ...profile.rows[0]}
-        console.log(userProfile);
-        return res.redirect(301, `/login?q=${userProfile.uid}`)        
+        await pool.query("BEGIN")
+        // insert into users table
+        let user = (await pool.query("INSERT INTO users (uid, name, email, password) VALUES ($1, $2, $3, $4) RETURNING *", [uid, name, email, hashedPassword])).rows[0];
+
+        if (!user || !user.uid) {
+            throw new Error("Something went wrong. Please try again")
+        }
+        // insert into profile table
+        await pool.query("INSERT INTO profile (uid) VALUES ($1)", [user.uid]);         
+
+        await pool.query("COMMIT")
+        return res.redirect(301, `/login?q=${user.uid}`)        
     }
     catch(err){
+        await pool.query("ROLLBACK")
         return res.render("pages/register", 
         {
             title: "Register with Moovey", 
@@ -149,6 +233,13 @@ exports.submitRegisterForm = async function(req, res) {
     }
 }
 
+
+/**
+ * @description         Logged in user is logged out. Session and cookies are cleared and then redirected to /login route 
+ * @method              get
+ * @URL :               /logout
+ * @access              private
+ */
 exports.handleLogOut = function(req, res) {
     req.session.destroy();
     res.clearCookie(SESSION_NAME, {
@@ -163,29 +254,14 @@ exports.handleLogOut = function(req, res) {
     })
 }
 
-exports.showMyProfile = async function(req, res) {
-    try {
-        const {rows} = await pool.query(`SELECT * FROM users INNER JOIN profile ON users.uid = profile.uid WHERE users.uid = $1`, [req.session.uid]);
-        const showProfile = rows[0].email === req.session.email;
-        delete rows[0].password;
-        rows[0].showProfile = showProfile
-        rows[0].date_joined = readableDateStringFormat(rows[0].date_joined)
-        rows[0].blogs = []
-        rows[0].lists = []
-        rows[0].recommendations = []
-        rows[0].watchlist = []
-        return res.render("pages/user_profile", 
-            {
-                loggedIn : req.session?.name,
-                title : `${titleCase(req.session.name)}'s Profile`, 
-                profile: rows[0]
-            })
-    }
-    catch(err){
-        console.log(err);
-    }
-}
 
+/**
+ * @description         Show all the users. Users can be searched by name. Sorted by name, overall ratings based on lists & reviews
+ *                      pagination of 24 users per page 
+ * @method              get
+ * @URL :               /reviewers
+ * @access              public
+ */
 exports.reviewerList = async function(req, res) {
     const searchName = req.query?.q;
     const loggedIn = req.session?.name;
@@ -208,56 +284,89 @@ exports.reviewerList = async function(req, res) {
         }
     }
     catch(err) {
-        console.log(err);
         return res.redirect("/")
     }
 }
 
+
+/**
+ * @param id            uuid signifying a user's uid
+ * @description         Show the profile page for user with uid of [id]. if not redirected to 404-not-found page 
+ *                      If user/[id] and logged user are the same, show a link to open in dashboard
+ *                      tab 1 : show the basic info of the user
+ *                      tab 2 : show the reviews by the user
+ *                      tab 3 : show the lists created by the user
+ *                      tab 4 : show the movies/shows added to watchlist by user
+ *                      tab 5 : show the movies/shows added to favorites by user
+ * @method              get
+ * @URL :               /reviewers/:id
+ * @access              public
+ */
 exports.reviewerProfile = async function(req, res) {
     const {id} = req.params, loggedUser = req.session?.email;
     try {
-        const {rows} = await pool.query("SELECT * FROM users INNER JOIN profile ON users.uid = profile.uid WHERE users.uid = $1", [id]);
-        if (loggedUser && loggedUser === rows[0].email) {
-            return res.redirect('/dashboard');
-        }
+        const {rows} = await pool.query("SELECT * FROM users INNER JOIN profile ON users.uid = profile.uid WHERE users.uid = $1 LIMIT 1", [id]);
         if(rows[0]){
             delete rows[0].password
         }
-        console.log(rows[0],loggedUser,req.session?.uid === rows[0].uid);
         return res.render("pages/user_profile", 
             {
                 loggedIn : loggedUser,
                 authorized : req.session?.uid === rows[0].uid,
                 title : ``, 
-                profile: rows[0] ?? []
+                profile: rows[0]
             })
     }
     catch(err) {
-        console.log(err, "profile detail error");
+        return res.redirect("/")
     }
 }
 
-exports.forgotPasswordPage = async function(req, res) {
-    return res.render("pages/forgot_password", {
-        title : "Forgot password?",
-        forgotMsg : ''
-    })
+
+/**
+ * @description         if user clicks on forgot-password this method is invoked. 
+ * @method              get
+ * @URL :               /forgot-password
+ * @access              public
+ */
+exports.forgotPasswordPage = async function(_, res) {
+    try {
+
+        return res.render("pages/forgot_password", {
+            title : "Forgot password?",
+            forgotMsg : '',
+            step : 1
+        })
+    } catch (error) {
+        return res.redirect("/")
+    }
 }
 
-exports.resetPassword = async function(req, res) {
+
+/**
+ * @param email         a valid email ID
+ * @description         an email is submitted. this email is checked in the database. if no user is found for the email ID
+ *                      a failure email is sent. if user is found a random token is created. a URL consiting of userID and token 
+ *                      is sent to the emailID as a success mail with the reset link. the token is hashed and stored alongside 
+*                       the  user id and a validity of 10 mins to the recover table 
+ * @method              post
+ * @URL :               /forgot-password
+ * @access              public
+ */
+exports.submitForgotPassword = async function(req, res) {
     try {
-        let {email} = req.body;
+        let {body : {email}, protocol, headers : {host} } = req;
         email = email?.trim().toLowerCase();
         if (!email) {
             throw Error("Email cannot be empty")
         }
-        const existingUser = (await pool.query("SELECT * FROM users WHERE email = $1", [email])).rows[0];
-        if (!existingUser) {
-            throw Error("User doesn't exist")
-        }
-        // user exists...
-        // generate a code
-        const code = uuid();
+        const user = (await pool.query("SELECT uid, name FROM users WHERE email = $1 LIMIT 1", [email])).rows[0]
+        // no explicit user check to mitigate hack attacks trying to get access to user email
+        // send mail to entered email
+        // if invalid mail return error 
+        // only a valid email address holder can access the reset token anyway
+
+        // step 0: create the mail sending transport client
         const transport = await mailer.createTransport({
             host : `${MAIL_HOST}`,
             port : MAIL_PORT,
@@ -265,103 +374,186 @@ exports.resetPassword = async function(req, res) {
                 user : MAIL_USER,
                 pass : MAIL_PASSWORD
             },
-            subject : `Reset password for ${existingUser.name}'s Moovey•• account`,
         })
-        // add code to forgot table
-        const recovery = (await pool.query("INSERT INTO recover (uid, token) VALUES ($1, $2) ON CONFLICT (uid) DO UPDATE SET token = $2 RETURNING *", [existingUser.uid, code])).rows[0]
+        let mailResponse;
 
-        const request = new Date(`${recovery.request_valid}`).toLocaleTimeString();
-
-        // send mail to user
-        const mailResponse = await transport.sendMail({
-            from : MAIL_USER,
-            subject : `Reset password for ${existingUser.name}'s Moovey•• account`,
-            to : existingUser.email,
-            html : renderEmailHtml({
-                name : existingUser.name,
-                token : recovery.token,
-                validity : request,
+        // Step 1: send the failure mail to the email ID if email ID is syntactically corrent but doesn't exist
+        if (!user) {
+            const failureEmail = await ejs.renderFile(path.resolve(path.dirname(__dirname), "View", "email", "failure.ejs"))
+            mailResponse = await transport.sendMail({
+                from : MAIL_USER,
+                to : email,
+                html : failureEmail,
+                subject : "M°ovey - Reset Password"    
             })
-        })
+        } 
+        // if user is valid
+        // Step 2:  Create a random reset token and store the hash in the database
+        else {
+            // check whether the user already has a valid token in recover table and deleting if item is found
+            const token = uuid()
+            const hashedToken = await bcrypt.hash(token, 10);
+            // insert the user and hashed token to DB
+            const {rows} = await pool.query("INSERT INTO recover (uid, token, request_sent, request_valid) VALUES ($1, $2, $3, $4) ON CONFLICT (uid) DO UPDATE SET token = $2, request_sent = $3, request_valid = $4 RETURNING *", 
+            [user.uid, hashedToken, new Date().toISOString(), new Date(Date.now() + 10 * 60 * 1000).toISOString()])
+            
+            // create success email
+            const resetURL = `${protocol}://${host}/reset-password?u=${token}&t=${user.uid}`
+            const successEmail = await ejs.renderFile(path.resolve(path.dirname(__dirname), "View", "email", "success.ejs"), {user : user.name, resetURL, validTill : rows[0].request_valid})
+            mailResponse = await transport.sendMail({
+                from : MAIL_USER,
+                to : email,
+                html : successEmail,
+                subject : "M°ovey - Reset Password"
+            })
+
+        }
 
         if (mailResponse?.rejected.length > 0) {
-            throw Error("Recovery email couldn't be sent to your registered email ID.")
+            throw Error("Recovery email couldn't be sent to your email ID.")
         }
 
-        return res.render("pages/reset_password", {title: "Recover password", formMsg: '', uid : existingUser.uid})
-    } catch (error) {
-        console.log(error);
         return res.render("pages/forgot_password", {
             title : "Forgot password?",
-            forgotMsg : error.message
+            forgotMsg : '',
+            step : 2,
+            mailSuccessfullySent : true
+        })
+    } catch (error) {
+        return res.render("pages/forgot_password", {
+            title : "Forgot password?",
+            forgotMsg : error.message,
+            step : 1
         })
     }
 }
 
 
-exports.updatePassword = async function(req, res) {
+/**
+ * @query               t = valid user id and u = valid token. 
+ * @description         a mail with reset link is sent to the email mailbox. on opening the link, a new page with new password and
+ *                      confirm password fields is sent. 
+ * @method              get
+ * @URL :               /forgot-password
+ * @access              public
+ */
+exports.getResetPasswordPage = async function(req, res) {
     try {
-        console.log(req.body);
-        let { uid, code, newPassword, confirmPassword } = req.body;
-        newPassword = newPassword.trim()
-        confirmPassword = confirmPassword.trim()
-        code = code.trim()
-        if (newPassword !== confirmPassword){
-            throw Error("Passwords don't match")
+        const {t, u} = req.query;
+        const token = u.trim();
+        if (!u || !t){
+            throw new Error("Invalid link format")
         }
-        if (!minimumLength(newPassword, 6)){
-            throw Error("Password must be at least 6 characters")
-        }
-        if (!maximumLength(newPassword, 15)){
-            throw Error("Password can be of maximum 15 characters")
+        // check if user and token are valid.. if valid redirect
+        const userTokenCombo = (await pool.query("SELECT name, token, request_valid, recover.uid FROM recover INNER JOIN users ON recover.uid = users.uid WHERE recover.uid = $1 LIMIT 1", [t.trim()])).rows[0];
+
+        if (!userTokenCombo) {
+            throw new Error("Invalid password reset URL")
         }
 
-        const resetToken = (await pool.query("SELECT * FROM recover WHERE uid = $1", [uid])).rows[0];
+        // if expired token
+        const isExpired = new Date(userTokenCombo.request_valid) > new Date(new Date().toISOString());
 
-        for (let i = 0; i < 100; i++) {
-            const tokenValidFor = new Date().getTime() - new Date(`${resetToken.request_sent}`).getTime();
-            console.log("TOken generated ", Math.floor(tokenValidFor / 1000),  " seconds ago")
+        if (!isExpired) {
+            await pool.query("DELETE FROM recover WHERE uid = $1",[t.trim()])
+            throw new Error("Password reset link expired.")
         }
-        console.log(resetToken);
 
+        // check if valid token
+        const isValid = await bcrypt.compare(token, userTokenCombo.token);
 
+        if (!isValid) {
+            throw new Error("Invalid or tampered reset URL")
+        }
 
+        return res.render("pages/reset_password", {
+            title : "Forgot password?",
+            t, u,
+            accountError : '',
+            user : {
+                name : userTokenCombo.name
+            }
+        })
     } catch (error) {
-        console.log(error);
+        return res.render("pages/forgot_password", {
+            title : "Forgot password?",
+            forgotMsg : error.message,
+            step : 1
+        })
     }
 }
 
 
-exports.showLoginPage = async (req, res) => {
+/**
+ * @param newPassword       a valid new password
+ * @param confirmPassword   a valid confirm password that must be equal to the newPassword
+ * @description             an email is submitted. this email is checked in the database. if no user is found for the email ID
+    *                       a failure email is sent. if user is found a random token is created. a URL consiting of userID and token 
+    *                       is sent to the emailID as a reset link. the token is hashed and stored alongside the user id and a                       validity of 10 mins to the recover table 
+ * @method                  post
+ * @URL :                   /forgot-password
+ * @access                  public
+ */
+exports.submitNewPassword = async function(req, res) {
+    const context = {
+        title : "Forgot password?",
+        accountError : null,
+        user : {name : null}
+    }
     try {
-        let errorMsg = null;
-        const {q} = req.query;
-        switch(q) {
-            case "login-required" : 
-                errorMsg = "You are not logged in or your session has expired. Please log in to continue."
-                break
-            case null:
-            case  undefined:
-                errorMsg = null
-                break
-            default:
-                const {rows} = await pool.query(`SELECT * FROM users`);
-                if (rows[rows.length - 1]?.uid === q) {
-                    errorMsg = "Account created successfully. Log in to continue"
-                } 
+        let {t, u} = req.query;
+        // IF THE URL IS CORRUPT
+        if (!t || !u) {
+            throw new Error("Tampered link")
         }
-        return res.render("pages/login", {title: "Login", accountError : errorMsg})
+        t = t.trim(), u = u.trim();
+        context.t = t, context.u = u
+
+        // IF THE URL IS NOT CORRUPT BUT HAS BEEN TAMPERED
+        const recoveryToken = (await pool.query("SELECT * FROM recover INNER JOIN users ON recover.uid = users.uid WHERE recover.uid = $1 LIMIT 1", [t])).rows[0]
+        
+        if (!recoveryToken){
+            throw new Error("Invalid password reset link")
+        }
+        const isValidToken = await bcrypt.compare(u, recoveryToken.token);
+
+        if (!isValidToken) {
+            throw new Error("Invalid password reset link 1001")
+        }
+        
+        context.user.name = recoveryToken.name 
+
+        let {newPassword, confirmPassword} = req.body;
+        if (!newPassword || !confirmPassword) {
+            throw new Error("New password and confirm password required")
+        }
+        newPassword = newPassword.trim(), confirmPassword = confirmPassword.trim()
+        
+        if(!minimumLength(newPassword, 6))
+            throw new Error("Password must be at least six characters long")
+
+        if(!maximumLength(newPassword, 20))
+            throw new Error("Password cannot be more than twenty characters long")
+
+        if (newPassword !== confirmPassword) {
+            throw new Error("Passwords don't match")
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+        await pool.query("BEGIN")
+        await pool.query("UPDATE users SET password = $1 WHERE uid = $2", [hashedPassword, t.trim()])
+        await pool.query("DELETE FROM recover WHERE uid = $1",[t.trim()])
+        await pool.query("COMMIT")
+
+
+        return res.render("pages/login", {title: "Login", accountError : "Reset successful. Login to continue"})
     } catch (error) {
-        console.log("login error");
-        console.log(error);
+        await pool.query("ROLLBACK")
+        return res.render("pages/reset_password", {
+            ...context,
+            accountError : error.message,
+        })
     }
 }
 
-exports.showRegisterPage = async (req, res) => {
-    try {
-        return res.render("pages/register", {title: "Register", accountError : null})
-    } catch (error) {
-        console.log("register error");
-        console.log(error);
-    }
-}

@@ -2,24 +2,25 @@
 <body class="font-regular relative">
     <main class="h-screen w-full relative grid place-items-center">
         <img 
-        src="https://images.pexels.com/photos/4340785/pexels-photo-4340785.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" 
+        src="/static/assets/placeholder.jpg" 
         alt="" 
-        class="absolute pointer-events-none top-0 left-0 h-full w-full object-cover block opacity-20 filter grayscale sm:opacity-100 sm:grayscale-0">
+        class="absolute pointer-events-none top-0 left-0 h-full w-full object-cover block opacity-20 filter grayscale sm:opacity-100 sm:grayscale-0 lg:blur-sm">
 
 
-        <div class="w-full h-full z-10 bg-transparent bg-opacity-80 flex flex-col items-center justify-center sm:bg-white sm:max-w-md sm:h-3/4 sm:bg-opacity-50">
+        <div class="w-full h-full z-10 bg-transparent bg-opacity-80 flex flex-col items-center justify-center sm:bg-white sm:max-w-lg sm:h-auto sm:bg-opacity-50">
             
-            <% if (accountError) { %>
-            <p id="accountGlobalError" class="absolute top-0 left-0 font-regular block w-full text-center p-2 bg-black text-white">
-                <i class="fas fa-exclamation-triangle text-sm"></i> <%= accountError %>
-            </p>
-            <% } %>
+        <% if (accountError) { %>
+        <p id="accountGlobalError" class="absolute top-0 left-0 font-regular block w-full text-center p-2 bg-black text-white">
+            <i class="fas fa-exclamation-triangle text-sm"></i> 
+            <%= accountError %>
+        </p>
+        <% } %>
 
             <form
                 action="/register"
                 method="POST"
                 autocomplete="off" 
-                class="h-full w-full p-2 flex flex-col items-center justify-center sm:bg-white max-w-sm sm:my-10">
+                class="h-full w-full p-2 md:py-10 flex flex-col items-center justify-center sm:bg-white max-w-md sm:my-10">
                 <h1 class="capitalize mb-6 flex flex-col justify-center items-center">
                     <p class="font-special text-2xl text-black">
                         M<small class="inline-block animate-bounce">&deg;</small>
@@ -28,68 +29,84 @@
                         sign up
                     </span>
                 </h1>
-                <div class="w-full h-1/2 flex justify-center items-center flex-col">
-                    <section class="w-11/12 max-w-md mb-1 sm:w-5/6">
-                        <label for="name" class="text-xs mb-0.5 capitalize font-semibold text-gray-400 tracking-wider">
+                <div class="w-full h-auto flex justify-center items-center flex-col md:w-11/12 mx-auto">
+                    <section class="w-11/12 max-w-md mb-1">
+                        <label data-active="text-black" data-inactive="text-gray-500" for="name" class="text-xs mb-0.5 capitalize font-semibold text-gray-500 tracking-wider">
                             <small>name</small>
                         </label>
                         <input 
                             data-tag="visible"
-                            data-active="black"
-                            data-inactive="gray-400"
-                            autocomplete="cc-additional-name"
-                            name="name"
+                            data-active="text-black"
+                            data-inactive="text-gray-500"
+                            data-name="name"
+                            data-type="name"
                             type="text" 
-                            class="w-full border-2 p-1 rounded-md border-gray-400 bg-transparent text-sm outline-none focus:outline-none font-semibold font-regular transition-all ring-0 focus:ring-0 ring-transparent focus:ring-transparent ring-offset-transparent focus:border-black"
+                            autocomplete="cc-additional-name"
+                            class="w-full border-2 p-1 rounded-md border-current bg-transparent text-gray-500 text-sm outline-none focus:outline-none font-semibold font-regular transition-all ring-0 focus:ring-0 ring-transparent focus:border-black focus:text-black ring-offset-transparent"
                             id="name">
-                    </section>
-                    <small class="my-1 text-xs text-black font-special font-semibold capitalize">
-                    </small>
-                    <section class="w-11/12 max-w-md mb-1 sm:w-5/6">
-                        <label for="email" class="text-xs mb-0.5 capitalize font-semibold text-gray-400 tracking-wider">
+                        <small class="my-1 text-xs text-gray-500 font-special capitalize">
+                            name should be between 3-15 characters
+                        </small>
+                    </section>                 
+
+                    <section class="w-11/12 max-w-md mb-1">
+                        <label data-active="text-black" data-inactive="text-gray-500" for="email" class="text-xs mb-0.5 capitalize font-semibold text-gray-500 tracking-wider">
                             <small>email</small>
                         </label>
                         <input 
                             data-tag="visible"
-                            data-active="black"
-                            data-inactive="gray-400"
-                            data-type="email"
+                            data-active="text-black"
+                            data-inactive="text-gray-500"
+                            data-name="email"
+                            data-type="emai;"
                             type="text" 
-                            class="w-full border-2 p-1 rounded-md border-gray-400 bg-transparent text-sm outline-none focus:outline-none font-semibold font-regular transition-all ring-0 focus:ring-0 ring-transparent focus:ring-transparent ring-offset-transparent focus:border-black"
+                            autocomplete="cc-additional-name"
+                            class="w-full border-2 p-1 rounded-md border-current bg-transparent text-gray-500 text-sm outline-none focus:outline-none font-semibold font-regular transition-all ring-0 focus:ring-0 ring-transparent focus:border-black focus:text-black ring-offset-transparent"
                             id="email">
+                        <small class="my-1 text-xs text-gray-500 font-special capitalize">
+                            Email must be a valid email address
+                        </small>
                     </section>
-                    <small class="my-1 text-xs text-black font-special font-semibold capitalize">
-                    </small>
-                    <section class="w-11/12 max-w-md mb-1 sm:w-5/6 relative">
-                        <label for="password" class="text-xs mb-0.5 capitalize font-semibold text-gray-400 tracking-wider">
+                    <section class="w-11/12 max-w-md mb-1">
+                        <label data-active="text-black" data-inactive="text-gray-500" for="password" class="text-xs mb-0.5 capitalize font-semibold text-gray-500 tracking-wider">
                             <small>password</small>
                         </label>
-                        <input 
-                            data-tag="visible"
-                            data-active="black"
-                            data-inactive="gray-400"
-                            data-type="password"
-                            type="text" 
-                            class="w-full border-2 p-1 pr-4 rounded-md border-gray-400 bg-transparent text-sm outline-none focus:outline-none font-semibold font-regular transition-all ring-0 focus:ring-0 ring-transparent focus:ring-transparent ring-offset-transparent focus:border-black"
-                            id="password">
-                        <button type="button" id="togglePassword" class="absolute bottom-2 right-2 flex flex-col items-center justify-center outline-none focus:outline-none hover:text-black text-gray-500 transition-all">
-                            <i class="fas fa-eye"></i>
-                            <small class="hidden">show/hide password</small>
-                        </button>
+                        <div class="w-full relative">
+                            <input 
+                                data-tag="visible"
+                                data-active="text-black"
+                                data-inactive="text-gray-500"
+                                data-name="password"
+                                data-type="password"
+                                type="text" 
+                                data-content=""
+                                autocomplete="organization"
+                                class="w-full border-2 p-1 pr-4 rounded-md border-current bg-transparent text-gray-500 text-sm outline-none focus:outline-none font-semibold font-regular transition-all ring-0 focus:ring-0 ring-transparent focus:border-black focus:text-black ring-offset-transparent"
+                                id="password">
+                            <button type="button" class="togglePassword absolute bottom-2 right-2 flex flex-col items-center justify-center outline-none focus:outline-none hover:text-black text-gray-500 transition-all">
+                                <i class="fas fa-eye"></i>
+                                <i class="fas fa-eye-slash hidden"></i>
+                                <small class="hidden">show/hide password</small>
+                            </button>
+                        </div>
+                        <small class="my-1 text-xs text-gray-500 font-special capitalize">
+                            Password must be between 6-20 characters
+                        </small>
                     </section>
-                    <small class="my-1 text-xs text-black font-special font-semibold capitalize">
-                    </small>
                 </div>
-                <input type="hidden" name="email">
-                <input type="hidden" name="password">
+                <input type="hidden" name="name" class="hiddenField">
+                <input type="hidden" name="email" class="hiddenField">
+                <input type="hidden" name="password" class="hiddenField">
                 <section class="w-4/5 max-w-md my-6 sm:w-5/6">
                     <button  
                         type="submit"  
-                        class="w-max bg-black text-xs text-white py-1.5 px-5 mx-auto flex items-center justify-center capitalize outline-none focus:outline-none">
-                        <i class="fas fa-user-plus"></i>
-                        <span class="ml-1.5">register</span>
+                        class="w-max bg-black text-xs text-white py-1.5 px-5 mx-auto flex items-center justify-center capitalize outline-none focus:outline-none transition-all transform cursor-not-allowed opacity-50" disabled>
+                        <i class="fas fa-user-plus" id="btnDefaultIcon"></i>
+                        <i class="fas fa-spinner animate-spin hidden" id="btnLoadIcon"></i>
+                        <span class="ml-1.5" id="btnText" data-load="loggin in">register</span>
                     </button>
                 </section>
+                
                 <section class="w-full text-center mb-6">
                     <p class="text-xs text-center text-gray-500">
                         Already have an account? <a href="/login" class="border-b border-transparent outline-none focus:outline-none hover:border-current hover:text-black font-semibold">Login Now</a>
@@ -102,3 +119,4 @@
 <script src="/static/js/account.js"></script>
 </body>
 </html>
+
