@@ -9,7 +9,12 @@
             No description available
         <% } %>
     </p>
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Hayao_Miyazaki_cropped_3_Hayao_Miyazaki_201211.jpg/800px-Hayao_Miyazaki_cropped_3_Hayao_Miyazaki_201211.jpg" 
+    <img
+        <% if (user.picture) {%> 
+        src="<%= user.picture %>"
+        <% } else { %> 
+            src="/static/assets/image-not-found.jpg"
+        <% } %> 
         class="h-20 w-20 sm:h-28 sm:w-28 object-cover block p-2 shadow-xl rounded-full my-2"
     alt="">
     <div class="flex flex-col items-center justify-center mb-2">
@@ -22,8 +27,8 @@
             <%= date.date %>-<%= date.month %>-<%= date.year %>
         </small>
     </div>
-    <a href="" class="text-sm outline-none focus:outline-none my-10 py-2 px-5 border border-dashed border-black hover:text-white hover:bg-black">
-        <i class="fas fa-stethoscope"></i>
+    <a href="/dashboard/my-lists/<%= id %>" class="text-sm outline-none focus:outline-none my-10 py-2 px-5 border border-dashed border-black hover:text-white hover:bg-black">
+        <i class="far fa-paper-plane"></i>
         <span class="capitalize font-special font-semibold">open in dashboard</span>
     </a>
 </header>

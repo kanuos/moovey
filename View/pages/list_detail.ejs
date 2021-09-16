@@ -3,16 +3,14 @@
     <!-- navbar -->
     <%- include('../partials/navbar')%>
     <!-- header -->
-    <%- include('../partials/detail-header', {
+    <%- include('../partials/list-detail-header', {
         id : data.lid,
         title : data.list_title,
         desc : data.list_desc,
         date : data.date,
-        user : {
-            name : data.name,
-            id : data.uid
-        }
+        user
     })%>
+    <% console.log(locals) %>
     <%- include('../partials/bg_image') %>
     
     <%- include('../partials/social-share', {title, desc: data.list_desc, url: currentURL}) %>

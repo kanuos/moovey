@@ -63,9 +63,9 @@ app.use(session({
 
 // ROUTE MIDDLEWARES
 app.use('/', require('./_Routes/accountRoutes'))
-app.use('/dashboard', require('./_Routes/dashboardRoutes'))
 app.use('/moovey/list', require('./_Routes/listRoutes'))
 app.use('/moovey', require('./_Routes/blogRoutes'))
+app.use('/dashboard', require('./_Routes/dashboardRoutes'))
 
 app.get('*', (req, res) => res.render("pages/404", {title : 'Page Not Found'}))
 

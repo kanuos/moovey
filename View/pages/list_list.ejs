@@ -3,16 +3,153 @@
     <!-- navbar -->
     <%- include('../partials/navbar')%>
     <!-- header -->
-    <%- include('../partials/list-header')%>
+    <%- include('../partials/list-header', {text: "Check out our lists"})%>
     <%- include('../partials/bg_image')%>
     
     <% if (data?.length > 0) { %>
+    
+    <% console.log(locals) %>
         
-    <main class="pb-8 grid h-full min-h-screen grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-6 w-full mx-auto max-w-6xl">
-    <% data.forEach(list => { %>
-            <%- include("../partials/list_thumbnail", {list: list}) %>
-    <% }) %>
-    </main>
+    <main class="pb-8 px-4 grid h-full min-h-screen grid-cols-1 gap-6 md:gap-14 w-full lg:w-11/12 mx-auto max-w-6xl">
+        <% data.forEach((item, index) => { %>
+            <% if (index % 2 === 0) { %>
+            <!-- even article -->
+                <section class="flex flex-col w-full gap-3 text-left md:text-left">
+                    <article class="relative shadow-glass p-4 rounded-md w-full md:w-5/6 max-w-prose mr-auto grid gap-y-2 bg-white">
+                        <!-- user info -->
+                        <div class="absolute -top-6 right-4 flex flex-col gap-2 items-center">
+                            <img 
+                                <% if(item.picture) { %>
+                                src="<%= item.picture %>"
+                                <% } else { %> 
+                                    src="/static/assets/image-not-found.png"
+                                <% }  %> 
+                                alt="<%= item.name %>'s profile picture" 
+                                class="rounded-full bg-white p-1 filter drop-shadow-lg object-cover h-14 w-14 md:h-20 md:w-20">
+                            <a href="/reviewers/<%= item.uid %>" class="outline-none focus:outline-none text-pink-600 border-b border-transparent hover:border-current focus:border-current transition-colors font-regular font-semibold text-xs capitalize">
+                                <%= item.name %>
+                            </a>
+                        </div>
+                        <section class="flex flex-col w-full gap-1 max-w-md">
+                            <small class="text-xs font-special text-gray-500 font-semibold capitalize">
+                                title
+                            </small>
+                            <p class="font-regular font-semibold block text-black w-full capitalize">
+                                <%= item.title %>
+                            </p>
+                        </section>
+                        <section class="flex flex-col w-full gap-2">
+                            <small class="text-xs font-special text-gray-500 font-semibold capitalize">
+                                year
+                            </small>
+                            <p class="font-regular font-semibold block text-black w-full text-xs leading-relaxed">
+                                <%= item.date_created.date %> <sup><%= item.date_created.suffix %></sup> <span class="capitalize"><%= item.date_created.month %></span> <%= item.date_created.year %>
+                            </p>
+                        </section>
+                        <section class="flex flex-col w-full gap-2">
+                            <small class="text-xs font-special text-gray-500 font-semibold capitalize">
+                                description
+                            </small>
+                            <p class="font-regular italic font-semibold block text-black w-full text-xs leading-relaxed">
+                                <% if (item.description ) { %>
+                                    <%= item.description %>
+                                <% } else {%>
+                                    No description available
+                                <% } %>
+                            </p>
+                            <p class="text-sm text-gray-500">
+                                Contains <strong class="text-pink-600"><%= item.itemcount %></strong> items.
+                            </p>
+                        </section>
+                    </article>
+                    <ul class="flex flex-col gap-1 items-center justify-center md:flex-row md:justify-start px-2 md:gap-x-6">
+                        <li class="text-xs text-gray-500 capitalize font-regular font-semibold">
+                            <a href="/moovey/list/<%= item.lid %>" class="outline-none focus:outline-none hover:text-pink-600">
+                                open list
+                            </a>
+                        </li>
+                        <% if (authorized) {%>
+                        <li class="text-xs text-gray-500 capitalize font-regular font-semibold">
+                            <a href="/dashboard/my-list/<%= item.lid %>" class="outline-none focus:outline-none hover:text-pink-600">
+                                open list in dashboard
+                            </a>
+                        </li>
+                        <% } %>
+                    </ul>
+                </section>
+            <% } else {%>
+            <!-- odd article -->
+                <section class="flex flex-col w-full gap-3 text-left md:text-right">
+                    <article class="relative shadow-glass p-4 rounded-md w-full md:w-5/6 max-w-prose ml-auto  grid gap-y-2 bg-white">
+                        <!-- user info -->
+                        <div class="absolute -top-6 right-4 flex flex-col gap-2 items-center md:right-auto md:left-4">
+                            <img 
+                                <% if(item.picture) { %>
+                                src="<%= item.picture %>"
+                                <% } else { %> 
+                                    src="/static/assets/image-not-found.png"
+                                <% }  %> 
+                                alt="<%= item.name %>'s profile picture" 
+                                class="rounded-full bg-white p-1 filter drop-shadow-lg object-cover h-14 w-14 md:h-20 md:w-20">
+                            <a href="/reviewers/<%= item.uid %>" class="outline-none focus:outline-none text-pink-600 border-b border-transparent hover:border-current focus:border-current transition-colors font-regular font-semibold text-xs capitalize">
+                                <%= item.name %>
+                            </a>
+                        </div>
+                        <section class="flex flex-col w-full gap-1 max-w-md md:ml-auto">
+                            <small class="text-xs font-special text-gray-500 font-semibold capitalize">
+                                title
+                            </small>
+                            <p class="font-regular font-semibold block text-black w-full capitalize">
+                                <%= item.title %>
+                            </p>
+                        </section>
+                        <section class="flex flex-col w-full gap-2">
+                            <small class="text-xs font-special text-gray-500 font-semibold capitalize">
+                                year
+                            </small>
+                            <p class="font-regular font-semibold block text-black w-full text-xs leading-relaxed">
+                                <%= item.date_created.date %> <sup><%= item.date_created.suffix %></sup> <span class="capitalize"><%= item.date_created.month %></span> <%= item.date_created.year %>
+                            </p>
+                        </section>
+                        <section class="flex flex-col w-full gap-2">
+                            <small class="text-xs font-special text-gray-500 font-semibold capitalize">
+                                description
+                            </small>
+                            <p class="font-regular italic font-semibold block text-black w-full text-xs leading-relaxed">
+                                <% if (item.description) { %>
+                                    <%= item.description %>
+                                <% } else {%>
+                                    No description available
+                                <% } %>
+                            </p>
+                            <p class="text-sm text-gray-500">
+                                Contains <strong class="text-pink-600"><%= item.itemcount %></strong> items.
+                            </p>
+                        </section>
+                    </article>
+                    <ul class="flex flex-col gap-1 items-center justify-center md:flex-row md:justify-end px-2 md:gap-x-6">
+                        <li class="text-xs text-gray-500 capitalize font-regular font-semibold">
+                            <a href="/moovey/list/<%= item.lid %>" class="outline-none focus:outline-none hover:text-pink-600">
+                                open list
+                            </a>
+                        </li>
+                        <% if (authorized) {%>
+                        <li class="text-xs text-gray-500 capitalize font-regular font-semibold">
+                            <a href="/dashboard/my-list/<%= item.lid %>" class="outline-none focus:outline-none hover:text-pink-600">
+                                open list in dashboard
+                            </a>
+                        </li>
+                        <% } %>
+                    </ul>
+                </section>
+            <% } %>
+        <% }) %>
+    
+    
+    
+        </main>
+
+
     <%- include('../partials/pagination') %>
     <% } else { %>
     <main class="h-65vh max-w-6xl my-4 mx-auto flex items-start pt-20 justify-center">
