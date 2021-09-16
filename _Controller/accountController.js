@@ -2,7 +2,6 @@ const {
     minimumLength,
     validEmail, 
     maximumLength, 
-    dbLikeQueryString
 } = require("../functions");
 
 const pool = require("../_Database")
@@ -263,28 +262,38 @@ exports.handleLogOut = function(req, res) {
  * @access              public
  */
 exports.reviewerList = async function(req, res) {
-    const searchName = req.query?.q;
+    let searchName = req.query?.q?.trim() || '';
     const loggedIn = req.session?.name;
     try {
         if(searchName) {
-            const cleanedName = searchName.trim().split('+').join(' ').trim();
-            const {rows} = await pool.query(`SELECT u.uid, name, picture, count(b.blog_id) AS blogs
-            FROM users AS u INNER JOIN profile AS p ON u.uid = p.uid LEFT JOIN blogs AS b ON b.uid = u.uid
-            GROUP BY u.uid, name, picture WHERE name LIKE $1;`, 
-            [dbLikeQueryString(`%${cleanedName.toLowerCase()}%`)]);
+            const {rows} = await pool.query(`SELECT u.name,u.uid, picture, location, bio, facebook, twitter, website, COUNT(DISTINCT lm.lid) AS totalLists, 
+                COUNT(DISTINCT b.blog_id) AS totalBlogs FROM 
+                users AS u INNER JOIN profile AS p ON u.uid = p.uid 
+                LEFT JOIN list_meta AS lm ON lm.uid= u.uid 
+                LEFT JOIN blogs AS b ON b.uid = u.uid 
+                WHERE name ILIKE $1
+                GROUP BY u.uid, u.name, picture, location, bio, facebook, twitter, website;`, ["%"+searchName+"%"]);
             
-            return res.render("pages/user_list", {title : `Search result for "${cleanedName}"`, reviewers : rows, notFound : `No result for "${cleanedName}" found.`, loggedIn});
+            return res.render("pages/user_list", {
+                title : `Reviewers with the name "${searchName.toUpperCase()}"`, 
+                reviewers : rows, 
+                searchName, 
+                loggedIn
+            });
         } 
         else {
-            const {rows} = await pool.query(`SELECT u.uid, name, picture, count(b.blog_id) AS blogs
-            FROM users AS u INNER JOIN profile AS p ON u.uid = p.uid LEFT JOIN blogs AS b ON b.uid = u.uid
-            GROUP BY u.uid, name, picture`);
+            const {rows} = await pool.query(`SELECT u.name,u.uid, picture, location, bio, facebook, twitter, website, COUNT(DISTINCT lm.lid) AS totalLists, 
+                COUNT(DISTINCT b.blog_id) AS totalBlogs FROM 
+                users AS u INNER JOIN profile AS p ON u.uid = p.uid 
+                LEFT JOIN list_meta AS lm ON lm.uid= u.uid 
+                LEFT JOIN blogs AS b ON b.uid = u.uid 
+                GROUP BY u.uid, u.name, picture, location, bio, facebook, twitter, website;`);
         
-            return res.render("pages/user_list", {title : 'All reviewers', reviewers : rows, notFound : "Be the first one to join!", loggedIn});
+            return res.render("pages/user_list", {title : 'All reviewers', reviewers : rows, searchName, loggedIn});
         }
     }
     catch(err) {
-        return res.redirect("/")
+        return res.redirect("/reviewer-not-found")
     }
 }
 

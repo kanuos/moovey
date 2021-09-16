@@ -1,54 +1,48 @@
-<% if (!isEven) { %>
-<article data-animate="opacity-0" class="scrollArticle origin-bottom transition-all opacity-0 grid grid-cols-4 mb-16 max-w-md lg:gap-x-4 lg:max-w-3xl mx-auto lg:grid-cols-3 lg:max-h-52">
-    <figure class="col-start-2 col-end-4 grid place-content-center rounded-full shadow-2xl bg-white aspect-w-1 aspect-h-1 lg:col-start-1 lg:col-end-2">
-        <img 
-            class="object-cover block h-full w-full p-2 rounded-full object-center"
-            src="https://i.ndtvimg.com/i/2016-11/sheldon_640x480_41478610926.jpg" 
-            alt="Sheldon Cooper" >
-    </figure>
-    <section class="col-start-1 col-end-5 flex flex-col items-center justify-center mt-2 lg:items-start lg:col-start-2 lg:col-end-5 lg:row-end-1">
-        <h3 class="text-lg capitalize break-words font-semibold text-gray-600 sm:text-xl">
+<article class="relative h-full block vh-50 rounded-md w-4/5 mx-auto bg-white shadow-xl overflow-hidden group max-w-xs md:w-full md:hover:scale-105 md:hover:-translate-y-px md:hover:shadow-2xl transform transition-all outline-none focus:outline-none">
+    <span class="absolute bg-black py-2 px-4 text-white font-regular font-semibold right-0 top-0 z-20 text-xs">
+        #<%= index %>
+    </span>
+    <img src="<% if (user.picture) {%><%= user.picture %><% } else { %> /static/assets/placeholder.jpg <% }%>" alt="" class="h-full w-full block absolute top-0 left-0 object-cover object-center filter brightness-50 z-0 transform transition-all origin-bottom-right md:group-hover:scale-150 md:grayscale-0 md:group-hover:grayscale">
+    <section class="absolute top-0 left-0 w-full h-full z-10 py-6 px-4 flex flex-col">
+        <a href="/reviewers/<%= user.uid %>" class="text-white capitalize font-special font-semibold outline-none focus:outline-none transition-all border-b-2 border-dashed inline-block w-max" title="View Profile">
             <%= user.name %>
-        </h3>
-        <div class="flex items-center text-gray-400">
-            <i class="fa fa-map-marker-alt text-xs"></i>
-            <span class="ml-1 capitalize text-sm">
-                texas
-            </span>
-        </div>
-        <p class="italic text-gray-600 text-xs text-center w-5/6 max-w-lg mx-auto mt-2.5 sm:text-sm lg:text-left lg:mx-0 lg:border-b border-gray-200 lg:pb-2">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ipsam culpa tempore voluptatum, eius nisi quod itaque earum libero laborum ipsa accusantium modi dolore porro rem quos! Quis distinctio provident ea!
-        </p>
-        <a href="/reviewers/<%= user.uid %>" class="text-gray-600 font-regular font-semibold capitalize my-3 text-sm outline-none focus:outline-none hover:text-black focus:text-black">
-            view profile
         </a>
+        <% if (user.location) { %>
+            <p class="text-xs">
+                <small class="text-gray-300 my-1">
+                    <%= user.location %>
+                </small>   
+            </p>
+        <% } %>
+        <div class="flex flex-col items-start justify-center my-6 bg-white bg-opacity-70 p-3 text-xs gap-1 relative md:transition-all md:transform md:scale-0  md:group-hover:scale-100">
+            <i class="fas fa-quote-left absolute -top-4 text-black text-lg left-1"></i>
+            <blockquote class="mb-2 font-regular italic overflow-ellipsis">
+                <% if (user.bio) { %>
+                    <%= user.bio.slice(0, 50) %> <% if (user.bio.length > 50) { %>...<% } %>
+                <% } else { %>
+                    No profile bio found
+                <% } %>
+            </blockquote>
+            <small class="text-black font-semibold font-regular"><%= user.totalblogs %> Reviews</small>
+            <small class="text-black font-semibold font-regular"><%= user.totallists %> Lists</small>
+
+            <a href="/reviewers/<%= user.uid %>" class="text-gray-500 hover:text-black font-regular font-semibold outline-none focus:outline-none transition-all block mx-auto my-2 p-1 capitalize" title="View Profile">
+                view profile
+            </a>
+        </div>
+        <ul class="flex flex-col items-start justify-center mt-auto pl-1 gap-4 text-sm text-white md:transform md:transition-all md:translate-y-full md:group-hover:translate-y-0 md:group-hover:opacity-100 md:opacity-0">
+            <% if (user.facebook) {%>
+            <li><a title="<%= user.name %>'s facebook account" href="<%= user.facebook %>" target="_blank" class="outline-none focus:outline-none transition-all transform hover:scale-125 origin-center inline-block"><i class="fab fa-facebook-f"></i></a></li>
+            <% } %>
+            
+            <% if (user.twitter) {%>
+            <li><a title="<%= user.name %>'s twitter account" href="<%= user.twitter %>" target="_blank" class="outline-none focus:outline-none transition-all transform hover:scale-125 origin-center inline-block"><i class="fab fa-twitter"></i></a></li>
+            <% } %>
+            
+            <% if (user.website) {%>
+            <li><a title="<%= user.name %>'s website account" href="<%= user.website %>" target="_blank" class="outline-none focus:outline-none transition-all transform hover:scale-125 origin-center inline-block"><i class="fas fa-link"></i></a></li>
+            <% } %>
+
+        </ul>
     </section>
 </article>
-<% } else { %>
-<!-- user card even -->
-<article data-animate="opacity-0" class="scrollArticle origin-bottom transition-all opacity-0 grid grid-cols-4 mb-16 max-w-md lg:gap-x-4 lg:max-w-3xl mx-auto lg:grid-cols-3 lg:max-h-52">
-    <figure class="col-start-2 col-end-4 grid place-content-center rounded-full shadow-2xl bg-white aspect-w-1 aspect-h-1 lg:col-start-3 lg:col-end-4">
-        <img 
-            class="object-cover block h-full w-full p-2 rounded-full object-center"
-            src="https://i.pinimg.com/originals/5e/41/52/5e4152a1526947373833983e9e0b3aff.jpg" 
-            alt="Howard" >
-    </figure>
-    <section class="col-start-1 col-end-5 flex flex-col items-center justify-center mt-2 lg:items-start lg:col-start-1 lg:col-end-3 lg:row-end-1">
-        <h3 class="text-lg capitalize break-words font-semibold text-gray-600 sm:text-xl">
-            <%= user.name %>
-        </h3>
-        <div class="flex items-center text-gray-400">
-            <i class="fa fa-map-marker-alt text-xs"></i>
-            <span class="ml-1 capitalize text-sm">
-                california
-            </span>
-        </div>
-        <p class="italic text-gray-600 text-xs text-center mx-auto mt-2.5 sm:text-sm lg:text-left lg:mx-0 lg:border-b border-gray-200 lg:pb-2">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ipsam culpa tempore voluptatum, eius nisi quod itaque earum libero laborum ipsa accusantium modi dolore porro rem quos! Quis distinctio provident ea!
-        </p>
-        <a href="/reviewers/<%= user.uid %>" class="text-gray-600 font-regular font-semibold capitalize my-3 text-sm outline-none focus:outline-none hover:text-black focus:text-black">
-            view profile
-        </a>
-    </section>
-</article>
-<% } %>

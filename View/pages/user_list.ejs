@@ -2,30 +2,55 @@
 <body class="min-h-screen font-regular relative custom-scrollbar">    
 
 <%- include('../partials/navbar')%>
-
-<%- include('../partials/list-header') %>
 <%- include('../partials/bg_image')%>
+
+<header class="pt-20 pb-10 h-auto grid place-items-center w-11/12 mx-auto">
+    <form action="/reviewers" class="w-full grid place-items-center" autocomplete="off">
+        <h1 class="font-special text-lg capitalize text-black font-semibold">
+            Meet the reviewers and cinephiles
+        </h1>
+        <section class="w-11/12 max-w-lg mb-1">
+            <label data-active="text-black" data-inactive="text-gray-500" for="q" class="text-xs mb-0.5 capitalize font-semibold text-gray-500 tracking-wider">
+                <small>Search reviewer</small>
+            </label>
+            <div class="w-full relative">
+                <input 
+                    name="q"
+                    type="text"
+                    placeholder="Eg. Sounak" 
+                    class="w-full border-2 p-1 rounded-md border-current bg-transparent text-gray-500 text-sm outline-none focus:outline-none font-semibold font-regular transition-all ring-0 focus:ring-0 ring-transparent focus:border-black focus:text-black ring-offset-transparent pr-4 py-1.5 pl-1.5"
+                    id="q">
+                <button type="submit" class="-translate-y-1/2 absolute right-2 top-1/2 transform"><i class="fas fa-search"></i></button>
+            </div>
+        </section>
+        <% if(searchName) { %>
+        <p class="text-center font-special font-semibold text-sm">
+            Showing <strong class="text-pink-600"><%= reviewers.length %></strong> results for "<%= searchName %>" 
+        </p>
+        <% } %>
+    </form>
+</header>
 
 <!-- user list -->
 <% if (reviewers?.length > 0) { %>
-<main class="min-h-screen w-full max-w-4xl mx-auto p-6">
+<main class="h-auto w-full max-w-6xl my-4 mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10 pb-10">
     <% reviewers.forEach((reviewer, index) => { %>
         <%- include('../partials/profile-card', 
             {
                 user : reviewer, 
-                isEven: index % 2 === 0
+                index : index + 1
             }
         )%>
     <% }) %>
 </main>
 <%- include('../partials/pagination') %>
 <% } else {%>
-    <main class="min-h-screen max-w-6xl my-4 mx-auto flex items-center justify-center">
-        <%= notFound %>
+    <main class="vh-50 flex items-start">
+        <p class="my-20 max-w-6xl text-center mx-auto">
+            No result found <% if (searchName) { %> for "<%= searchName %>" <% } %>
+        </p>
     </main>
 <% } %>
-
-
 
 <script src="/static/js/navbar.js"></script>
 <script src="/static/js/list-header.js"></script>
