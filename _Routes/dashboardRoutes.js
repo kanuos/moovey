@@ -117,6 +117,13 @@ dashboardRoutes.post("/my-lists/:id/edit", redirectToLogin, controller.dashboard
 dashboardRoutes.post("/my-lists/:id/delete", redirectToLogin, controller.dashboard__deleteList)
 
 
+// URL          :   /dashboard/my-lists/[id]/add-item
+// description  :   add item to list with [id]
+// access       :   PRIVATE
+// method       :   GET
+dashboardRoutes.get("/my-lists/:id/add-item", redirectToLogin, controller.dashboard__showSearchMovieForm)
+dashboardRoutes.post("/my-lists/:id/add-item", redirectToLogin, controller.dashboard__addItemToList)
+
 
 
 

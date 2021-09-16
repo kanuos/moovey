@@ -16,10 +16,10 @@
     </h6>
 
     <form action="<%= actionURL %>" 
-        method="POST" 
+        method="<%= formMethod %>" 
         autocomplete="off" class="searchForm w-11/12 max-w-xl mx-auto bg-white filter md:drop-shadow-xl p-4 h-1/2 rounded relative">
 
-        <a href="/dashboard/my-articles" class="absolute -top-4 right-2 text-3xl outline-none focus:outline-none transform transition-all hover:scale-110 focus:scale-110"><i class="fas fa-times-circle"></i></a>
+        <a href="<%= backURL %>" class="absolute -top-4 right-2 text-3xl outline-none focus:outline-none transform transition-all hover:scale-110 focus:scale-110"><i class="fas fa-times-circle"></i></a>
 
         <p class="text-lg md:text-2xl mb-4 font-light font-special text-center">
             Search Movie | TV shows | Web Shows 
@@ -49,7 +49,7 @@
         </section>
         <section>
             <legend class="font-regular capitalize text-xs text-black mb-1 block">
-                sort by
+                category
             </legend>
             <div class="flex items-start md:items-center justify-start gap-3">
                 <div class="flex items-center gap-2">
@@ -76,7 +76,7 @@
         method="POST" 
         autocomplete="off" class="searchForm hidden scale-0 w-11/12 max-w-xl mx-auto bg-white filter md:drop-shadow-xl p-4 h-1/2 rounded relative">
 
-        <a href="/dashboard/my-articles" class="absolute -top-4 right-2 text-3xl outline-none focus:outline-none transform transition-all hover:scale-110 focus:scale-110"><i class="fas fa-times-circle"></i></a>
+        <a href="<%= backURL %>" class="absolute -top-4 right-2 text-3xl outline-none focus:outline-none transform transition-all hover:scale-110 focus:scale-110"><i class="fas fa-times-circle"></i></a>
 
         <p class="text-lg md:text-2xl mb-4 font-light font-special text-center">
             <i class="fab fa-imdb text-gray-600"></i> IMDB Search 

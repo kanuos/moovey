@@ -407,9 +407,7 @@ async function dashboard__getListByID(req, res) {
             context.activeTab = 0
             // check if list with same title by user already exists or not
             const {rows} = (await pool.query("SELECT lm.lid, lm.date_created, lm.uid,  lm.description as list_desc, lm.title as list_title, li.description as li_desc, itemid, mm.imdbid, mm.title as movie_title, mm.year as movie_year  FROM list_meta AS lm LEFT JOIN list_item AS li ON lm.lid = li.lid LEFT JOIN movies_meta AS mm ON mm.imdbid = li.imdbid WHERE lm.lid = $1 AND lm.uid = $2", [id, req.session.uid]))
-            
-            console.log("get list by id 411", rows);
-    
+                
             if (rows.length === 0) {
                 throw new Error(`List #${id} does not exist`)
             }
@@ -554,6 +552,155 @@ async function dashboard__deleteList(req, res) {
 
 
 
+async function dashboard__showSearchMovieForm(req, res) {
+    const context = {
+        title  : "Add movies, shows and more to list",
+        data : [],
+        loggedIn : req.session?.name,
+        activeDashboardLink : DASHBOARD_LINKS.lists,
+        searchError : null,
+        conflictDetail : null,
+        formMethod : "POST"
+    }
+    try {
+        let {params : {id}} = req;
+        // if no id is passed in the URL
+        if (!id) {
+            throw new Error("List ID is required")
+        }
+        // if list does not exist
+        const listWithID = (await pool.query("SELECT * FROM list_meta WHERE lid = $1 LIMIT 1", [id])).rows[0]
+        if (!listWithID) {
+            throw new Error("List with ID doesn't exist")
+        }
+        // if logged user doesn't have permission to add to list
+        if (listWithID.uid !== req.session.uid){
+            throw new Error("You do not have permission to modify the list")
+        }
+        // define the action URL where the form will submit its data to
+        context.actionURL = `/dashboard/my-lists/${id}/add-item`
+        context.backURL = `/dashboard/my-lists/${id}/`
+       
+        // show the search movie page with step 
+        context.step = 1
+        return res.render("pages/dashboard/search-movie-page", context)
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+
+async function dashboard__addItemToList(req, res) {
+    const context = {
+        title  : "Add movies, shows and more to list",
+        data : [],
+        loggedIn : req.session?.name,
+        activeDashboardLink : DASHBOARD_LINKS.lists,
+        searchError : null,
+        conflictDetail : null,
+        formMethod : "POST"
+    }
+    let {params : {id}, body : {step, keyword, year, type, imdbid}} = req;
+    try {
+        // if no id is passed in the URL
+        if (!id) {
+            throw new Error("List ID is required")
+        }
+        // if list does not exist
+        const listWithID = (await pool.query("SELECT * FROM list_meta WHERE lid = $1 LIMIT 1", [id])).rows[0]
+        if (!listWithID) {
+            throw new Error("List with ID doesn't exist")
+        }
+        // if logged user doesn't have permission to add to list
+        if (listWithID.uid !== req.session.uid){
+            throw new Error("You do not have permission to modify the list")
+        }
+        // define the action URL where the form will submit its data to
+        context.actionURL = `/dashboard/my-lists/${id}/add-item`
+        context.backURL = `/dashboard/my-lists/${id}/`
+        
+        if (!step) {
+            // a step hidden value must be submitted to denote the progress
+            throw new Error("Something went wrong")
+        }
+        switch(parseInt(step)) {    
+            case 1:
+                context.step = 2
+                // user submits movie search query in form of IMDBID
+                if (imdbid) {
+                    imdbid = imdbid.trim()
+                    // search db for item with imdbid
+                    const movie = await searchIMDBInMovieMeta(imdbid)
+                    if (movie.length > 0){
+                        // item present in database
+                        context.data = movie;
+                        return res.render("pages/dashboard/search-movie-page", {...context, keyword : imdbid})
+                    }
+                    // item is not present in database
+                    // search api with imdbid
+                    const {result, error, errorMsg} = await searchIMDBMetaDataFromAPI(imdbid);
+                    if (error) {
+                        throw new Error(errorMsg)
+                    }
+                    // valid data from api
+                    context.data = result
+                    return res.render("pages/dashboard/search-movie-page", {...context, keyword : imdbid})
+                }
+
+                // user submits keyword
+                keyword = keyword.trim(), year = year.trim(), type = type.trim()
+                // validation for corrupt data
+                if (!keyword.length) {
+                    throw new Error("Keyword is missing")
+                }
+                
+                if (!["series", "movie"].includes(type)) {
+                    throw new Error("Invalid category")
+                }
+                
+                if (parseInt(year) > new Date().getFullYear()  || parseInt(year) < 1900 ) {
+                    throw new Error("Year out of range")
+                }
+
+                // search in db with {keywod, year, type}
+                const movies = await searchMovieMetaInDB(keyword, type, year);
+                if (movies.length === 0) {
+                    // no movies with said keyword in DB
+                    // search keyword, year and type in API
+                    const {result, error, errorMsg} = await searchMovieMetaFromAPI(keyword, type, year)
+                    if (error) {
+                        throw new Error(errorMsg)
+                    }
+                                        // valid data from api
+                    // store data to db
+                    const dataFromAPIDB = await storeMoviesMetaToDB([...result])
+                    if (!dataFromAPIDB.success) {
+                        throw new Error(dataFromAPIDB.data)
+                    }
+                    context.data = dataFromAPIDB.data
+                    return res.render("pages/dashboard/search-movie-page", {...context, keyword: `${keyword} (${year})`})
+                }
+                context.data = movies
+                return res.render("pages/dashboard/search-movie-page", {...context, keyword})
+
+
+            case 2:
+                // sends the imdbid as query string
+                // show the movie meta filled add item
+                break
+            case 3:
+                // sub
+            
+        }
+    } catch (error) {
+        console.log(error);
+        context.searchError = error.message;
+        context.step = 1
+        return res.render("pages/dashboard/search-movie-page", context)
+    }
+}
 
 
 
@@ -579,7 +726,10 @@ module.exports = {
     dashboard__getListByID,
     dashboard__getListEditPage,
     dashboard__submitListEditData,
-    dashboard__deleteList
+    dashboard__deleteList,
+
+    dashboard__showSearchMovieForm,
+    dashboard__addItemToList,
 }
 
 

@@ -6,6 +6,12 @@ const {slugify, reformatMovieURL} = require("../functions")
 
 const {MOVIE_API_KEY, MOVIE_API_URL} = process.env
 
+const RESPONSE_BOOL = {
+    "True" : true, 
+    "False" : false
+}
+
+
 // search movies metadata from DB ♥ by keyword, type and year
 async function searchMovieMetaInDB(keyword, type="movie", year){
     try {
@@ -18,7 +24,7 @@ async function searchMovieMetaInDB(keyword, type="movie", year){
         }
         const {rows} = await pool.query(sql);
         if (rows.length === 0){
-            throw Error(`No items found for ${keyword}`)
+            throw Error
         }        
         return rows;
     } catch (error) {
@@ -89,12 +95,8 @@ async function searchMovieMetaFromAPI(keyword, type="movie", year){
 // search movies metadata from DB ♥ by imdbid
 async function searchIMDBInMovieMeta(imdbid){
     try {
-
         const {rows} = await pool.query("SELECT * FROM movies_meta WHERE imdbid = $1 LIMIT 1", [imdbid]);
-        if (rows.length === 0){
-            throw Error(`No items found for ${imdbid}`)
-        }        
-        return rows[0];
+        return rows;
     } catch (error) {
         return null;
     }
@@ -113,10 +115,7 @@ async function searchIMDBMetaDataFromAPI(imdbid){
             url,
             params
         })
-        const RESPONSE_BOOL = {
-            "True" : true, 
-            "False" : false
-        }
+        console.log("APIDB - 118 API response ", data);
         if (!RESPONSE_BOOL[data.Response]) {
             throw Error(data.Error)
         }
@@ -125,7 +124,7 @@ async function searchIMDBMetaDataFromAPI(imdbid){
         // step 1: insert into movies_meta
         await pool.query("BEGIN")
         const result = (await pool.query("INSERT INTO movies_meta (title, year, imdbid, type, poster) VALUES ($1, $2, $3, $4, $5) ON CONFLICT DO NOTHING RETURNING *", 
-        [data.Title, data.Year, data.imdbID, data.Type, reformatMovieURL(data.Poster)])).rows[0]
+        [data.Title, data.Year, data.imdbID, data.Type, reformatMovieURL(data.Poster)])).rows
         // STEP 2 : INSERT INTO movies details table 
         await pool.query("INSERT INTO movies_detail (imdbid, metadata) VALUES ($1, $2) ON CONFLICT(imdbid, metadata) DO NOTHING RETURNING *", [data.imdbID, JSON.stringify(data)])
         // commit the transaction
@@ -160,8 +159,9 @@ async function storeMoviesMetaToDB(movies){
             success : true
         }
     } catch (error) {
+        console.log(error);
         return {
-            data : [],
+            data : "Something went wrong",
             success : false
         }
     }
@@ -181,66 +181,94 @@ async function storeMoviesMetaToDB(movies){
  * 
  */
 
-
-
-
-async function searchMovieDetailInDB(imdbid) {
-    try {
-        const {rows} = await pool.query("SELECT * FROM movies_detail WHERE imdbid = $1", [imdbid.trim()]);
-        if (rows.length === 0) {
-            throw Error("not in db")
-        }
-        return rows[0];
-    } catch (error) {
-        console.log(error.message);
-        return null
+async function handleMovieDetailSearch(imdbid) {
+    // check if imdbid is invalid
+    if(!imdbid){
+        throw Error("Invalid imdbid")
     }
-}
-
-async function storeMoviesDetailToDB(imdbid, movie){
-    console.log("store to DB from API ", movie);
-    try {
-        const savedMovie = (await pool.query("INSERT INTO movies_detail (imdbid, metadata) VALUES ($1, $2) ON CONFLICT(imdbid, metadata) DO NOTHING RETURNING *", [imdbid, movie])).rows[0];
-
-        if (!savedMovie) {
-            throw Error("server error")
-        }
-        return savedMovie;
-
-    } catch (error) {
-        console.log(error.message);
-        return null
-    }
-}
-
-async function searchMovieDetailFromAPI(imdbid) {
-    try{
-        const {Response, Search} = (await axios({
+    // search in database 
+    const movieFromDB = (await pool.query("SELECT * FROM movies_detail WHERE imdbid = $1 LIMIT 1", [imdbid])).rows;
+    if (movieFromDB.length === 0) {
+        // if movie not in db
+        // step 1: search movie detail from API
+        const {data} = (await axios({
             url : MOVIE_API_URL,
-            method : 'GET',
+            method : "GET",
             params : {
-                apikey : MOVIE_API_KEY,
+                apiKey : MOVIE_API_KEY,
                 i : imdbid.trim(),
-                plot: 'full'
+                plot : "full"
             }
-        })).data;
-        
-        if (Response === "False"){
-            throw Error("invalid imdbid")
-        }
-        console.log(Search);
-        return Search;
-    }
-    catch(error) {
-        return null
-    }
+        }))
 
+        if (!RESPONSE_BOOL[data.Response]) {
+            throw Error(data.Error)
+        }
+
+        return data;
+
+    }
+    return movieFromDB[0]
 }
+
+
+// async function searchMovieDetailInDB(imdbid) {
+//     try {
+//         const {rows} = await pool.query("SELECT * FROM movies_detail WHERE imdbid = $1", [imdbid.trim()]);
+//         if (rows.length === 0) {
+//             throw Error("not in db")
+//         }
+//         return rows[0];
+//     } catch (error) {
+//         console.log(error.message);
+//         return null
+//     }
+// }
+
+// async function storeMoviesDetailToDB(imdbid, movie){
+//     console.log("store to DB from API ", movie);
+//     try {
+//         const savedMovie = (await pool.query("INSERT INTO movies_detail (imdbid, metadata) VALUES ($1, $2) ON CONFLICT(imdbid, metadata) DO NOTHING RETURNING *", [imdbid, movie])).rows[0];
+
+//         if (!savedMovie) {
+//             throw Error("server error")
+//         }
+//         return savedMovie;
+
+//     } catch (error) {
+//         console.log(error.message);
+//         return null
+//     }
+// }
+
+// async function searchMovieDetailFromAPI(imdbid) {
+//     try{
+//         const {Response, Search} = (await axios({
+//             url : MOVIE_API_URL,
+//             method : 'GET',
+//             params : {
+//                 apikey : MOVIE_API_KEY,
+//                 i : imdbid.trim(),
+//                 plot: 'full'
+//             }
+//         })).data;
+        
+//         if (Response === "False"){
+//             throw Error("invalid imdbid")
+//         }
+//         console.log(Search);
+//         return Search;
+//     }
+//     catch(error) {
+//         return null
+//     }
+
+// }
 
 
 
 module.exports = {
     searchMovieMetaFromAPI, searchMovieMetaInDB,storeMoviesMetaToDB, searchIMDBInMovieMeta, searchIMDBMetaDataFromAPI,
 
-    searchMovieDetailInDB, storeMoviesDetailToDB, searchMovieDetailFromAPI
+    handleMovieDetailSearch
 }

@@ -6,23 +6,24 @@
     
     <!-- dashboard -->
     <%- include('../../partials/dashboard/dashboard-sidebar') %>
-
+    
     <!-- list header -->
-    <%- include('../../partials/list-header') %>
+    <% if (step === 1) { %>
+    <header>
+        <%- include('../../partials/dashboard/search-movie') %>
+    </header>
+    <% } %>
     
+    <% if (step === 2) { %>
     <main class="w-full relative h-screen flex items-start md:pl-10">
-        <section class="w-11/12 max-w-7xl mx-auto md:pl-6 my-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-8 place-items-center pb-6">
-            
-            <% data.forEach(movie => { %>
-                <%- include('../../partials/movie_thumbnail', {...movie}) %>
-            <% }) %>
-        </section>
-    
+        <%- include('../../partials/dashboard/search-result', {data, keyword: locals.keyword}) %>
     </main>
+    <% } %>
         
     
     <script src="/static/js/dashboard-sidebar.js"></script>
     <script src="/static/js/navbar.js"></script>
+    <script src="/static/js/dashboard-search-form.js"></script>
 
 </body>
 </html>
