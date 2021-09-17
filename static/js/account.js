@@ -221,7 +221,7 @@ window.addEventListener("state-change", toggleBtnFunctionality)
 
 form?.addEventListener("submit", handleFormSubmit)
 
-workingInputs?.forEach(input => input.addEventListener("keydown", readInput))
+workingInputs?.forEach(input => input.addEventListener("input", readInput))
 workingInputs?.forEach(input => input.addEventListener("paste", e => e.preventDefault()))
 
 passwordViewTogglers?.forEach(toggler => toggler.addEventListener("click", togglePasswordFieldType))
