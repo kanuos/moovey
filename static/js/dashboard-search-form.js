@@ -23,7 +23,7 @@ function createErrorMsgEl() {
         span.classList.add("p-2", "text-sm", "md:text-base", "font-special", "capitalize", "block")
         span.setAttribute("id", "searchMsgEl");
         span.textContent = "Search your favorite movies and Tv shows here"
-        searchError.appendChild(span)
+        searchError?.appendChild(span)
         return span
     }
 }
@@ -163,10 +163,10 @@ window.addEventListener("search-movie-validation-failed", hideErrorMsg)
 
 window.addEventListener("load", () => {
     activeForm = Array.from(forms)?.find(form => !form.classList.contains("hidden"))
-    activeForm.addEventListener("submit", handleFormSubmit)
+    activeForm?.addEventListener("submit", handleFormSubmit)
     hideErrorMsg()
-    submitBtn = activeForm.querySelector("button[type='submit']")
-    searchInput = activeForm.querySelector("input[type='search']")
+    submitBtn = activeForm?.querySelector("button[type='submit']")
+    searchInput = activeForm?.querySelector("input[type='search']")
     searchInput?.addEventListener("input", toggleBtnSubmissionFunctionality)
 
 })

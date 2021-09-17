@@ -59,6 +59,8 @@
                                     <% if(locals.existing) { %>data-existingvalue="<%= existing.description %>"<% } %>
                                     class="autoHeightInputField placeholder-pink-600 placeholder-opacity-80 resize-none p-1.5 overflow-hidden mt-0.5 font-special font-semibold block text-gray-500 w-full text-xs outline-none focus:outline-none focus:text-black h-auto whitespace-pre-wrap rounded-sm ring-offset-transparent ring-0 focus:ring-0 border-gray-300 focus:border-black"><% if(locals.existing) { %><%= existing.description %><% } %></textarea>
                             </section>
+                            <small id="liDescriptionMsg" class="text-black text-xs capitalize font-special font-semibold">
+                            </small>
                         </div>
     
     
@@ -88,6 +90,7 @@
 <script src="/static/js/dashboard-sidebar.js"></script>
 <script src="/static/js/navbar.js"></script>
 <script src="/static/js/dashboard-profile-page.js"></script>
+<script src="/static/js/dashboard-create-edit-li.js"></script>
 
 </body>
 </html>
