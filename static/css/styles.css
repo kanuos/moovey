@@ -33637,6 +33637,12 @@ html {
   box-shadow: 0 1px 1.25rem rgba(0,0,0,.125), 0 -2px 1.25rem rgba(0,0,0,.125);
 }
 
+@media screen and (min-width: 768px) {
+  .md\:shadow-glass {
+    box-shadow: 0 1px 1.25rem rgba(0,0,0,.125), 0 -2px 1.25rem rgba(0,0,0,.125);
+  }
+}
+
 @media (min-width: 640px) {
   .sm\:container {
     width: 100%;
