@@ -1,5 +1,5 @@
 <%- include('../../partials/head') %>
-<body class="relative">
+<body class="relative custom-scrollbar">
     <!-- navbar partial -->
     <%- include('../../partials/navbar') %>
     
@@ -9,6 +9,13 @@
     <!-- main body for the article page s-->
     <main class="w-full relative h-screen flex items-start">
 
+        <% if (locals.deletedMsg) { %>
+        <div id="deletedMsg" class="fixed top-0 left-0 bg-black w-full h-screen z-20 bg-opacity-50 grid place-items-center  transform transition-all scale-0">
+            <p class="bg-white shadow-glass p-4 text-lg font-regular text-pink-600 font-semibold capitalize">
+                "<%= deletedMsg %>" deleted from the list successfully
+            </p>
+        </div>
+        <% } %>
         <!-- page specific data -->
         <!-- page specific data -->
         <section class="h-full w-full max-w-5xl p-4 mx-auto py-14 md:pl-14">
@@ -163,8 +170,13 @@
                             <li class="text-xs text-black capitalize font-special">
                                 edit item
                             </li>
-                            <li class="text-xs text-black capitalize font-special">
-                                remove item
+                            <li class="text-xs text-black font-special">
+                                <form action="/dashboard/my-lists/<%= listData[0].lid %>/remove-item" method="post">
+                                    <input type="hidden" name="imdbid" value="<%= item.imdbid %>">
+                                    <button type="submit" class="transition-colors outline-none focus:outline-none hover:text-pink-600 capitalize">
+                                        remove item
+                                    </button>
+                                </form>
                             </li>
                         </ul>
                     </section>
@@ -209,8 +221,13 @@
                             <li class="text-xs text-black capitalize font-special">
                                 edit item
                             </li>
-                            <li class="text-xs text-black capitalize font-special">
-                                remove item
+                            <li class="text-xs text-black font-special">
+                                <form action="/dashboard/my-lists/<%= listData[0].lid %>/remove-item" method="post">
+                                    <input type="hidden" name="imdbid" value="<%= item.imdbid %>">
+                                    <button type="submit" class="transition-colors outline-none focus:outline-none hover:text-pink-600 capitalize">
+                                        remove item
+                                    </button>
+                                </form>
                             </li>
                         </ul>
                     </section>
@@ -232,6 +249,7 @@
     
     <script src="/static/js/dashboard-sidebar.js"></script>
     <script src="/static/js/navbar.js"></script>
+    <script src="/static/js/deleteListDeleteMsg.js"></script>
 
 </body>
 </html>

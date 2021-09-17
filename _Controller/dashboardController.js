@@ -401,8 +401,10 @@ async function dashboard__getListByID(req, res) {
         activeTab : 0
     }
     try {
-        const {params : {id}, query : {tab}} = req;
-        
+        const {params : {id}, query : {tab, dm}} = req;
+        if (dm) {
+            context.deletedMsg = dm
+        }
         // show the main tab
         if (!tab || tab === "1") {
             context.activeTab = 0
@@ -760,6 +762,27 @@ async function dashboard__addItemToList(req, res) {
 }
 
 
+async function dashboard__removeItemFromList(req, res) {
+    // receives from the request object
+    const {body : {imdbid}, params : {id}, session : {uid}} = req;
+    try {
+        // delete from the list item when all the parameters are met. 
+        const movieID = (await pool.query("DELETE FROM list_item WHERE lid = $1 AND imdbid = $2 AND uid = $3 RETURNING imdbid", 
+        [id.trim(), imdbid.trim(), uid])).rows[0]
+        
+        if (!movieID.imdbid) {
+            throw Error("invalid movie ID")
+        }
+        // send custom message
+        const {title, year} = (await pool.query("SELECT title, year FROM movies_meta WHERE imdbid = $1 LIMIT 1", [movieID.imdbid])).rows[0];
+        if (!title) {
+            throw Error("invalid movie")
+        }
+        return res.redirect(`/dashboard/my-lists/${id}?dm=${title}(${year})`)
+    } catch (error) {
+        return res.redirect(`/dashboard/my-lists/${id})`)
+    }
+}
 
 
 
@@ -787,6 +810,7 @@ module.exports = {
 
     dashboard__showSearchMovieForm,
     dashboard__addItemToList,
+    dashboard__removeItemFromList,
 }
 
 

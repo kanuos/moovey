@@ -125,6 +125,13 @@ dashboardRoutes.get("/my-lists/:id/add-item", redirectToLogin, controller.dashbo
 dashboardRoutes.post("/my-lists/:id/add-item", redirectToLogin, controller.dashboard__addItemToList)
 
 
+// URL          :   /dashboard/my-lists/[id]/remove-item
+// description  :   remove item [imdbid] from list with [id]
+// access       :   PRIVATE
+// method       :   GET
+dashboardRoutes.post("/my-lists/:id/remove-item", redirectToLogin, controller.dashboard__removeItemFromList)
+
+
 
 
 module.exports = dashboardRoutes
