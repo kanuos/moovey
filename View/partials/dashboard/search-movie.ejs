@@ -1,12 +1,14 @@
 <article class="fixed h-screen top-0 left-0 w-full bg-white flex flex-col items-center justify-center gap-6 md:p-4 z-50">
     <!-- search error -->
-    <p id="searchError" class="bg-black text-white absolute top-0 left-0 w-full text-center">
+    <p id="searchError" class="bg-black text-white absolute top-0 left-0 w-full text-center z-20">
         <% if (searchError) { %>
-        <span class="p-2 text-sm md:text-base font-special capitalize block">
+        <span id="searchMsgEl" class="p-2 text-sm md:text-base font-special capitalize block">
             <i class="fas fa-exclamation-circle text-xs"></i> &nbsp; <%= searchError %>
         </span>
         <% } %>
     </p>
+
+    <a href="<%= backURL %>" class="block md:hidden absolute top-2 right-2 text-lg outline-none focus:outline-none transform transition-all hover:scale-110 focus:scale-110"><i class="fas fa-times-circle"></i></a>
 
     <h6 class="searchFormToggler font-special text-sm capitalize text-gray-500 text-center inline-flex items-center justify-center gap-1">
         <p>
@@ -17,11 +19,11 @@
 
     <form action="<%= actionURL %>" 
         method="<%= formMethod %>" 
-        autocomplete="off" class="searchForm w-11/12 max-w-xl mx-auto bg-white filter md:drop-shadow-xl p-4 h-1/2 rounded relative">
+        autocomplete="off" class="searchForm w-11/12 max-w-xl mx-auto bg-white md:shadow-glass py-4 md:p-4 h-auto rounded relative">
 
-        <a href="<%= backURL %>" class="absolute -top-4 right-2 text-3xl outline-none focus:outline-none transform transition-all hover:scale-110 focus:scale-110"><i class="fas fa-times-circle"></i></a>
+        <a href="<%= backURL %>" class="hidden md:block absolute -top-4 right-2 text-3xl outline-none focus:outline-none transform transition-all hover:scale-110 focus:scale-110"><i class="fas fa-times-circle"></i></a>
 
-        <p class="text-lg md:text-2xl mb-4 font-light font-special text-center">
+        <p class="md:text-2xl mb-4 font-light font-special text-center">
             Search Movie | TV shows | Web Shows 
         </p>
         <section class="mb-4">
@@ -30,7 +32,7 @@
             <input 
                 type="search" 
                 name="keyword" 
-                placeholder="Search"
+                placeholder="Search movie/series title"
                 class="w-full border p-1 pr-4 rounded-md border-gray-400 bg-transparent text-sm outline-none focus:outline-none font-regular transition-all ring-0 focus:ring-0 ring-transparent focus:border-black ring-offset-transparent"
                 id="keyword">
         </section>
@@ -39,11 +41,9 @@
                 year  <small class="text-gray-500">(optional)</small>
             </label>
             <input 
-                type="number"
-                min="1900"
-                max="<%= new Date().getFullYear()%>"
+                type="text"
                 name="year" 
-                placeholder="Search"
+                placeholder="Year of release"
                 class="w-full border p-1 pr-4 rounded-md border-gray-400 bg-transparent text-sm outline-none focus:outline-none font-regular transition-all ring-0 focus:ring-0 ring-transparent focus:border-black ring-offset-transparent"
                 id="year">
         </section>
@@ -67,18 +67,18 @@
             </div>
         </section>
 
-        <button type="submit" class="text-sm py-1.5 px-5 bg-black text-white ring-0 ring-offset-transparent focus:ring-0 ring-transparent focus:ring-transparent capitalize block w-max mx-auto my-6 font-special">
-            <i class="fas fa-search text-xs"></i> search
+        <button type="submit" class="text-sm py-1.5 px-5 bg-black text-white ring-0 ring-offset-transparent focus:ring-0 ring-transparent focus:ring-transparent capitalize block w-max mx-auto my-6 font-special opacity-50 cursor-not-allowed" disabled>
+            <i class="fas fa-search text-xs searchIcon"></i><span class="searchText"> search</span>
         </button>
     </form>
 
     <form action="<%= actionURL %>" 
         method="POST" 
-        autocomplete="off" class="searchForm hidden scale-0 w-11/12 max-w-xl mx-auto bg-white filter md:drop-shadow-xl p-4 h-1/2 rounded relative">
+        autocomplete="off" class="searchForm hidden scale-0 w-11/12 max-w-xl mx-auto bg-white md:shadow-glass py-4 md:p-4 h-auto rounded relative">
 
-        <a href="<%= backURL %>" class="absolute -top-4 right-2 text-3xl outline-none focus:outline-none transform transition-all hover:scale-110 focus:scale-110"><i class="fas fa-times-circle"></i></a>
+        <a href="<%= backURL %>" class="hidden md:block absolute -top-4 right-2 text-3xl outline-none focus:outline-none transform transition-all hover:scale-110 focus:scale-110 bg-white"><i class="fas fa-times-circle"></i></a>
 
-        <p class="text-lg md:text-2xl mb-4 font-light font-special text-center">
+        <p class="md:text-2xl mb-4 font-light font-special text-center">
             <i class="fab fa-imdb text-gray-600"></i> IMDB Search 
         </p>
         <section class="mb-4">
@@ -91,8 +91,8 @@
                 class="w-full border p-1 pr-4 rounded-md border-gray-400 bg-transparent text-sm outline-none focus:outline-none font-regular transition-all ring-0 focus:ring-0 ring-transparent focus:border-black ring-offset-transparent"
                 id="keyword">
         </section>
-        <button type="submit" class="text-sm py-1.5 px-5 bg-black text-white ring-0 ring-offset-transparent focus:ring-0 ring-transparent focus:ring-transparent capitalize block w-max mx-auto my-6 font-special">
-            <i class="fas fa-search text-xs"></i> search
+        <button type="submit" class="text-sm py-1.5 px-5 bg-black text-white ring-0 ring-offset-transparent focus:ring-0 ring-transparent focus:ring-transparent capitalize block w-max mx-auto my-6 font-special opacity-50 cursor-not-allowed" disabled>
+            <i class="fas fa-search text-xs searchIcon"></i><span class="searchText"> search</span>
         </button>
     </form>
 
