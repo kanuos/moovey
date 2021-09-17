@@ -73,6 +73,7 @@ async function initDB() {
             title VARCHAR(50) NOT NULL,
             uid TEXT NOT NULL REFERENCES users(uid) ON DELETE CASCADE,
             date_created TIMESTAMPTZ DEFAULT Now(), 
+            views INT DEFAULT 0,
             PRIMARY KEY (uid, title)
             )`)
             console.log("list_meta table created");
@@ -98,8 +99,8 @@ async function initDB() {
         await pool.query(`CREATE TABLE IF NOT EXISTS recover (
             uid TEXT PRIMARY KEY REFERENCES users(uid) ON DELETE CASCADE ,
             token VARCHAR(150) NOT NULL,
-            request_sent TIMESTAMPTZ DEFAULT NOW(),
-            request_valid TIMESTAMPTZ DEFAULT NOW() + INTERVAL '10 min')`)
+            request_sent TIMESTAMPTZ,
+            request_valid TIMESTAMPTZ)`)
             console.log("recover table created");
     }
     catch(err) {

@@ -128,8 +128,23 @@ dashboardRoutes.post("/my-lists/:id/add-item", redirectToLogin, controller.dashb
 // URL          :   /dashboard/my-lists/[id]/remove-item
 // description  :   remove item [imdbid] from list with [id]
 // access       :   PRIVATE
-// method       :   GET
+// method       :   POST
 dashboardRoutes.post("/my-lists/:id/remove-item", redirectToLogin, controller.dashboard__removeItemFromList)
+
+
+// URL          :   /dashboard/my-lists/[id]/edit-item/[itemid]
+// description  :   get the prefilled form to edit the list item description 
+// Params       :   list id - id | item id - itemid
+// access       :   PRIVATE
+// method       :   GET
+dashboardRoutes.get("/my-lists/:id/edit-item/:itemid", redirectToLogin, controller.dashboard__getEditListItemPage)
+
+// URL          :   /dashboard/my-lists/[id]/edit-item/[itemid]
+// description  :   submit the new description 
+// Params       :   list id - id | item id - itemid
+// access       :   PRIVATE
+// method       :   GET
+dashboardRoutes.post("/my-lists/:id/edit-item/:itemid", redirectToLogin, controller.dashboard__updateListItem)
 
 
 

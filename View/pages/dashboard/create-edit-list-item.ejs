@@ -6,14 +6,27 @@
 
 <%- include('../../partials/dashboard/dashboard-sidebar') %>
 
-
-
      <!-- main page -->
 <main class="md:px-14 pt-14">
         
         <!-- main tab -->
     <section class="w-11/12 mx-auto max-w-4xl">
-        <form action="/dashboard/my-lists/<%= lid %>/add-item" method="post" class="flex flex-col w-full" id="profileForm">
+        <form 
+            <% if (locals.existing) {%>
+                <% if (existing.actionURL) { %>
+                    action=<%= existing.actionURL %> 
+            <% } else { %>
+                action="/dashboard/my-lists/<%= lid %>/add-item" 
+            <% } %>
+            <% } %>
+            method="post" 
+            class="flex flex-col w-full" 
+            <% if (locals.existing) {%>
+                id="listItemForm"
+            <% } else { %>
+                id="profileForm"
+            <% } %>
+            >
             <input type="hidden" name="imdbid" value="<%= imdbid %>">         
             <input type="hidden" name="step" value="4">         
             <!-- movie/series section -->
@@ -60,6 +73,9 @@
                                     class="autoHeightInputField placeholder-pink-600 placeholder-opacity-80 resize-none p-1.5 overflow-hidden mt-0.5 font-special font-semibold block text-gray-500 w-full text-xs outline-none focus:outline-none focus:text-black h-auto whitespace-pre-wrap rounded-sm ring-offset-transparent ring-0 focus:ring-0 border-gray-300 focus:border-black"><% if(locals.existing) { %><%= existing.description %><% } %></textarea>
                             </section>
                             <small id="liDescriptionMsg" class="text-black text-xs capitalize font-special font-semibold">
+                                <% if (locals.liDescriptionMsg) {%>
+                                    <%= liDescriptionMsg %>
+                                <% }%>
                             </small>
                         </div>
     
@@ -74,11 +90,20 @@
             </div>
                 
                 <section class="mx-auto max-w-md my-10 w-full">
-                    <button type="submit" class="outline-none focus:outline-none py-2 px-5 bg-black text-white text-xs capitalize font-special mx-auto block w-max md:text-sm">
+                    <button
+                    <% if (locals.existing) { %> disabled <% } %> 
+                        type="submit" 
+                        class="outline-none focus:outline-none py-2 px-5 bg-black text-white text-xs capitalize font-special mx-auto block w-max md:text-sm <% if (locals.existing) { %> opacity-50 cursor-not-allowed <% } %>">
                         <i id="submit-loader" class="fas fa-spinner animate-spin origin-center mr-1 hidden"></i>
-                        <span id="submit-text" data-text="save changes" data-load="adding to list">
+                        <% if (locals.existing) { %>
+                        <span id="submit-text" data-text="update item" data-load="saving changes">
+                            update item
+                        </span>
+                        <% } else { %>
+                        <span id="submit-text" data-text="add to list" data-load="adding to list">
                             add to list
                         </span>
+                        <% } %>
                     </button>
                 </section>
             </form>
@@ -89,8 +114,12 @@
 
 <script src="/static/js/dashboard-sidebar.js"></script>
 <script src="/static/js/navbar.js"></script>
-<script src="/static/js/dashboard-profile-page.js"></script>
-<script src="/static/js/dashboard-create-edit-li.js"></script>
+<% if (locals.existing) {%>
+    <script src="/static/js/dashboard-submit-edit-li.js"></script>
+<% } else { %>
+    <script src="/static/js/dashboard-profile-page.js"></script>
+    <script src="/static/js/dashboard-create-edit-li.js"></script>
+<% }  %>
 
 </body>
 </html>

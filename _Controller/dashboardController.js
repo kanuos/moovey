@@ -706,7 +706,7 @@ async function dashboard__addItemToList(req, res) {
                     throw new Error("Invalid movie id")
                 }
                 // check if the imdbid is already present in the list 
-                const existingItemInList = (await pool.query("SELECT li.itemid, lm.lid, lm.uid FROM list_meta AS lm INNER JOIN list_item AS li ON li.lid = lm.lid WHERE li.imdbid = $1 AND lm.uid = $2 LIMIT 1", [imdbidMetaData, req.session.uid])).rows[0];
+                const existingItemInList = (await pool.query("SELECT li.itemid, lm.lid, lm.uid FROM list_meta AS lm INNER JOIN list_item AS li ON li.lid = lm.lid WHERE li.imdbid = $1 AND lm.uid = $2 AND li.lid = $3 LIMIT 1", [imdbidMetaData, req.session.uid, lid])).rows[0];
 
                 if (existingItemInList) {
                     throw new Error("Item already present in list")
@@ -719,7 +719,7 @@ async function dashboard__addItemToList(req, res) {
                     type : validMovie.type,
                 }
                 // check if list already contains imdbid
-                const movieAlreadyInList = (await pool.query("SELECT li.description FROM list_meta AS lm INNER JOIN list_item AS li ON li.lid = lm.lid WHERE imdbid = $1 LIMIT 1", [imdbidMetaData])).rows;
+                const movieAlreadyInList = (await pool.query("SELECT li.description FROM list_meta AS lm INNER JOIN list_item AS li ON li.lid = lm.lid WHERE imdbid = $1 AND lm.lid = $2 AND lm.uid = $3 LIMIT 1", [imdbidMetaData, lid, req.session.uid])).rows;
 
                 if (movieAlreadyInList.length > 0) {
                     context.existing = {
@@ -785,11 +785,79 @@ async function dashboard__removeItemFromList(req, res) {
 }
 
 
+async function dashboard__getEditListItemPage(req, res) {
+    const context = {
+        title  : "Edit item",
+        loggedIn : req.session?.name,
+        activeDashboardLink : DASHBOARD_LINKS.lists,
+        searchError : null,
+        conflictDetail : null,
+        formMethod : "POST"
+    }
+    // receives as parameters
+    let {params: {id, itemid}, session : {uid}} = req;
+    try {
+        id = id.trim(), itemid = itemid.trim()
+        if (!id) {
+            throw new Error("Invalid list")
+        }
+        if (!itemid) {
+            throw new Error("Invalid moovey")
+        }
+        // check if list id has itemid and list's author is active author
+        const validListItem = (await pool.query("SELECT * FROM list_meta AS lm INNER JOIN list_item AS li ON li.lid = lm.lid INNER JOIN movies_meta AS mm ON mm.imdbid = li.imdbid WHERE lm.lid = $1 AND li.itemid = $2 AND lm.uid = $3 LIMIT 1", [id.trim(), itemid.trim(), uid])).rows[0];
 
+        if (!validListItem) {
+            throw Error("Invalid List")     
+        }
+        context.lid = validListItem.lid;
+        context.imdbid = validListItem.imdbid
+        context.moovey = {
+            title : validListItem.title,
+            year : validListItem.year,
+            type : validListItem.type,
+        }
+        context.existing = {
+            description : validListItem.description,
+            actionURL : `/dashboard/my-lists/${validListItem.lid}/edit-item/${validListItem.itemid}`
+        }
+        return res.render("pages/dashboard/create-edit-list-item", context)
+    } catch (error) {
+        console.log(error.message);
+        return res.redirect("/page-not-found")
+    }
+}
 
+async function dashboard__updateListItem(req, res) {
+    let {body : {imdbid, description}, session : {uid}, params : {id, itemid}} = req;
+    try {
+        description = description.trim(), id = id.trim(), itemid = itemid.trim()
+        // check if the inputs are valid syntatically
+        if (!id || !itemid) {
+            throw new Error("Invalid URL")
+        }
+        // check whether list has itemid and item id has imdbid and all are created by logged user (PERMISSION)
+        const validExistingItem = (await pool.query("SELECT li.description FROM list_meta AS lm INNER JOIN list_item AS li ON lm.lid = li.lid WHERE lm.uid = $1 AND lm.lid = $2 AND li.itemid = $3 AND li.imdbid = $4 LIMIT 1", [uid, id, itemid, imdbid])).rows[0]
+
+        if (!validExistingItem) {
+            return res.redirect("/page-not-found")
+        }
+
+        // check if the new description and the old description are equal. only add to database if they are different
+        if (validExistingItem.description !== description) {
+            await pool.query("UPDATE list_item SET description = $1 WHERE lid = $2 AND itemid = $3 AND uid = $4 AND imdbid = $5", 
+            [description, id, itemid, uid, imdbid])
+            return res.redirect("/dashboard/my-lists/" + id)
+        }
+        return res.redirect("/dashboard/my-lists/" + id)
+    
+    } catch (error) {
+        console.log(error);
+        return res.redirect("/dashboard/my-lists")
+    }
+}
 
 module.exports = {
-    // dashboard__searchMovieMeta,
     dashboard__getAllArticles,
     dashboard__getArticleByID_RD,
     dashboard__getArticleByID_CU,
@@ -811,6 +879,8 @@ module.exports = {
     dashboard__showSearchMovieForm,
     dashboard__addItemToList,
     dashboard__removeItemFromList,
+    dashboard__getEditListItemPage,
+    dashboard__updateListItem
 }
 
 

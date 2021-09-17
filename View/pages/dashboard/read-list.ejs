@@ -167,8 +167,10 @@
                             </section>
                         </article>
                         <ul class="flex flex-col gap-1 items-center justify-center md:flex-row md:justify-start px-2 md:gap-x-6">
-                            <li class="text-xs text-black capitalize font-special">
-                                edit item
+                            <li class="text-xs text-black font-special">
+                                <a href="/dashboard/my-lists/<%= listData[0].lid %>/edit-item/<%= item.itemid %>" class="transition-colors outline-none focus:outline-none hover:text-pink-600 capitalize">
+                                    edit item
+                                </a>
                             </li>
                             <li class="text-xs text-black font-special">
                                 <form action="/dashboard/my-lists/<%= listData[0].lid %>/remove-item" method="post">
@@ -218,8 +220,10 @@
                             </section>
                         </article>
                         <ul class="flex flex-col gap-1 items-center justify-center md:flex-row md:justify-end px-2 md:gap-x-6">
-                            <li class="text-xs text-black capitalize font-special">
-                                edit item
+                            <li class="text-xs text-black font-special">
+                                <a href="/dashboard/my-lists/<%= listData[0].lid %>/edit-item/<%= item.itemid %>" class="transition-colors outline-none focus:outline-none hover:text-pink-600 capitalize">
+                                    edit item
+                                </a>
                             </li>
                             <li class="text-xs text-black font-special">
                                 <form action="/dashboard/my-lists/<%= listData[0].lid %>/remove-item" method="post">

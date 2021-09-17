@@ -115,7 +115,6 @@ async function searchIMDBMetaDataFromAPI(imdbid){
             url,
             params
         })
-        console.log("APIDB - 118 API response ", data);
         if (!RESPONSE_BOOL[data.Response]) {
             throw Error(data.Error)
         }
