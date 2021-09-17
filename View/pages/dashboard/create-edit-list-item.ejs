@@ -1,0 +1,93 @@
+<%- include('../../partials/head') %>
+<body class="font-special relative w-full h-full">
+
+<%- include('../../partials/navbar') %>
+
+
+<%- include('../../partials/dashboard/dashboard-sidebar') %>
+
+
+
+     <!-- main page -->
+<main class="md:px-14 pt-14">
+        
+        <!-- main tab -->
+    <section class="w-11/12 mx-auto max-w-4xl">
+        <form action="/dashboard/my-lists/<%= lid %>/add-item" method="post" class="flex flex-col w-full" id="profileForm">
+            <input type="hidden" name="imdbid" value="<%= imdbid %>">         
+            <input type="hidden" name="step" value="4">         
+            <!-- movie/series section -->
+            <div class="flex items-start justiyf-start w-full gap-4 md:mb-10">
+                <section class="mx-auto max-w-md mb-6 w-full md:w-1/2">
+                    <legend class="capitalize text-xs font-special font-semibold text-gray-500 md:hidden">Selected <%= moovey.type %></legend>
+                    <article class="flex h-auto items-center justify-center md:items-start md:justify-start my-2 p-4 rounded shadow-glass w-full">
+                        
+                        <section class="flex flex-col items-center gap-1 sm:items-start">
+                            <strong class="text-sm md:text-base text-black font-semibold font-special capitalize">
+                                <%= moovey.title %> 
+                            </strong>
+                            <small class="text-xs text-gray-500 font-semibold font-regular lowercase">
+                                <%= moovey.year %>
+                            </small>
+                        </section>
+                    </article>
+                </section>
+                <h4 class="hidden md:block w-1/2 font-special capitalize font-semibold pb-1.5 text-right border-b-2 border-black text-black border-dashed">
+                    Selected <%= moovey.type %>
+                </h4>
+            </div>
+
+            <!-- basic info section -->
+            <div class="flex items-start justiyf-start w-full mx-auto gap-4 md:flex-row-reverse">
+                <div class="mx-auto mb-6 w-full md:col-start-2 md:col-end-4 h-auto">
+                    <legend class="capitalize text-xs font-special font-semibold text-gray-500 md:hidden">Add Description</legend>
+    
+                    <article class="h-auto w-full rounded my-2 grid md:grid-cols-3 md:grid-rows-2">
+                        <div class="shadow-glass md:col-start-2 md:col-end-4 p-4">
+                            <section class="flex flex-col gap-1 items-start w-full box-shadow">
+                                <label for="description" class="text-gray-500 font-semibold font-special capitalize">
+                                    <small class="text-xs">
+                                        Description
+                                    </small>
+                                </label>
+                                <textarea
+                                    type="text" 
+                                    name="description" 
+                                    id="description" 
+                                    placeholder="Where are you from?"
+                                    maxlength="250"
+                                    <% if(locals.existing) { %>data-existingvalue="<%= existing.description %>"<% } %>
+                                    class="autoHeightInputField placeholder-pink-600 placeholder-opacity-80 resize-none p-1.5 overflow-hidden mt-0.5 font-special font-semibold block text-gray-500 w-full text-xs outline-none focus:outline-none focus:text-black h-auto whitespace-pre-wrap rounded-sm ring-offset-transparent ring-0 focus:ring-0 border-gray-300 focus:border-black"><% if(locals.existing) { %><%= existing.description %><% } %></textarea>
+                            </section>
+                        </div>
+    
+    
+                        <h4 class="hidden md:inline-block w-full font-special capitalize font-semibold pb-1.5 text-left text-black md:col-start-1 md:col-end-2 md:row-start-1">
+                            <span class="border-b-2 border-black w-11/12 mr-auto border-dashed block">
+                                Add Description
+                            </span>
+                        </h4>
+                    </article>
+                </div>
+            </div>
+                
+                <section class="mx-auto max-w-md my-10 w-full">
+                    <button type="submit" class="outline-none focus:outline-none py-2 px-5 bg-black text-white text-xs capitalize font-special mx-auto block w-max md:text-sm">
+                        <i id="submit-loader" class="fas fa-spinner animate-spin origin-center mr-1 hidden"></i>
+                        <span id="submit-text" data-text="save changes" data-load="adding to list">
+                            add to list
+                        </span>
+                    </button>
+                </section>
+            </form>
+        </section>
+
+</main>
+
+
+<script src="/static/js/dashboard-sidebar.js"></script>
+<script src="/static/js/navbar.js"></script>
+<script src="/static/js/dashboard-profile-page.js"></script>
+
+</body>
+</html>

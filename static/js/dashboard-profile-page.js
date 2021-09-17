@@ -70,8 +70,10 @@ window.addEventListener("file-error" , hideFileErrorMsg)
 function hideFileErrorMsg () {
     const timer = setTimeout(() => {
         const fileUploadError = document.querySelector("#fileUploadError");
-        fileUploadError.textContent = '';
-        fileUploadError.classList.add("hidden")
+        if (fileUploadError) {
+            fileUploadError.textContent = '';
+            fileUploadError.classList.add("hidden")
+        }
     }, 5000)
     return () => clearTimeout(timer)
 }

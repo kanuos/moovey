@@ -8,99 +8,116 @@
 
 <header class="pt-20"></header>
 
-<main id="main" class="pl-4 md:pl-8 filter flex flex-col w-11/12 mx-auto h-full min-h-screen ">
+<main id="main" class="md:pl-8 filter flex flex-col w-11/12 mx-auto h-full min-h-screen ">
     
-
         <a href="/dashboard/my-lists/new" class="bg-black focus:outline-none hover:-translate-y-px hover:scale-105 mb-6 outline-none px-4 py-2 text-white text-xs transform transition-all block mx-auto w-max hover:shadow-lg">Create New List
         </a>
         <!-- items list -->
-        <table class="table w-full table-auto md:table-fixed border-separate max-w-6xl mx-auto">
-            <thead class="capitalize text-pink-600">
-                <tr>
-                    <th class="text-sm md:text-base font-semibold font-special text-left w-2/3 md:w-4/6">title</th>
-                    <th class="text-sm md:text-base font-semibold font-special text-left w-1/3 md:w-1/6">created on</th>
-                    <th class="hidden md:table-cell text-sm md:text-base font-semibold font-special text-left md:w-1/6">action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- table row element -->
-                <% if(lists.length > 0) {%>
-                    <% lists.forEach(list => {%>
-                <tr class="table-row-group md:pb-6">
-                    <!-- row metadata -->
-                    <tr>
-                        <td class="text-sm md:text-base p-2 font-special font-semibold border border-gray-300 md:w-4/6">
-                            <%= list.title %>
-                        </td>
-                        <td class="text-sm md:text-base p-2 font-special font-semibold border border-gray-300 md:w-1/6">
-                            <%= new Date(list.date_created).toLocaleDateString() %>
-                        </td>
-                        <td class="hidden md:table-cell text-sm md:text-base p-2 font-special font-semibold border border-gray-300 md:w-1/6">
-                            <ul class="flex flex-col items-center justify-center">
+        <div class="w-full md:px-4 max-w-6xl mx-auto flex flex-col gap-6 my-4">
+            <% lists.forEach((list, index) => { %>
+                <% if (index % 2 === 0) { %>
+                <!-- even article -->
+                    <section class="flex flex-col w-full gap-3 text-left md:text-left">
+                        <article class="relative shadow-glass p-4 rounded-md w-full md:w-5/6 max-w-prose mr-auto grid gap-y-2 bg-white">
+                            <section class="flex flex-col w-full gap-0.5 max-w-md">
+                                <small class="text-xs font-special text-gray-500 font-semibold capitalize">
+                                    title
+                                </small>
+                                <p class="font-regular font-semibold block text-black w-full capitalize">
+                                    <%= list.title %>
+                                </p>
+                            </section>
+                            <ul class="flex gap-4 text-gray-500 text-xs font-special p-0.5 items-center justify-between w-max">
                                 <li>
-                                    <a href="/dashboard/my-lists/<%= list.lid %>" class="font-semibold font-regular capitalize">
-                                        go to list
-                                    </a>
+                                    <i class="far fa-eye"></i>
+                                    <span><%= list.views %></span>
                                 </li>
                                 <li>
-                                    <a href="/dashboard/my-lists/<%= list.lid %>/edit" class="font-semibold font-regular capitalize">
-                                        edit list
-                                    </a>
+                                    <i class="far fa-star"></i>
+                                    <span>3.5/5 (125)</span>
+                                </li>
+                                <li>
+                                    <i class="far fa-calendar-alt"></i>
+                                    <span>
+                                        <%= new Date(list.date_created).toLocaleDateString() %>
+                                    </span>
                                 </li>
                             </ul>
-                        </td>
-                    </tr>
-                    <!-- row description -->
-                    <tr class="hidden md:table-row md:w-full">
-                        <td class="text-sm md:text-base font-special font-semibold text-gray-500 md:pb-4">
-                            <% if (list.l_desc.length > 0) {%>
-                                <%= list.l_desc %>
-                            <% } else {%>
-                                No description available
-                            <% } %>
-                        </td>
-                    </tr>
-                    <!-- row description for mobile only -->
-                    <tr class="md:hidden">
-                        <td class="pb-6 block text-center text-sm md:text-base text-black font-semibold capitalize w-full">
-                            <details class="w-full mt-2">
-                                <summary class="text-left w-max font-semibold">
-                                    show more
-                                </summary>
-                                <p class="w-full text-left mt-2 mb-4 text-gray-500">
-                                    <% if (list.l_desc.length > 0) {%>
+                            <section class="flex flex-col w-full gap-0.5">
+                                <small class="text-xs font-special text-gray-500 font-semibold capitalize">
+                                    description
+                                </small>
+                                <p class="font-regular italic font-semibold block text-black w-full text-xs leading-relaxed">
+                                    <% if (list.l_desc ) { %>
                                         <%= list.l_desc %>
                                     <% } else {%>
                                         No description available
                                     <% } %>
                                 </p>
-                                <ul class="flex flex-col items-center justify-center">
-                                    <li>
-                                        <a href="/dashboard/my-lists/<%= list.lid %>" class="font-semibold font-regular capitalize">
-                                            go to list
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="/dashboard/my-lists/<%= list.lid %>/edit" class="font-semibold font-regular capitalize">
-                                            edit list
-                                        </a>
-                                    </li>
-                                </ul>
-                            </details> 
-                        </td>
-                    </tr>                          
-                </tr>
-                    <% }) %>
-                <!-- table row element end -->
+                            </section>
+                        </article>
+                        <ul class="flex flex-col gap-1 items-center justify-center md:flex-row md:justify-start px-2 md:gap-x-6">
+                            <li class="text-xs text-gray-500 capitalize font-regular font-semibold">
+                                <a href="/dashboard/my-lists/<%= list.lid %>" class="outline-none focus:outline-none hover:text-pink-600">
+                                    open list
+                                </a>
+                            </li>
+                        </ul>
+                    </section>
                 <% } else {%>
-                    <p>
-                        you haven't created a list yet. 
-                    </p>
+                <!-- odd article -->
+                    <section class="flex flex-col w-full gap-3 text-left md:text-right">
+                        <article class="relative shadow-glass p-4 rounded-md w-full md:w-5/6 max-w-prose ml-auto  grid gap-y-2 bg-white">
+                            <section class="flex flex-col w-full gap-0.5 max-w-md md:ml-auto">
+                                <small class="text-xs font-special text-gray-500 font-semibold capitalize">
+                                    title
+                                </small>
+                                <p class="font-regular font-semibold block text-black w-full capitalize">
+                                    <%= list.title %>
+                                </p>
+                            </section>
+                            <ul class="flex gap-4 text-gray-500 text-xs font-special p-0.5 items-center justify-between w-max md:ml-auto">
+                                <li>
+                                    <i class="far fa-eye"></i>
+                                    <span><%= list.views %></span>
+                                </li>
+                                <li>
+                                    <i class="far fa-star"></i>
+                                    <span>3.5/5 (125)</span>
+                                </li>
+                                <li>
+                                    <i class="far fa-calendar-alt"></i>
+                                    <span>
+                                        <%= new Date(list.date_created).toLocaleDateString() %>
+                                    </span>
+                                </li>
+                            </ul>
+                            <section class="flex flex-col w-full gap-0.5">
+                                <small class="text-xs font-special text-gray-500 font-semibold capitalize">
+                                    description
+                                </small>
+                                <p class="font-regular italic font-semibold block text-black w-full text-xs leading-relaxed">
+                                    <% if (list.l_desc) { %>
+                                        <%= list.l_desc %>
+                                    <% } else {%>
+                                        No description available
+                                    <% } %>
+                                </p>
+                            </section>
+                        </article>
+                        <ul class="flex flex-col gap-1 items-center justify-center md:flex-row md:justify-end px-2 md:gap-x-6">
+                            <li class="text-xs text-gray-500 capitalize font-regular font-semibold">
+                                <a href="/dashboard/my-lists/<%= list.lid %>" class="outline-none focus:outline-none hover:text-pink-600">
+                                    open list
+                                </a>
+                            </li>
+                        </ul>
+                    </section>
                 <% } %>
+            <% }) %>
+        </div>
 
 
-            </tbody>
-        </table>
 
 <div class="mt-auto">
     <%- include('../../partials/pagination') %>

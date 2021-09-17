@@ -302,15 +302,16 @@ s        }
 // get all lists of the logged user
 // url : /dashboard/lists
 async function dashboard__getAllLists(req, res) {
+    // TODO: add search query from dashboard
     try {
         const context = {
             loggedIn : req.session?.name,
             title : "My Dashboard | My Articles",
             dashboardMode : true,
-            dashboardPageName : req.session?.name + " lists",
+            dashboardPageName : req.session?.name + "'s lists",
             activeDashboardLink : DASHBOARD_LINKS.lists
         }
-        const listsByUser = (await pool.query("select l.lid,l.title, l.description as l_desc, date_created, l.uid, (select count(*) as li from list_item where lid = l.lid) from list_meta as l where l.uid = $1", [req.session.uid])).rows;
+        const listsByUser = (await pool.query("select l.lid,l.title,l.views, l.description as l_desc, date_created, l.uid from list_meta as l where l.uid = $1", [req.session.uid])).rows;
         context.lists = listsByUser
         return res.render("pages/dashboard/lists", context)
     } catch (error) {
@@ -413,7 +414,7 @@ async function dashboard__getListByID(req, res) {
             }
             // for tab = 1 or no tab query param
             context.title = `${rows[0].list_title}`
-            context.dashboardPageName = `My Lists  >  ${rows[0].list_title}`
+            context.dashboardPageName = `${req.session.name}'s Lists  >  ${rows[0].list_title}`
             context.listData = rows;
         }
         // show the testimonials for list
@@ -602,7 +603,7 @@ async function dashboard__addItemToList(req, res) {
         conflictDetail : null,
         formMethod : "POST"
     }
-    let {params : {id}, body : {step, keyword, year, type, imdbid}} = req;
+    let {params : {id}, body : {step, keyword, year, type, imdbid, description}} = req;
     try {
         // if no id is passed in the URL
         if (!id) {
@@ -686,18 +687,74 @@ async function dashboard__addItemToList(req, res) {
                 return res.render("pages/dashboard/search-movie-page", {...context, keyword})
 
 
-            case 2:
-                // sends the imdbid as query string
-                // show the movie meta filled add item
-                break
             case 3:
-                // sub
+                // receives step and imdbid from body; list id from param
+                let imdbidMetaData = req.body.imdbid?.trim(),
+                    lid = req.params.id?.trim();
+                // check if any of the input is missing
+                if (!lid) {
+                    throw new Error("list id is required")
+                }
+                if (!imdbidMetaData) {
+                    throw new Error("imdbid is required")
+                }
+                // check if the imdbid is valid and is in movies_meta
+                const validMovie = (await pool.query("SELECT * FROM movies_meta WHERE imdbid = $1 LIMIT 1", [imdbidMetaData])).rows[0]
+                if (!validMovie) {
+                    throw new Error("Invalid movie id")
+                }
+                // check if the imdbid is already present in the list 
+                const existingItemInList = (await pool.query("SELECT li.itemid, lm.lid, lm.uid FROM list_meta AS lm INNER JOIN list_item AS li ON li.lid = lm.lid WHERE li.imdbid = $1 AND lm.uid = $2 LIMIT 1", [imdbidMetaData, req.session.uid])).rows[0];
+
+                if (existingItemInList) {
+                    throw new Error("Item already present in list")
+                }
+                context.lid = lid;
+                context.imdbid = imdbidMetaData
+                context.moovey = {
+                    title : validMovie.title,
+                    year : validMovie.year,
+                    type : validMovie.type,
+                }
+                // check if list already contains imdbid
+                const movieAlreadyInList = (await pool.query("SELECT li.description FROM list_meta AS lm INNER JOIN list_item AS li ON li.lid = lm.lid WHERE imdbid = $1 LIMIT 1", [imdbidMetaData])).rows;
+
+                if (movieAlreadyInList.length > 0) {
+                    context.existing = {
+                        description : movieAlreadyInList[0].description
+                    }
+                }
+                // show the movie meta filled add item
+                return res.render("pages/dashboard/create-edit-list-item", {...context, keyword})
+
+
+            case 4:
+                //  receiving {imdbid, step, description, id} from req.body
+                // validate data for permission in case of attacks
+                // check if any of the input is missing
+                if (!id.trim()) {
+                    throw new Error("list id is required")
+                }
+                if (!imdbid.trim()) {
+                    throw new Error("imdbid is required")
+                }
+                // check if the imdbid is valid and is in movies_meta
+                const movieFromMoviesMeta = (await pool.query("SELECT * FROM movies_meta WHERE imdbid = $1 LIMIT 1", [imdbid.trim()])).rows[0]
+                if (!movieFromMoviesMeta) {
+                    throw new Error("Invalid movie id")
+                }
+                // check if the imdbid is already present in the list 
+                // PRIMARY KEY (uid, lid, imdbid) - list_item
+                await pool.query(`INSERT INTO list_item (description, lid, uid, imdbid) VALUES ($1, $2, $3, $4) ON CONFLICT (uid, lid, imdbid) DO NOTHING`, 
+                [description.trim(), id.trim(), req.session.uid, imdbid.trim()]);
+
+                return res.redirect(`/dashboard/my-lists/${id}`)
             
         }
     } catch (error) {
         console.log(error);
         context.searchError = error.message;
-        context.step = 1
+        context.step = 1    // show the empty search movie page
         return res.render("pages/dashboard/search-movie-page", context)
     }
 }

@@ -52,12 +52,15 @@ exports.getAllList = async function(req, res) {
 exports.getListByID = async function(req, res) { 
     try{
         const {id} = req.params;
-        const {rows} = await pool.query("select u.name,picture, u.uid, lm.title as list_title,lm.lid,li.imdbid,li.description, lm.description as list_desc,lm.date_created, mm.poster, mm.title, mm.year from list_meta as lm inner join users as u on u.uid = lm.uid left join profile as p on p.uid = u.uid left join list_item as li on li.lid = lm.lid left join movies_meta as mm on mm.imdbid = li.imdbid where lm.lid = $1", [id])
+        const {rows} = await pool.query("select u.name,picture, u.uid, lm.title as list_title,lm.lid, views, li.imdbid,li.description, lm.description as list_desc,lm.date_created, mm.poster, mm.title, mm.year from list_meta as lm inner join users as u on u.uid = lm.uid left join profile as p on p.uid = u.uid left join list_item as li on li.lid = lm.lid left join movies_meta as mm on mm.imdbid = li.imdbid where lm.lid = $1", [id])
         
         // add recommendation field to items
         if (rows.length === 0){
             throw Error
         }
+
+        const {views} = (await pool.query("UPDATE list_meta SET views = $1 WHERE lid = $2 RETURNING views", [rows[0].views + 1, id])).rows[0]
+        
         const formattedData = { movies : []}
         rows.forEach(row => {
             if (!formattedData.lid){
@@ -101,6 +104,7 @@ exports.getListByID = async function(req, res) {
                 }
             }
         })
+        formattedData.views = views
         context.title = formattedData.list_title
         const url = await fn.getAbsoluteURL(req)
         context.currentURL = url
