@@ -43,7 +43,7 @@ const BTN_FUNCTION = {
 function hideErrorMessage() {
     const pageError = document.getElementById("pageError");
     const timer = setTimeout(() => {
-        pageError.remove()
+        pageError?.remove()
     }, 5000)
 
     return () => clearTimeout(timer)

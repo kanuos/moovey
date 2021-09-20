@@ -18,6 +18,13 @@ const {
     
     } = require("./api_DB")
 
+const RATING_VALUES = {
+    "bad": 1,
+    "average": 2,
+    "decent": 3,
+    "good": 4,
+    "great": 5,
+}
 
 const {convert} = require("html-to-text")
 const sharp = require("sharp");
@@ -177,9 +184,47 @@ async function dashboard__getAllArticles(req, res) {
             dashboardPageName : req.session?.name + " articles",
             activeDashboardLink : DASHBOARD_LINKS.articles
         }
+        // TODO: add pagination
+        const articles = (await pool.query("SELECT * FROM blogs WHERE uid = $1", [req.session.uid])).rows;
+        context.articles = articles.map(article => ({
+            ...article,
+            blog_content : convert(article.blog_content)
+        }));
         return res.render("pages/dashboard/articles", context)
     } catch (error) {
         console.log(error);
+    }
+}
+
+async function dashboard__getArticleCreateEditForm(req, res) {
+    try {
+        const context = {
+            loggedIn : req.session?.name,
+            title : "My Dashboard | My Articles",
+            dashboardMode : true,
+            dashboardPageName : "Write review",
+            activeDashboardLink : DASHBOARD_LINKS.articles,
+            pageError : false,
+            actionURL : "/dashboard/my-articles/new",
+            conflictDetail : false,
+            editData: null,
+        }
+        try {
+            context.step = 1
+            context.searchError = "Search movies/series you want to review"
+            context.backURL = "/dashboard/my-articles"
+            context.formMethod = "POST"
+            context.hiddenField = {
+                key : "step",
+                value : "2",
+            }
+            return res.render("pages/dashboard/search-movie-page", context)
+        } catch (error) {
+            context.pageError = error.message
+            return res.render("pages/dashboard/search-movie-page", context)
+        }
+    } catch (error) {
+        
     }
 }
 
@@ -194,10 +239,38 @@ async function dashboard__getArticleByID_RD(req, res) {
             dashboardMode : true,
             dashboardPageName : "Article ID: " + req.params.id,
             activeDashboardLink : DASHBOARD_LINKS.articles,
-            sortMode : false,
-            optionsArray : []
+            activeTab : 0
         }
-        return res.render("pages/dashboard/article[id]-read", context)
+        let {params:{id}, query : {tab}} = req;
+        if(!id) {
+            throw new Error("ID invalid")
+        }
+        if (!tab) {
+            tab = 1
+        }
+        const blog = (await pool.query("SELECT * FROM users AS u INNER JOIN blogs AS b ON u.uid = b.uid WHERE b.blog_id = $1 LIMIT 1", [id])).rows[0];
+
+        if (!blog) {
+            throw new Error(`Blog with ID ${id} not found`)
+        }
+        context.blog = blog
+        context.ratingObj = RATING_VALUES
+        context.readTime = Math.round(convert(blog.blog_content).split(' ').length / 100)
+
+        switch(tab - 1) {
+            case 0:
+            case 1:
+                context.activeTab = tab - 1;
+                return res.render("pages/dashboard/article[id]-read", context)
+            case 2:
+                context.activeTab = tab - 1;
+                context.actionURL = `/dashboard/my-articles/${id}/delete`
+                return res.render("pages/dashboard/article[id]-delete", context)
+            default: 
+                context.activeTab = 1;
+                return res.render("pages/dashboard/article[id]-read", context)
+        }
+
     } catch (error) {
         console.log(error);
     }
@@ -210,88 +283,163 @@ async function dashboard__getArticleByID_RD(req, res) {
 // url : /dashboard/my-articles/:id/edit  
 
 
-async function dashboard__getArticleByID_CU(req, res) {
+async function dashboard__submitArticleCreateEditData(req, res) {
     const context = {
         loggedIn : req.session?.name,
-        title : "My Dashboard",
+        title : "My Dashboard | My Articles",
         dashboardMode : true,
-        mode : "C",
-        dashboardPageName : "Search Movies | TV shows",
-        activeDashboardLink : DASHBOARD_LINKS.watchlist,
-        actionURL : `/dashboard/my-articles/new`,
-        searchError : '',
-        step : req.body?.step,
-        conflictDetail : null,
-        selectedMovie : null
+        dashboardPageName : "Write review",
+        activeDashboardLink : DASHBOARD_LINKS.articles,
+        pageError : false,
+        actionURL : "/dashboard/my-articles/new",
+        conflictDetail : false,
+        editData: null,
     }
     try {
-        const {step} = req.body;
-        console.log("step : ", step);
-        if (step === '1') {
-            const {keyword, year, type, imdbid} = req.body;
-            let movies;
-            if (!imdbid) {
-                context.keyword = keyword
-                movies = await handleMovieMetaSearch(keyword, type, year)
-                context.data = movies;
-            }
-            else {
-                context.keyword = imdbid
-                movies = await handleMovieMetaSearchByIMDB(imdbid)
-                context.data = [movies];
-            }
-            context.step = "2"
-            return res.render("pages/dashboard/article[id]-write-edit", context)
+        let {session : {uid}, body : {step}} = req;
+        step = parseInt(step.trim())
+
+        context.data = []
+        switch(step) {
+            case 2: // receives the search parameters in either imdb or keyword format
+                // if searched by imdbid
+                context.step = 2
+                let {imdbid, keyword, year, type} = req.body;
+                if(imdbid) {
+                    imdbid = imdbid.trim()
+                    // search movie meta in DB
+                    const movieFromDB = await searchIMDBInMovieMeta(imdbid)
+                    if (!movieFromDB) {
+                        const {error, errorMsg, result} = await searchIMDBMetaDataFromAPI(imdbid);
+                        if (error) {
+                            throw new Error(errorMsg)
+                        }
+                        context.data = result;
+                        return res.render("pages/dashboard/search-movie-page", context)
+                    }
+                }
+                // else if searched by keyword year type...
+                else{
+                    console.log("searching by keyword");
+                    keyword = keyword.trim(), year = year.trim(), type = type.trim()
+                    // validation for corrupt data
+                    if (!keyword.length) {
+                        throw new Error("Keyword is missing")
+                    }
+                    
+                    if (!["series", "movie"].includes(type)) {
+                        throw new Error("Invalid category")
+                    }
+                    
+                    if (parseInt(year) > new Date().getFullYear()  || parseInt(year) < 1900 ) {
+                        throw new Error("Year out of range")
+                    }
+
+                    // search in db with {keywod, year, type}
+                    const movies = await searchMovieMetaInDB(keyword, type, year);
+                    if (movies.length === 0) {
+                        // no movies with said keyword in DB
+                        // search keyword, year and type in API
+                        const {result, error, errorMsg} = await searchMovieMetaFromAPI(keyword, type, year)
+                        if (error) {
+                            throw new Error(errorMsg)
+                        }
+                                            // valid data from api
+                        // store data to db
+                        const dataFromAPIDB = await storeMoviesMetaToDB([...result])
+                        if (!dataFromAPIDB.success) {
+                            throw new Error(dataFromAPIDB.data)
+                        }
+
+                        context.data = dataFromAPIDB.data
+                        return res.render("pages/dashboard/search-movie-page", {...context, keyword: `${keyword} (${year})`})
+                    }
+                    context.data = movies
+                    return res.render("pages/dashboard/search-movie-page", {...context, keyword: `${keyword} (${year})`})
+                }
+            case 3: 
+                // receives a step and imdbid
+                const movieID = req.body?.imdbid?.trim()
+                if (!movieID || movieID.length === 0) {
+                    throw new Error("Tampered movie ID")
+                }
+                // validate imdbid as it will definitely be in movies_meta and may also be in movies_detail
+                const movieWithImdbID = (await pool.query("SELECT mm.imdbid, mm.title, md.metadata, COUNT(md.metadata) AS hasMetadata FROM movies_meta AS mm LEFT JOIN movies_detail AS md ON mm.imdbid = md.imdbid WHERE mm.imdbid = $1 GROUP BY mm.imdbid, md.metadata", [movieID])).rows;
+
+                if (movieWithImdbID.length === 0) {
+                    throw new Error("Invalid movie ID")
+                }
+                // check whether imdbid exists in blog by user
+                const existingReview = (await pool.query("SELECT blog_id FROM blogs WHERE imdbid = $1 AND uid = $2 LIMIT 1", [movieID, uid])).rows[0];
+                if (existingReview) {
+                    context.conflictDetail = existingReview;
+                    throw new Error("Review already exists")
+                } 
+                // if hasMetadata is null update hasMetadata => either 0 or 1. check by truthy/falsy value
+                if (parseInt(movieWithImdbID[0].hasmetadata)) {
+                    context.movie = movieWithImdbID
+                    return res.render("pages/dashboard/create-edit-article", context)
+                }
+                const savedAPIData = await handleMovieDetailSearch(movieID);
+                console.log(savedAPIData);
+                if (savedAPIData.error) {
+                    throw new Error(savedAPIData.errorMsg)
+                }
+                context.movie = savedAPIData.result
+                return res.render("pages/dashboard/create-edit-article", context)
+                // if all is valid return the CMS page
+            case 4:
+                // receives the blog/review in the request body
+                const {imdb, title, content, acting, acting_rating, direction, direction_rating, plot, plot_rating, conclusion} 
+                = req.body
+                console.log(req.body);
+                const text = convert(content)
+                // to validate if the html form was manually edited
+                const existingMovie = (await pool.query("SELECT mm.imdbid, mm.title, md.metadata, COUNT(md.metadata) AS hasMetadata FROM movies_meta AS mm LEFT JOIN movies_detail AS md ON mm.imdbid = md.imdbid WHERE mm.imdbid = $1 GROUP BY mm.imdbid, md.metadata", [imdb])).rows;
+
+                console.log(existingMovie);
+                if (existingMovie.length === 0) {
+                    throw new Error("Invalid movie ID")
+                }
+                // check whether imdbid exists in blog by user
+                const conflictReview = (await pool.query("SELECT blog_id FROM blogs WHERE imdbid = $1 AND uid = $2 LIMIT 1", [imdb, uid])).rows[0];
+                if (conflictReview) {
+                    context.conflictDetail = conflictReview;
+                    throw new Error("Review already exists")
+                } 
+                // if hasMetadata is null update hasMetadata => either 0 or 1. check by truthy/falsy value
+                if (!parseInt(existingMovie[0].hasmetadata)) {
+                    throw new Error("Invalid movie ID")
+                }
+
+                if (title.trim().length === 0) {
+                    context.movie = existingMovie
+                    context.pageError = 'Title cannot be empty'
+                    return res.render("pages/dashboard/create-edit-article", context)
+                }
+
+                if (text.trim().length === 0) {
+                    context.movie = existingMovie
+                    context.pageError = 'Content cannot be empty'
+                    return res.render("pages/dashboard/create-edit-article", context)
+                }
+
+                const newReview = (await pool.query("INSERT INTO blogs (blog_title, blog_content, plot_rating, acting_rating, direction_rating, plot,acting, direction, conclusion, imdbid, uid) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) ON CONFLICT (uid, imdbid) DO NOTHING RETURNING *", [title.trim(), content, RATING_VALUES[plot_rating], RATING_VALUES[acting_rating], RATING_VALUES[direction_rating], plot, acting, direction, conclusion, imdb, uid])).rows[0];
+
+                if (newReview.length === 0) {
+                    context.movie = existingMovie
+                    context.pageError = 'Review could not be saved'
+                    return res.render("pages/dashboard/create-edit-article", context)
+                }
+                return res.redirect("/dashboard/my-articles/" + newReview.blog_id)
         }
-        else if (step === "3") {
-            const {imdbid} = req.body;
-            // check if imdbid is valid. user did not manually tamper imdbid
-            const movie = (await pool.query("SELECT * FROM movies_meta WHERE imdbID = $1", [imdbid])).rowCount;
-
-            if (movie === 0) {
-                throw Error("Movie doesn't exist")
-            }
-
-            // check if user has already written review on imdbid
-            const existingBlog = (await pool.query("SELECT blog_id, blog_title, title, created FROM blogs INNER JOIN movies_meta ON blogs.imdbid = movies_meta.imdbid WHERE uid = $1 AND blogs.imdbID = $2 LIMIT 1", [req.session.uid, imdbid])).rows[0];
-
-            if (existingBlog) {
-                context.conflictDetail = existingBlog
-                throw Error("review for particular movie already exists")
-            }
-
-            // imdbid valid. review of imdbid by active user not found. 
-            // search movies_detail in [DB] and [API ► DB](if needed)
-            // TODO fix blog detail issue
-            const movieDetail = await handleMovieDetailSearch(imdbid)
-            context.selectedMovie = movieDetail
-s        }
-
-        else if (step === "4") {
-            const {review, title, conclusion, movie_title, imdbid} = req.body;
-            console.log(req.body, "  at step 4");
-            const plainTitle = convert(title)
-            if(!plainTitle.trim().length) {
-                context.step = "4"
-                context.searchError = "Title cannot be empty"
-                context.selectedMovie = {title : movie_title, imdbid : imdbid}
-                return res.render("pages/dashboard/article[id]-write-edit", context)
-            }
-            const plainReview = convert(review)
-            if(!plainReview.trim().length) {
-                context.step = "4"
-                context.searchError = "Review cannot be empty"
-                context.selectedMovie = {title : movie_title, imdbid : imdbid}
-                return res.render("pages/dashboard/article[id]-write-edit", context)
-            }
-
-        }
-        return res.render("pages/dashboard/article[id]-write-edit", context)
+        // trim the input data for excess whitespaces
     } 
     catch (error) {
+        console.log(error);
         context.searchError = error.message
-        context.step = '0'
-        return res.render("pages/dashboard/article[id]-write-edit", context)
+        context.step = '1'
+        return res.render("pages/dashboard/search-movie-page", context)
     }
 }
 
@@ -859,8 +1007,9 @@ async function dashboard__updateListItem(req, res) {
 
 module.exports = {
     dashboard__getAllArticles,
+    dashboard__getArticleCreateEditForm,
     dashboard__getArticleByID_RD,
-    dashboard__getArticleByID_CU,
+    dashboard__submitArticleCreateEditData,
 
 
     dashboard__getMyProfile,
@@ -885,45 +1034,45 @@ module.exports = {
 
 
 
-async function handleMovieMetaSearch(keyword, type='movie', year) {
-    if (!keyword) {
-        throw new Error("search keyword missing")
-    }
-    if (type && !["movie", "series"].includes(type)) {
-        throw new Error("search type is not valid")
-    }
-    let movies;
-    movies = await searchMovieMetaInDB(keyword,type, year)
+// async function handleMovieMetaSearch(keyword, type='movie', year) {
+//     if (!keyword) {
+//         throw new Error("search keyword missing")
+//     }
+//     if (type && !["movie", "series"].includes(type)) {
+//         throw new Error("search type is not valid")
+//     }
+//     let movies;
+//     movies = await searchMovieMetaInDB(keyword,type, year)
     
-    if (!movies.length) {
-        const {result, error, errorMsg} = await searchMovieMetaFromAPI(keyword, type, year);
-        if (error || !result.length) {
-            throw Error(errorMsg)
-        }
-        const {data, success} = await storeMoviesMetaToDB(result);
+//     if (!movies.length) {
+//         const {result, error, errorMsg} = await searchMovieMetaFromAPI(keyword, type, year);
+//         if (error || !result.length) {
+//             throw Error(errorMsg)
+//         }
+//         const {data, success} = await storeMoviesMetaToDB(result);
         
-        if (!success){
-            throw Error("something went wrong")
-        }
-        return data;
-    }
-    return movies
-}
+//         if (!success){
+//             throw Error("something went wrong")
+//         }
+//         return data;
+//     }
+//     return movies
+// }
 
 
-async function handleMovieMetaSearchByIMDB(imdb) {
-    if (!imdb) {
-        throw new Error("imdb ID missing")
-    }
-    let movie = await searchIMDBInMovieMeta(imdb);
-    if (!movie) {
-        const {result, error, errorMsg} = await searchIMDBMetaDataFromAPI(imdb)
-        if (error) {
-            throw Error(errorMsg)
-        }
-        return result;
-    }
-    return movie;
-}
+// async function handleMovieMetaSearchByIMDB(imdb) {
+//     if (!imdb) {
+//         throw new Error("imdb ID missing")
+//     }
+//     let movie = await searchIMDBInMovieMeta(imdb);
+//     if (!movie) {
+//         const {result, error, errorMsg} = await searchIMDBMetaDataFromAPI(imdb)
+//         if (error) {
+//             throw Error(errorMsg)
+//         }
+//         return result;
+//     }
+//     return movie;
+// }
 
 

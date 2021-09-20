@@ -38,10 +38,17 @@ dashboardRoutes.get("/my-articles", redirectToLogin, controller.dashboard__getAl
 
 
 // URL          :   /dashboard/my-articles/new
+// description  :   Show the create new/ edit review page for the logged in user
+// access       :   PRIVATE
+// method       :   GET
+dashboardRoutes.get("/my-articles/new", redirectToLogin, controller.dashboard__getArticleCreateEditForm)
+
+
+// URL          :   /dashboard/my-articles/new
 // description  :   Add new review by logged in user
 // access       :   PRIVATE
 // method       :   POST
-dashboardRoutes.post("/my-articles/new", redirectToLogin, controller.dashboard__getArticleByID_CU)
+dashboardRoutes.post("/my-articles/new", redirectToLogin, controller.dashboard__submitArticleCreateEditData)
 
 
 
@@ -49,7 +56,7 @@ dashboardRoutes.post("/my-articles/new", redirectToLogin, controller.dashboard__
 // description  :   Edit existing review by logged in user
 // access       :   PRIVATE
 // method       :   POST
-dashboardRoutes.post("/my-articles/:id/edit", redirectToLogin, controller.dashboard__getArticleByID_CU)
+dashboardRoutes.post("/my-articles/:id/edit", redirectToLogin, controller.dashboard__submitArticleCreateEditData)
 
 
 

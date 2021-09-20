@@ -181,88 +181,57 @@ async function storeMoviesMetaToDB(movies){
  */
 
 async function handleMovieDetailSearch(imdbid) {
-    // check if imdbid is invalid
-    if(!imdbid){
-        throw Error("Invalid imdbid")
-    }
-    // search in database 
-    const movieFromDB = (await pool.query("SELECT * FROM movies_detail WHERE imdbid = $1 LIMIT 1", [imdbid])).rows;
-    if (movieFromDB.length === 0) {
-        // if movie not in db
-        // step 1: search movie detail from API
-        const {data} = (await axios({
-            url : MOVIE_API_URL,
-            method : "GET",
-            params : {
-                apiKey : MOVIE_API_KEY,
-                i : imdbid.trim(),
-                plot : "full"
-            }
-        }))
-
-        if (!RESPONSE_BOOL[data.Response]) {
-            throw Error(data.Error)
+    try {
+        // check if imdbid is invalid
+        if(!imdbid){
+            throw Error("Invalid imdbid")
         }
+        // search in database 
+        const movieFromDB = (await pool.query("SELECT * FROM movies_detail WHERE imdbid = $1 LIMIT 1", [imdbid])).rows;
+        if (movieFromDB.length === 0) {
+            // if movie not in db
+            // step 1: search movie detail from API
+            const {data} = (await axios({
+                url : MOVIE_API_URL,
+                method : "GET",
+                params : {
+                    apiKey : MOVIE_API_KEY,
+                    i : imdbid.trim(),
+                    plot : "full"
+                }
+            }))
+    
+            if (!RESPONSE_BOOL[data.Response]) {
+                throw Error(data.Error)
+            }
+    
+            // storet the api data to DB
+            const movie = (await pool.query("INSERT INTO movies_detail (imdbid, metadata) VALUES ($1, $2) ON CONFLICT(imdbid, metadata) DO NOTHING RETURNING *", [imdbid, data])).rows
 
-        return data;
-
-    }
-    return movieFromDB[0]
-}
-
-
-// async function searchMovieDetailInDB(imdbid) {
-//     try {
-//         const {rows} = await pool.query("SELECT * FROM movies_detail WHERE imdbid = $1", [imdbid.trim()]);
-//         if (rows.length === 0) {
-//             throw Error("not in db")
-//         }
-//         return rows[0];
-//     } catch (error) {
-//         console.log(error.message);
-//         return null
-//     }
-// }
-
-// async function storeMoviesDetailToDB(imdbid, movie){
-//     console.log("store to DB from API ", movie);
-//     try {
-//         const savedMovie = (await pool.query("INSERT INTO movies_detail (imdbid, metadata) VALUES ($1, $2) ON CONFLICT(imdbid, metadata) DO NOTHING RETURNING *", [imdbid, movie])).rows[0];
-
-//         if (!savedMovie) {
-//             throw Error("server error")
-//         }
-//         return savedMovie;
-
-//     } catch (error) {
-//         console.log(error.message);
-//         return null
-//     }
-// }
-
-// async function searchMovieDetailFromAPI(imdbid) {
-//     try{
-//         const {Response, Search} = (await axios({
-//             url : MOVIE_API_URL,
-//             method : 'GET',
-//             params : {
-//                 apikey : MOVIE_API_KEY,
-//                 i : imdbid.trim(),
-//                 plot: 'full'
-//             }
-//         })).data;
+            if (!movie) {
+                throw new Error("Something went wrong")
+            }
+    
+            return {
+                result : movie,
+                error : false,
+                errorMsg : null
+            }
+        }
+        return {
+            result : movieFromDB, 
+            error : false, 
+            errorMsg : null
+        }
         
-//         if (Response === "False"){
-//             throw Error("invalid imdbid")
-//         }
-//         console.log(Search);
-//         return Search;
-//     }
-//     catch(error) {
-//         return null
-//     }
-
-// }
+    } catch (error) {
+        return {
+            result : [], 
+            error : true, 
+            errorMsg : error.message
+        }
+    }
+}
 
 
 

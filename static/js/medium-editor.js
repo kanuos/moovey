@@ -6,8 +6,8 @@ richTextFields?.forEach(field => {
     mediumEditor = new MediumEditor(field, {
         activeButtonClass : ACTIVE_LINK_CLASS,
         buttonLabels : 'fontawesome',
-        disableExtraSpaces : true,
-        disableReturn : field.dataset["return"] || false,
+        disableExtraSpaces : Boolean(field.dataset["spaces"]) || true,
+        disableReturn : Boolean(field.dataset["return"]) || false,
         toolbar : {
             buttons : ['bold', 'italic','underline'],
         },

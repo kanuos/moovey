@@ -8,6 +8,7 @@
         <% } %>
     </p>
 
+
     <a href="<%= backURL %>" class="block md:hidden absolute top-2 right-2 text-lg outline-none focus:outline-none transform transition-all hover:scale-110 focus:scale-110"><i class="fas fa-times-circle"></i></a>
 
     <h6 class="searchFormToggler font-special text-sm capitalize text-gray-500 text-center inline-flex items-center justify-center gap-1">
@@ -21,13 +22,21 @@
         method="<%= formMethod %>" 
         autocomplete="off" class="searchForm w-11/12 max-w-xl mx-auto bg-white md:shadow-glass py-4 md:p-4 h-auto rounded relative">
 
+        
+        <!-- only for the new articles -->
+        <% if (locals.hiddenField)  {%>
+            <input type="hidden" name="<%= hiddenField.key %>" value="<%= hiddenField.value %>">
+        <% } %>
+
         <a href="<%= backURL %>" class="hidden md:block absolute -top-4 right-2 text-3xl outline-none focus:outline-none transform transition-all hover:scale-110 focus:scale-110"><i class="fas fa-times-circle"></i></a>
 
         <p class="md:text-2xl mb-4 font-light font-special text-center">
             Search Movie | TV shows | Web Shows 
         </p>
         <section class="mb-4">
-            <input type="hidden" name="step" value="1">
+            <% if (!locals.hiddenField)  {%>
+                <input type="hidden" name="step" value="1">
+            <% } %>
             <label for="keyword" class="font-regular capitalize text-xs text-black mb-1 block">title</label>
             <input 
                 type="search" 
@@ -76,13 +85,20 @@
         method="POST" 
         autocomplete="off" class="searchForm hidden scale-0 w-11/12 max-w-xl mx-auto bg-white md:shadow-glass py-4 md:p-4 h-auto rounded relative">
 
+        <!-- only for the new articles -->
+        <% if (locals.hiddenField)  {%>
+            <input type="hidden" name="<%= hiddenField.key %>" value="<%= hiddenField.value %>">
+        <% } %>
+
         <a href="<%= backURL %>" class="hidden md:block absolute -top-4 right-2 text-3xl outline-none focus:outline-none transform transition-all hover:scale-110 focus:scale-110 bg-white"><i class="fas fa-times-circle"></i></a>
 
         <p class="md:text-2xl mb-4 font-light font-special text-center">
             <i class="fab fa-imdb text-gray-600"></i> IMDB Search 
         </p>
         <section class="mb-4">
-            <input type="hidden" name="step" value="1">
+            <% if (!locals.hiddenField)  {%>
+                <input type="hidden" name="step" value="1">
+            <% } %>
             <label for="imdbid" class="font-regular capitalize text-xs text-black mb-1.5 block">IMDB ID</label>
             <input 
                 type="search" 

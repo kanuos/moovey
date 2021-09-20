@@ -1,0 +1,214 @@
+<%- include('../../partials/head') %>
+<body class="custom-scrollbar relative">  
+    <%- include('../../partials/navbar') %>
+    <%- include('../../partials/dashboard/dashboard-sidebar') %>
+    
+    <div id="loadScreen" class="fixed top-0 left-0 h-full w-full bg-black flex flex-col items-center justify-center gap-1 z-50">
+        <p class="text-white text-xl font-special font-light">
+            Loading
+        </p>
+        <span class="text-xs text-white font-special mb-4">
+            Please wait
+        </span>
+        <i class="fas fa-spinner animate-spin text-white"></i>
+    </div>
+
+
+    <header class="h-auto flex flex-col gap-4 mb-10 pt-20 md:w-11/12 max-w-4xl md:mx-auto md:gap-10 px-2.5">
+        <!--  -->
+        <% if (pageError) { %>
+        <div id="pageError" class="p-2 block text-center text-white bg-black shadow-glass font-regular">
+            <%= pageError %>
+        </div>
+        <% } %>
+        <article class="w-full md:relative md:flex md:items-center md:gap-2">
+            <section class="shadow-glass p-2 pb-4 w-full h-auto rounded overflow-hidden md:pb-4 md:w-3/5 md:text-center">
+                <small class="text-xs font-special text-gray-500 font-semibold capitalize md:hidden">
+                    selected <%= movie[0].metadata["Type"] ?? movie[0].metadata["type"] %>
+                </small>
+                <p class="my-0.5 font-regular font-semibold block text-black w-full text-xs md:text-sm capitalize">
+                    <%= movie[0].metadata["Title"] ?? movie[0].metadata["title"] %> (<%= movie[0].metadata["Year"] ?? movie[0].metadata["year"] %>)
+                </p>
+                <small class="text-xs font-special text-gray-400 font-semibold capitalize">
+                    starring
+                </small>
+                <p class="my-0.5 font-special font-semibold block text-gray-600 w-full text-xs md:text-sm capitalize">
+                    <%= movie[0].metadata["Actors"] ?? movie[0].metadata["actors"] %>
+                </p>
+            </section>
+            <h4 class="hidden md:block md:w-2/5 text-right border-b-2 border-current border-dashed capitalize font-semibold font-special">
+                selected <%= movie[0].metadata["Type"] ?? movie[0].metadata["type"] %>
+            </h4>
+        </article>
+
+        <article class="w-full md:relative md:flex md:flex-row-reverse md:items-center md:gap-2">
+            <section class="shadow-glass p-2 w-full h-auto rounded overflow-hidden md:w-2/5 md:ml-auto md:text-center">
+                <small class="text-xs font-special text-gray-500 font-semibold capitalize md:hidden">
+                    date
+                </small>
+                <p class="mt-0.5 font-regular block text-gray-700 w-full text-xs">
+                    <%= new Date().toDateString() %>
+                </p>
+            </section>
+            <h4 class="hidden md:block md:w-3/5 text-left border-b-2 border-current border-dashed capitalize font-semibold font-special">
+                date
+            </h4>
+        </article>
+        
+    </header>
+
+    <section class="h-auto md:w-11/12 max-w-4xl md:mx-auto pb-10 px-2.5">
+        <form method="POST" action="/dashboard/my-articles/new" class="w-full grid gap-y-8">
+            <input type="hidden" name="step" value="4">
+            <input type="hidden" name="imdb" value="<%= movie[0].metadata.imdbid ?? movie[0].metadata.imdbID %>">
+
+            <div class="h-auto shadow-glass p-2 pb-4 w-full rounded grid gap-y-8">
+                <!-- title -->
+                <section class="p-2 pb-4 w-full h-auto rounded overflow-hidden md:pb-4">
+                    <label for="title">
+                        <small class="text-xs font-special text-gray-500 font-semibold capitalize">
+                            review title
+                        </small>
+                    </label>
+                    <textarea
+                        id="title" name="title"
+                        data-placeholder="Your blog title"
+                        data-return="true"
+                        class="richTextField resize-none ring-0 ring-offset-transparent outline-none focus:outline-none focus:ring-offset-transparent focus:ring-0 my-0.5 focus:border-black font-regular font-semibold block text-black w-full text-xs md:text-sm rounded placeholder-gray-500"></textarea>
+                </section>
+            </div>
+            <div class="h-auto min-h-screen shadow-glass p-2 pb-4 w-full rounded grid gap-y-8">
+            
+                <div class="h-auto shadow-glass p-2 pb-4 w-full rounded grid gap-y-8">
+                    <!-- content -->
+                    <section class="p-2 pb-4 w-full h-auto rounded overflow-hidden md:pb-4">
+                        <label for="title">
+                            <small class="text-xs font-special text-gray-500 font-semibold capitalize">
+                                review content
+                            </small>
+                        </label>
+                        <textarea
+                            id="content" name="content"
+                            data-placeholder="Your blog content"
+                            class="richTextField h-full resize-none ring-0 ring-offset-transparent outline-none focus:outline-none focus:ring-offset-transparent focus:ring-0 my-0.5 focus:border-black font-regular block text-black w-full text-xs md:text-sm rounded placeholder-gray-500"></textarea>
+                    </section>
+                </div>
+                <small class="text-xs font-special text-gray-500 font-semibold capitalize">
+                    your rating
+                </small>
+                <div class="h-auto shadow-glass p-2 pb-4 w-full rounded grid gap-y-8">
+                    <!--rating -->
+                    <section class="p-2 pb-4 w-full h-auto rounded overflow-hidden md:pb-4">
+                        <label for="acting">
+                            <small class="text-xs font-special text-gray-500 font-semibold capitalize">
+                                acting
+                            </small>
+                        </label>
+                        <textarea
+                            id="acting" name="acting"
+                            data-placeholder="Your opinion about the acting of the <%= movie[0].metadata.type %>"
+                            data-return="true"
+                            class="richTextField resize-none ring-0 ring-offset-transparent outline-none focus:outline-none focus:ring-offset-transparent focus:ring-0 my-0.5 focus:border-black font-regular block text-black w-full text-xs md:text-sm rounded placeholder-gray-500"></textarea>
+                    </section>
+                    <section class="p-2 pb-4 w-full h-auto rounded overflow-hidden md:pb-4">
+                        <label for="acting_rating">
+                            <small class="text-xs font-special text-gray-500 font-semibold capitalize">
+                                rate the acting
+                            </small>
+                        </label>
+                        <select class="block my-2 w-full capitalize font-special font-semibold" name="acting_rating" id="acting_rating">
+                            <option value="bad"> bad </option>
+                            <option value="average"> average </option>
+                            <option value="decent" selected> decent </option>
+                            <option value="good"> good </option>
+                            <option value="great"> great </option>
+                        </select>
+                    </section>
+                    <section class="p-2 pb-4 w-full h-auto rounded overflow-hidden md:pb-4">
+                        <label for="direction">
+                            <small class="text-xs font-special text-gray-500 font-semibold capitalize">
+                                direction
+                            </small>
+                        </label>
+                        <textarea
+                            id="direction" name="direction"
+                            data-placeholder="Your opinion about the direction of the <%= movie[0].metadata.type %>"
+                            data-return="true"
+                            class="richTextField resize-none ring-0 ring-offset-transparent outline-none focus:outline-none focus:ring-offset-transparent focus:ring-0 my-0.5 focus:border-black font-regular block text-black w-full text-xs md:text-sm rounded placeholder-gray-500"></textarea>
+                    </section>
+                    <section class="p-2 pb-4 w-full h-auto rounded overflow-hidden md:pb-4">
+                        <label for="direction_rating">
+                            <small class="text-xs font-special text-gray-500 font-semibold capitalize">
+                                rate the direction
+                            </small>
+                        </label>
+                        <select class="block my-2 w-full capitalize font-special font-semibold" name="direction_rating" id="direction_rating">
+                            <option value="bad"> bad </option>
+                            <option value="average"> average </option>
+                            <option value="decent" selected> decent </option>
+                            <option value="good"> good </option>
+                            <option value="great"> great </option>
+                        </select>
+                    </section>
+                    <section class="p-2 pb-4 w-full h-auto rounded overflow-hidden md:pb-4">
+                        <label for="plot">
+                            <small class="text-xs font-special text-gray-500 font-semibold capitalize">
+                                plot
+                            </small>
+                        </label>
+                        <textarea
+                            id="plot" name="plot"
+                            data-placeholder="Your opinion about the plot of the <%= movie[0].metadata.type %>"
+                            data-return="true"
+                            class="richTextField resize-none ring-0 ring-offset-transparent outline-none focus:outline-none focus:ring-offset-transparent focus:ring-0 my-0.5 focus:border-black font-regular block text-black w-full text-xs md:text-sm rounded placeholder-gray-500"></textarea>
+                    </section>
+                    <section class="p-2 pb-4 w-full h-auto rounded overflow-hidden md:pb-4">
+                        <label for="plot_rating">
+                            <small class="text-xs font-special text-gray-500 font-semibold capitalize">
+                                rate the plot
+                            </small>
+                        </label>
+                        <select class="block my-2 w-full capitalize font-special font-semibold" name="plot_rating" id="plot_rating">
+                            <option value="bad"> bad </option>
+                            <option value="average"> average </option>
+                            <option value="decent" selected> decent </option>
+                            <option value="good"> good </option>
+                            <option value="great"> great </option>
+                        </select>
+                    </section>
+
+                </div>
+            </div>
+            <div class="h-auto shadow-glass p-2 pb-4 w-full rounded grid gap-y-8">
+                <!--conclusion -->
+                <section class="p-2 pb-4 w-full h-auto rounded overflow-hidden md:pb-4">
+                    <label for="conclusion">
+                        <small class="text-xs font-special text-gray-500 font-semibold capitalize">
+                            conclusion
+                        </small>
+                    </label>
+                    <textarea
+                        id="conclusion" name="conclusion"
+                        data-placeholder="Your conclusion"
+                        data-return="true"
+                        class="richTextField resize-none ring-0 ring-offset-transparent outline-none focus:outline-none focus:ring-offset-transparent focus:ring-0 my-0.5 focus:border-black font-regular block text-black w-full text-xs md:text-sm rounded placeholder-gray-500"></textarea>
+                </section>
+            </div>
+            <button type="submit" class="bg-black focus:outline-none hover:-translate-y-px hover:scale-105 mb-6 outline-none px-4 py-2 text-white text-xs transform transition-all block mx-auto w-max hover:shadow-lg">
+                save changes
+            </button>
+        
+        </form>
+    
+    </section>
+
+    
+    <script src="//cdn.jsdelivr.net/npm/medium-editor@latest/dist/js/medium-editor.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/medium-editor@latest/dist/css/medium-editor.min.css" type="text/css" media="screen" charset="utf-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/medium-editor@5.23.3/dist/css/themes/beagle.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/medium-editor@latest/dist/css/medium-editor.min.css" type="text/css" media="screen" charset="utf-8">
+    <script src="/static/js/medium-editor.js"></script>
+    <script src="/static/js/article-create-edit.js"></script>
+
+</body>
+</html>

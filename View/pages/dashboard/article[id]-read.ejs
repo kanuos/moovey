@@ -1,5 +1,5 @@
 <%- include('../../partials/head') %>
-<body class="relative">
+<body class="relative custom-scrollbar">
     <!-- navbar partial -->
     <%- include('../../partials/navbar') %>
     
@@ -7,93 +7,187 @@
     <%- include('../../partials/dashboard/dashboard-sidebar') %>
        
     <!-- main body for the article page s-->
-    <main class="w-full relative h-screen flex items-start">
-    
+<main class="w-full relative min-h-screen h-auto flex items-start">
 
-        <!-- page specific data -->
-        <section class="h-full w-full overflow-y-auto custom-scrollbar pt-14 md:pt-0 md:pl-14">
-            <ul class="flex items-start justify-start gap-4 w-11/12 mx-auto md:mx-0 md:mr-auto max-w-5xl xl:max-w-7xl 2xl:max-w-full px-4 mb-5 capitalize md:sticky top-8 bg-white md:py-4 md:z-10">
-                <li class="text-pink-600 font-semibold font-special cursor-pointer" data-tab="article">article</li>
-                <li class="text-gray-400 font-semibold font-special cursor-pointer" data-tab="testimonial">testimonials</li>
-                <li class="text-gray-400 font-semibold font-special cursor-pointer" data-tab="delete">delete article</li>
-            </ul>
-            <!-- article view -->
-            <article data-target="article" class="tabTarget md:pt-14 min-h-screen w-11/12 mx-auto md:mx-0 md:mr-auto max-w-5xl xl:max-w-7xl p-4 relative">
-
-                <p class="mb-4 w-full max-w-5xl mr-auto text-sm font-special text-gray-500 font-semibold">
-                        Review of
-                    <strong class="font-semibold capitalize text-pink-600 ml-1">
-                        dr strangelove or how i learned to love the bomb and stop worrying
-                    </strong>
-                </p>
-                <p class="mb-4 w-full max-w-5xl mr-auto text-sm font-special text-gray-500 font-semibold">
-                        Written on
-                    <strong class="font-semibold capitalize text-black ml-1">
-                        15-October-2017
-                    </strong>
-                </p>
-                <section class="mb-4 w-full max-w-5xl mr-auto">
-                    <small class="text-sm font-special text-gray-500 font-semibold capitalize">
+    <% if (locals.deletedMsg) { %>
+    <div id="deletedMsg" class="fixed top-0 left-0 bg-black w-full h-screen z-20 bg-opacity-50 grid place-items-center  transform transition-all scale-0">
+        <p class="bg-white shadow-glass p-4 text-lg font-regular text-pink-600 font-semibold capitalize">
+            "<%= deletedMsg %>" deleted from the list successfully
+        </p>
+    </div>
+    <% } %>
+    <!-- page specific data -->
+    <!-- page specific data -->
+    <section class="h-full w-full max-w-5xl p-4 mx-auto py-14 md:pl-14">
+                    
+        <ul class="flex items-start justify-start gap-4 text-xs w-11/12 mx-auto md:mr-auto max-w-5xl mb-5 capitalize mt-2">
+            <li
+                <% if (activeTab === 0) {%>
+                class="text-black font-semibold font-special"
+                <% } else { %>
+                class="text-gray-400 font-semibold font-special"
+                <% } %>>
+                <a href="/dashboard/my-articles/<%= blog.blog_id %>" class="outline-none focus:outline-none">
+                    Review content
+                </a>
+            </li>
+            <li
+            <% if (activeTab === 1) {%>
+                class="text-black font-semibold font-special"
+                <% } else { %>
+                class="text-gray-400 font-semibold font-special"
+                <% } %>>
+                <a href="/dashboard/my-articles/<%= blog.blog_id %>?tab=2" class="outline-none focus:outline-none">
+                    testimonials
+                </a>
+            </li>
+            <li
+                <% if (activeTab === 2) {%>
+                class="text-black font-semibold font-special"
+                <% } else { %>
+                class="text-gray-400 font-semibold font-special"
+                <% } %>>
+                <a href="/dashboard/my-articles/<%= blog.blog_id %>?tab=3" class="outline-none focus:outline-none">
+                    delete blog
+                </a>
+            </li>
+        </ul>
+        
+        <header class="h-auto flex flex-col gap-4 mb-10 border-b border-gray-200 md:w-11/12 md:mx-auto md:gap-10">
+            <!--  -->
+            <article class="w-full md:relative md:flex md:items-center md:gap-2">
+                <section class="shadow-glass p-2 w-full h-auto rounded overflow-hidden md:pb-4 md:w-3/5 md:text-center">
+                    <small class="text-xs font-special text-gray-500 font-semibold capitalize md:hidden">
                         title
                     </small>
-                    <p class="mt-0.5 font-regular font-semibold block text-black-600 w-full text-lg">
-                        A classic satire by Stanley Kubrik. Dark humor at its best
+                    <p class="mt-0.5 font-regular font-semibold block text-black w-full text-lg md:text-xl capitalize">
+                        <%= blog.blog_title %>
                     </p>
                 </section>
-                <section class="mb-4 w-full max-w-5xl mr-auto">
-                    <small class="text-sm font-special text-gray-500 font-semibold capitalize">
-                        review
-                    </small>
-                    <p class="mt-0.5 font-regular block text-black w-full text-lg">
-                        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae, consequuntur repellat ducimus doloribus consectetur rerum reprehenderit eum cum aliquid nesciunt nulla laudantium nostrum dolorem! Est exercitationem enim velit quasi delectus. <br><br>
+                <h4 class="hidden md:block md:w-2/5 text-right border-b-2 border-current border-dashed capitalize font-semibold font-special">
+                    title
+                </h4>
+            </article>
 
-                        Lorem ipsum dolor sit, amet consectetur <strong>Lorem, ipsum dolor.</strong> adipisicing elit. Debitis voluptatum pariatur voluptate vero quas at odit ratione asperiores molestiae quidem excepturi necessitatibus vel sint modi, ad doloribus error nam aperiam architecto corporis reprehenderit quo reiciendis nesciunt. Tenetur, adipisci, saepe repellat earum sequi inventore nisi iste aliquid ad deserunt sapiente incidunt? <br><br>
-
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia amet inventore rem blanditiis beatae sit aut ipsam dolore corporis maiores provident illum saepe architecto, libero in facere autem distinctio. Totam velit fuga alias <i>Lorem ipsum, dolor sit amet consectetur adipisicing.</i> nihil nobis recusandae quaerat omnis, possimus soluta. Suscipit quia dignissimos amet iste rerum aut omnis consequuntur, veniam adipisci unde dolor assumenda odit, temporibus placeat dolore earum at numquam corporis? Voluptates blanditiis cumque consectetur vitae, voluptatibus qui impedit porro. Dolore quae, et repellendus cumque repellat modi magni voluptate, labore in rerum illum corrupti reiciendis! Voluptatum magni nostrum, labore omnis quo accusamus molestias numquam? Est soluta repellendus assumenda doloribus.
-                    </p>
-                </section>
-                <section class="mb-4 w-full max-w-5xl mr-auto">      
-                    <small class="text-sm font-special text-gray-500 font-semibold capitalize">
-                        rating
+            <article class="w-full md:relative md:flex md:items-center md:gap-2 flex-row-reverse">
+                <section class="shadow-glass p-2 w-full h-auto rounded overflow-hidden md:pb-4 md:w-1/2">
+                    <small class="text-xs font-special text-gray-500 font-semibold capitalize md:hidden">
+                        analytics
                     </small>
-                    <table class="border-separate table table-auto w-full max-w-xl mt-2 mb-4">
-                        <tr>
-                            <td class="p-2 border border-gray-400 text-sm font-special text-gray-500 font-semibold capitalize">direction</td>
-                            <td class="p-2 border border-gray-400 text-sm font-special text-gray-700 font-semibold capitalize">bing bong bang boom</td>
-                        </tr>
-                        <tr>
-                            <td class="p-2 border border-gray-400 text-sm font-special text-gray-500 font-semibold capitalize">performance</td>
-                            <td class="p-2 border border-gray-400 text-sm font-special text-gray-700 font-semibold capitalize">bing bong bang boom</td>
-                        </tr>
-                        <tr>
-                            <td class="p-2 border border-gray-400 text-sm font-special text-gray-500 font-semibold capitalize">plot</td>
-                            <td class="p-2 border border-gray-400 text-sm font-special text-gray-700 font-semibold capitalize">bing bong bang boom</td>
-                        </tr>
-                    </table>
-                    <p class="mt-0.5 font-regular font-semibold block text-black w-full text-lg">
-                       Dark humor at its best
+                    <p class="mt-0.5 font-regular italic font-semibold block text-gray-700 w-full text-xs leading-relaxed">
+                    <ul class="flex gap-3 w-5/6 justify-between items-center md:mx-auto text-gray-400">
+                        <li>
+                            <i class="far fa-eye"></i>
+                            <small><%= blog.views %></small>
+                        </li>
+                        <li>
+                            <i class="far fa-star"></i>
+                            <small>4.5/5 (7)</small>
+                        </li>
+                        <li>
+                            <i class="far fa-calendar-alt"></i>
+                            <small><%= new Date(blog.created).toLocaleDateString() %></small>
+                        </li>
+                    </ul>
                     </p>
                 </section>
-                    
-                <a href="" class="text-sm text-pink-600 mt-10 inline-flex gap-0.5 outline-none focus:outline-none focus:border-current border-b border-transparent hover:shadow-md">
-                    <i class="far fa-edit"></i>
-                    <span class="font-semibold font-special">Edit article</span>
+                <h4 class="hidden md:block md:w-1/2 text-left border-b-2 border-current border-dashed capitalize font-semibold font-special">
+                    analytics
+                </h4>
+            </article>
+
+
+            <section class="w-full flex items-center justify-center gap-4 my-10">
+                <a href="/moovey/<%= blog.blog_id %>" class="px-5 py-1.5 outline-none focus:outline-none border-2 border-dashed border-black text-black  capitalize text-xs hover:bg-black hover:text-white filter drop-shadow-md">
+                    open as someone else
                 </a>
-            </article>       
-            <!-- testimonial view -->
-            <%- include('../../partials/dashboard/testimonials-table') %>
-            <!-- delete view -->
-            <%- include('../../partials/dashboard/item[id]-delete') %>
-            
-        </section>
-    </main>
+                <a href="/dashboard/my-articles/<%= blog.blog_id %>/edit" class="px-5 py-1.5 outline-none focus:outline-none border-2 border-dashed border-black text-black  capitalize text-xs hover:bg-black hover:text-white filter drop-shadow-md">
+                    edit list
+                </a>
+                <a href="/dashboard/my-articles/<%= blog.blog_id %>/add-item" class="px-5 py-1.5 outline-none focus:outline-none border-2 border-dashed border-black text-black  capitalize text-xs hover:bg-black hover:text-white filter drop-shadow-md">
+                    add to list
+                </a>
+            </section>
+        </header>
 
+
+        <section class="mb-5 grid gap-8">
+            <!-- blog content -->
+            <article class="w-full md:relative md:flex md:items-center md:gap-2">
+                <section class="shadow-glass p-2 w-full h-auto rounded overflow-hidden md:pb-4 md:w-11/12 md:text-center">
+                    <div class="mt-0.5 font-special p-4 md:text-lg text-left block text-black w-full text-base capitalize">
+                        <h3 class="mb-4 text-black font-regular font-semibold text-sm">Review (<%= readTime %> mins)</h3>
+                        <%- blog.blog_content %>
+                    </div>
+                </section>
+                <h4 class="hidden md:block md:w-1/12 text-right border-b-2 border-current border-dashed capitalize font-semibold font-special">
+                    review
+                </h4>
+            </article>
+            <!-- blog rating -->
+            <article class="w-full md:relative md:flex md:items-center md:gap-2 flex-row-reverse">
+                <section class="shadow-glass p-2 w-full h-auto rounded overflow-hidden md:pb-4 md:w-3/5 md:text-right">
+                    <small class="text-xs mb-5 font-special text-gray-500 font-semibold capitalize md:hidden">
+                        my rating
+                    </small>
+                    <div class="w-full mb-4">
+                        <small class="text-xs font-special text-gray-500 font-semibold capitalize">
+                            acting
+                        </small>
+                        <p class="mt-0.5 font-regular font-semibold block text-black w-full text-xs md:text-sm capitalize">
+                            <%= blog.acting %>
+                            <%= Object.keys(ratingObj)[Object.values(ratingObj).indexOf(parseInt(blog.acting_rating))] %> <small class="text-xs text-gray-400">(<%= blog.acting_rating %>/5)</small>
+                        </p>
+                    </div>
+                    <div class="w-full mb-4">
+                        <small class="text-xs font-special text-gray-500 font-semibold capitalize">
+                            plot
+                        </small>
+                        <p class="mt-0.5 font-regular font-semibold block text-black w-full text-xs md:text-sm capitalize">
+                            <%= blog.plot %>
+                            <%= Object.keys(ratingObj)[Object.values(ratingObj).indexOf(parseInt(blog.plot_rating))] %> <small class="text-xs text-gray-400">(<%= blog.plot_rating %>/5)</small>
+                        </p>
+                    </div>
+                    <div class="w-full">
+                        <small class="text-xs font-special text-gray-500 font-semibold capitalize">
+                            direction
+                        </small>
+                        <p class="mt-0.5 font-regular font-semibold block text-black w-full text-xs md:text-sm capitalize">
+                            <%= blog.direction %>
+                            <%= Object.keys(ratingObj)[Object.values(ratingObj).indexOf(parseInt(blog.direction_rating))] %> <small class="text-xs text-gray-400">(<%= blog.direction_rating %>/5)</small>
+                        </p>
+                    </div>
+                </section>
+                <h4 class="hidden md:block md:w-2/5 text-left border-b-2 border-current border-dashed capitalize font-semibold font-special">
+                    my rating
+                </h4>
+            </article>
+            <!-- blog content -->
+            <%// if (blog.conclusion) {%>
+            <article class="w-full md:relative md:flex md:items-center md:gap-2">
+                <section class="shadow-glass p-2 w-full h-auto rounded overflow-hidden md:pb-4 md:w-3/5 md:text-center">
+                    <small class="text-xs font-special text-gray-500 font-semibold capitalize md:hidden">
+                        conclusion
+                    </small>
+                    <p class="mt-0.5 font-special font-semibold block text-black text-left w-full text-sm capitalize">
+                        <%- blog.conclusion %>
+                        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Reprehenderit debitis optio voluptatibus. Consectetur eius debitis doloremque perspiciatis error maxime, et in beatae at itaque delectus cupiditate adipisci quasi laboriosam veritatis.
+                    </p>
+                </section>
+                <h4 class="hidden md:block md:w-2/5 text-right border-b-2 border-current border-dashed capitalize font-semibold font-special">
+                    conclusion
+                </h4>
+            </article>
+            <%// } %>
+        </section>
+    </section>
+        
+    </main>
 
     
     <script src="/static/js/dashboard-sidebar.js"></script>
     <script src="/static/js/navbar.js"></script>
-    <script src="/static/js/dashboard-item[id].js"></script>
-    <script src="/static/js/item[id]-delete-confirm.js"></script>
+    <script src="/static/js/deleteListDeleteMsg.js"></script>
 
 </body>
 </html>

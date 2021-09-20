@@ -1,135 +1,149 @@
 <%- include('../../partials/head') %>
-<body class="font-special relative w-full h-full">
+<body class="font-special relative w-full h-full custom-scrollbar">
 
 <%- include('../../partials/navbar') %>
 
 
 <%- include('../../partials/dashboard/dashboard-sidebar') %>
 
+<header class="pt-14"></header>
 
-
-    <main id="main" class="pl-4 md:pl-8 filter flex flex-col w-11/12 mx-auto h-full min-h-screen">
-
-        <h1 class="text-2xl my-16 w-5/6 mx-auto">
-            list header goes here with sort options
-        </h1>
-
-        <!-- items list -->
-        <table class="table w-full table-auto md:table-fixed border-separate max-w-6xl">
-            <thead class="capitalize text-pink-600">
-                <tr>
-                    <th class="text-sm md:text-base font-semibold font-special text-left w-4/5 md:w-4/6">title</th>
-                    <th class="text-sm md:text-base font-semibold font-special text-left w-1/5 md:w-1/6">created on</th>
-                    <th class="hidden md:table-cell text-sm md:text-base font-semibold font-special text-left md:w-1/6">action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- table row element -->
-                <tr class="table-row-group md:pb-6">
-                    <!-- row metadata -->
-                    <tr>
-                        <td class="text-sm md:text-base p-2 font-special font-semibold border capitalize border-gray-300 md:w-4/6">My favorite animes of 2020</td>
-                        <td class="text-sm md:text-base p-2 font-special font-semibold border border-gray-300 md:w-1/6">20-Oct-2020</td>
-                        <td class="hidden md:table-cell text-sm md:text-base p-2 font-special font-semibold border border-gray-300 md:w-1/6">go to list</td>
-                    </tr>
-                    <!-- row description -->
-                    <tr class="hidden md:table-row md:w-3/5">
-                        <td class="text-sm md:text-base font-special font-semibold text-gray-500 md:pb-4">
-                            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ducimus adipisci sint velit eligendi, cum alias pariatur modi qui dicta...
-                        </td>
-                    </tr>
-                    <!-- row description for mobile only -->
-                    <tr class="md:hidden">
-                        <td class="pb-6 block text-center text-sm md:text-base text-black font-semibold capitalize w-full">
-                            <details class="w-full mt-2">
-                                <summary class="text-left w-max font-semibold">
-                                    show more
-                                </summary>
-                                <p class="w-full text-left mt-2 mb-4 text-gray-500">
-                                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ducimus adipisci sint velit eligendi, cum alias pariatur modi qui dicta...
-                                </p>
-                                <a href="" class="font-semibold font-regular capitalize">
-                                    go to list
-                                </a>
-                            </details> 
-                        </td>
-                    </tr>                          
-                </tr>
-                <!-- table row element end -->
-                <!-- table row element -->
-                <tr class="table-row-group md:pb-6">
-                    <!-- row metadata -->
-                    <tr>
-                        <td class="text-sm md:text-base p-2 font-special font-semibold border border-gray-300 md:w-4/6">best superhero movies of all times</td>
-                        <td class="text-sm md:text-base p-2 font-special font-semibold border border-gray-300 md:w-1/6">2016</td>
-                        <td class="hidden md:table-cell text-sm md:text-base p-2 font-special font-semibold border border-gray-300 md:w-1/6">go to list</td>
-                    </tr>
-                    <!-- row description -->
-                    <tr class="hidden md:table-row md:w-full">
-                        <td class="text-sm md:text-base font-special font-semibold text-gray-500 md:pb-4">
-                            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ducimus adipisci sint velit eligendi, cum alias pariatur...
-                        </td>
-                    </tr>
-                    <!-- row description for mobile only -->
-                    <tr class="md:hidden">
-                        <td class="pb-6 block text-center text-sm md:text-base text-black font-semibold capitalize w-full">
-                            <details class="w-full mt-2">
-                                <summary class="text-left w-max font-semibold">
-                                    show more
-                                </summary>
-                                <p class="w-full text-left mt-2 mb-4 text-gray-500">
-                                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ducimus adipisci sint velit eligendi, cum alias pariatur...
-                                </p>
-                                <a href="" class="font-semibold font-regular capitalize">
-                                    go to list
-                                </a>
-                            </details> 
-                        </td>
-                    </tr>                          
-                </tr>
-                <!-- table row element end -->
-
-                <!-- table row element -->
-                <tr class="table-row-group md:pb-6">
-                    <!-- row metadata -->
-                    <tr>
-                        <td class="text-sm md:text-base p-2 font-special font-semibold border border-gray-300 md:w-4/6">movies and shows with worst CGI</td>
-                        <td class="text-sm md:text-base p-2 font-special font-semibold border border-gray-300 md:w-1/6">2020</td>
-                        <td class="hidden md:table-cell text-sm md:text-base p-2 font-special font-semibold border border-gray-300 md:w-1/6">go to list</td>
-                    </tr>
-                    <!-- row description -->
-                    <tr class="hidden md:table-row md:w-3/5">
-                        <td class="text-sm md:text-base font-special font-semibold text-gray-500 md:pb-4">
-                            No description available
-                        </td>
-                    </tr>
-                    <!-- row description for mobile only -->
-                    <tr class="md:hidden">
-                        <td class="pb-6 block text-center text-sm md:text-base text-black font-semibold capitalize w-full">
-                            <details class="w-full mt-2">
-                                <summary class="text-left w-max font-semibold">
-                                    show more
-                                </summary>
-                                <p class="w-full text-left mt-2 mb-4 text-gray-500">
-                                    No description available
-                                </p>
-                                <a href="" class="font-semibold font-regular capitalize">
-                                    go to list
-                                </a>
-                            </details> 
-                        </td>
-                    </tr>                          
-                </tr>
-                <!-- table row element end -->
-
-            </tbody>
-        </table>
-
-<div class="mt-auto">
-    <%- include('../../partials/pagination') %>
-</div>
+<main id="main" class="pl-4 md:pl-8 filter flex flex-col w-11/12 mx-auto h-full min-h-screen ">
+    
+<% console.log(locals.articles) %>
+        <!-- article lists -->
+        <% if (articles.length > 0) { %>
         
-    </main>
+        <header>
+            <a href="/dashboard/my-articles/new" class="bg-black focus:outline-none hover:-translate-y-px hover:scale-105 mb-6 outline-none px-4 py-2 text-white text-xs transform transition-all block mx-auto w-max hover:shadow-lg">Write New Review</a>
+        </header>
 
+        <div class="w-full md:px-4 max-w-6xl mx-auto flex flex-col gap-6 my-4">
+            <% articles.forEach((article, index) => { %>
+                <% if (index % 2 === 0) { %>
+                <!-- even article -->
+                <section class="flex flex-col w-full gap-3 text-left md:text-left">
+                    <article class="relative shadow-glass p-4 rounded-md w-full md:w-5/6 max-w-prose mr-auto grid gap-y-2 bg-white">
+                        <section class="flex flex-col w-full gap-0.5 max-w-md">
+                            <small class="text-xs font-special text-gray-500 font-semibold capitalize">
+                                title
+                            </small>
+                            <p class="font-regular font-semibold block text-black w-full capitalize">
+                                <%= article.blog_title %>
+                            </p>
+                        </section>
+                        <ul class="flex gap-4 text-gray-500 text-xs font-special p-0.5 items-center justify-between w-max">
+                            <li>
+                                <i class="far fa-eye"></i>
+                                <span><%= article.views %></span>
+                            </li>
+                            <li>
+                                <i class="far fa-star"></i>
+                                <span>3.5/5 (125)</span>
+                            </li>
+                            <li>
+                                <i class="far fa-calendar-alt"></i>
+                                <span>
+                                    <%= new Date(article.created).toLocaleDateString() %>
+                                </span>
+                            </li>
+                        </ul>
+                        <section class="flex flex-col w-full gap-0.5">
+                            <small class="text-xs font-special text-gray-500 font-semibold capitalize">
+                                description
+                            </small>
+                            <p class="font-regular italic font-semibold block text-black w-full text-xs leading-relaxed">
+                                <% if (article.blog_content) { %>
+                                    <%= article.blog_content.slice(0,150) %>
+                                <% } else {%>
+                                    No description available
+                                <% } %>
+                            </p>
+                        </section>
+                    </article>
+                    <ul class="flex flex-col gap-1 items-center justify-center md:flex-row md:justify-start px-2 md:gap-x-6">
+                        <li class="text-xs text-gray-500 capitalize font-regular font-semibold">
+                            <a href="/dashboard/my-articles/<%= article.blog_id %>" class="outline-none focus:outline-none hover:text-pink-600">
+                                open article
+                            </a>
+                        </li>
+                    </ul>
+                </section>
+                <% } else {%>
+                <!-- odd article -->
+                <section class="flex flex-col w-full gap-3 text-left md:text-right">
+                    <article class="relative shadow-glass p-4 rounded-md w-full md:w-5/6 max-w-prose ml-auto  grid gap-y-2 bg-white">
+                        <section class="flex flex-col w-full gap-0.5 max-w-md md:ml-auto">
+                            <small class="text-xs font-special text-gray-500 font-semibold capitalize">
+                                title
+                            </small>
+                            <p class="font-regular font-semibold block text-black w-full capitalize">
+                                <%= article.blog_title %>
+                            </p>
+                        </section>
+                        <ul class="flex gap-4 text-gray-500 text-xs font-special p-0.5 items-center justify-between w-max md:ml-auto">
+                            <li>
+                                <i class="far fa-eye"></i>
+                                <span><%= article.views %></span>
+                            </li>
+                            <li>
+                                <i class="far fa-star"></i>
+                                <span>3.5/5 (125)</span>
+                            </li>
+                            <li>
+                                <i class="far fa-calendar-alt"></i>
+                                <span>
+                                    <%= new Date(article.created).toLocaleDateString() %>
+                                </span>
+                            </li>
+                        </ul>
+                        <section class="flex flex-col w-full gap-0.5">
+                            <small class="text-xs font-special text-gray-500 font-semibold capitalize">
+                                description
+                            </small>
+                            <p class="font-regular italic font-semibold block text-black w-full text-xs leading-relaxed">
+                                <% if (article.l_desc) { %>
+                                    <%= article.blog_content.slice(0,150) %>
+                                <% } else {%>
+                                    No description available
+                                <% } %>
+                            </p>
+                        </section>
+                    </article>
+                    <ul class="flex flex-col gap-1 items-center justify-center md:flex-row md:justify-end px-2 md:gap-x-6">
+                        <li class="text-xs text-gray-500 capitalize font-regular font-semibold">
+                            <a href="/dashboard/my-articles/<%= article.blog_id %>" class="outline-none focus:outline-none hover:text-pink-600">
+                                open article
+                            </a>
+                        </li>
+                    </ul>
+                </section>
+                <% } %>
+            <% }) %>
+        </div>
+                
+        <div class="mt-auto">
+            <%- include('../../partials/pagination') %>
+        </div>
+       
+        <% } else { %>
+        <div class="w-full vh-50 grid place-items-center">
+            <article class="flex flex-col items-center justify-center gap-3">
+                <h2 class="text-xl bg-gradient-to-tr from-pink-600 to-black text-transparent bg-clip-text font-special font-light">
+                    <i class="far fa-meh"></i> No reviews found
+                </h2>
+                <p class="font-regular text-sm text-gray-700">
+                    It seems like you have not reviewed any movie/series yet.
+                </p>
+                
+                <a href="/dashboard/my-articles/new" class="bg-black focus:outline-none hover:-translate-y-px hover:scale-105 mb-6 outline-none px-4 py-2 text-white text-xs transform transition-all block mx-auto w-max hover:shadow-lg">Write New Review</a>
+        
+            </article>
+        </div>
+        <% }  %>
+       
+    </main>
+    <script src="/static/js/navbar.js"></script>
+    <script src="/static/js/dashboard-sidebar.js"></script>
 </body>
 </html>
