@@ -60,6 +60,14 @@ dashboardRoutes.post("/my-articles/:id/edit", redirectToLogin, controller.dashbo
 
 
 
+// URL          :   /dashboard/my-articles/id/delete
+// description  :   Delete existing review by logged in user
+// access       :   PRIVATE
+// method       :   POST
+dashboardRoutes.post("/my-articles/:id/delete", redirectToLogin, controller.dashboard__deleteArticle)
+
+
+
 // URL          :   /dashboard/my-articles/[ID]
 // description  :   Get review by ID created by logged in user
 // access       :   PRIVATE

@@ -48,14 +48,17 @@ async function initDB() {
         console.log("movies_detail table created");
         await pool.query(`CREATE TABLE IF NOT EXISTS blogs (
             blog_id BIGSERIAL NOT NULL UNIQUE,
-            blog_title VARCHAR(40),
+            blog_title VARCHAR(150) NOT NULL,
             blog_content TEXT,
             plot_rating INT CHECK (plot_rating >= 0 AND plot_rating <= 10) DEFAULT 5,
             acting_rating INT CHECK (acting_rating >= 0 AND acting_rating <= 10) DEFAULT 5,
             direction_rating INT CHECK (direction_rating >= 0 AND direction_rating <= 10) DEFAULT 5,
+            plot TEXT,
+            acting TEXT,
+            direction TEXT,
+            conclusion TEXT,
             created TIMESTAMPTZ DEFAULT Now(),
-            published BOOLEAN DEFAULT FALSE,
-            completed_step INT DEFAULT 0 CHECK(completed_step >= 0 AND completed_step <= 4),
+            views INT DEFAULT 0,
             imdbID VARCHAR(20) NOT NULL REFERENCES movies_meta(imdbID) ON DELETE RESTRICT,
             uid TEXT NOT NULL REFERENCES users(uid) ON DELETE CASCADE,
             PRIMARY KEY (uid, imdbID)

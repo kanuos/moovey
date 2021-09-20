@@ -444,6 +444,24 @@ async function dashboard__submitArticleCreateEditData(req, res) {
 }
 
 
+// delete list/[id]/edit by logged user data
+// url : /dashboard/my-lists/[id]/delete
+async function dashboard__deleteArticle(req, res) {
+    let {params : {id}, body : {code}, session : {uid}} = req;
+    try {
+        // if confirmation code is not provided
+        if (!code) {
+            throw new Error("Please fill in the confirmation code")
+        }
+       // check if list with same title by user already exists or not
+        await pool.query("DELETE FROM blogs WHERE blog_id = $1 AND uid = $2 AND blog_title = $3", [id, uid, code.trim()])        
+        // on success redirect to the same page with fresh data
+        return res.redirect(`/dashboard/my-articles`)
+    } 
+    catch (error) {
+        return res.redirect(`/dashboard/my-articles/${id}/delete`)
+    }
+}
 
 
 
@@ -680,6 +698,7 @@ async function dashboard__submitListEditData(req, res) {
         return res.render("pages/dashboard/create-edit-list", context)
     }
 }
+
 
 
 // delete list/[id]/edit by logged user data
@@ -1010,7 +1029,7 @@ module.exports = {
     dashboard__getArticleCreateEditForm,
     dashboard__getArticleByID_RD,
     dashboard__submitArticleCreateEditData,
-
+    dashboard__deleteArticle,
 
     dashboard__getMyProfile,
     dashboard__submitProfileUpdate,
