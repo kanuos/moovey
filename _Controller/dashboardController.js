@@ -188,6 +188,7 @@ async function dashboard__getAllArticles(req, res) {
         const articles = (await pool.query("SELECT * FROM blogs WHERE uid = $1", [req.session.uid])).rows;
         context.articles = articles.map(article => ({
             ...article,
+            blog_title : convert(article.blog_title),
             blog_content : convert(article.blog_content)
         }));
         return res.render("pages/dashboard/articles", context)
@@ -196,7 +197,7 @@ async function dashboard__getAllArticles(req, res) {
     }
 }
 
-async function dashboard__getArticleCreateEditForm(req, res) {
+async function dashboard__getArticleCreateForm(req, res) {
     try {
         const context = {
             loggedIn : req.session?.name,
@@ -253,7 +254,7 @@ async function dashboard__getArticleByID_RD(req, res) {
         if (!blog) {
             throw new Error(`Blog with ID ${id} not found`)
         }
-        context.blog = blog
+        context.blog = {...blog, blog_title : convert(blog.blog_title).trim()}
         context.ratingObj = RATING_VALUES
         context.readTime = Math.round(convert(blog.blog_content).split(' ').length / 100)
 
@@ -278,12 +279,7 @@ async function dashboard__getArticleByID_RD(req, res) {
 
 
 
-// get the new article creation form/ edit existing article form
-// url : /dashboard/my-articles/new  
-// url : /dashboard/my-articles/:id/edit  
-
-
-async function dashboard__submitArticleCreateEditData(req, res) {
+async function dashboard__submitArticleCreateData(req, res) {
     const context = {
         loggedIn : req.session?.name,
         title : "My Dashboard | My Articles",
@@ -381,7 +377,6 @@ async function dashboard__submitArticleCreateEditData(req, res) {
                     return res.render("pages/dashboard/create-edit-article", context)
                 }
                 const savedAPIData = await handleMovieDetailSearch(movieID);
-                console.log(savedAPIData);
                 if (savedAPIData.error) {
                     throw new Error(savedAPIData.errorMsg)
                 }
@@ -392,12 +387,10 @@ async function dashboard__submitArticleCreateEditData(req, res) {
                 // receives the blog/review in the request body
                 const {imdb, title, content, acting, acting_rating, direction, direction_rating, plot, plot_rating, conclusion} 
                 = req.body
-                console.log(req.body);
                 const text = convert(content)
                 // to validate if the html form was manually edited
                 const existingMovie = (await pool.query("SELECT mm.imdbid, mm.title, md.metadata, COUNT(md.metadata) AS hasMetadata FROM movies_meta AS mm LEFT JOIN movies_detail AS md ON mm.imdbid = md.imdbid WHERE mm.imdbid = $1 GROUP BY mm.imdbid, md.metadata", [imdb])).rows;
 
-                console.log(existingMovie);
                 if (existingMovie.length === 0) {
                     throw new Error("Invalid movie ID")
                 }
@@ -448,13 +441,14 @@ async function dashboard__submitArticleCreateEditData(req, res) {
 // url : /dashboard/my-lists/[id]/delete
 async function dashboard__deleteArticle(req, res) {
     let {params : {id}, body : {code}, session : {uid}} = req;
+    console.log(code, id);
     try {
         // if confirmation code is not provided
         if (!code) {
             throw new Error("Please fill in the confirmation code")
         }
        // check if list with same title by user already exists or not
-        await pool.query("DELETE FROM blogs WHERE blog_id = $1 AND uid = $2 AND blog_title = $3", [id, uid, code.trim()])        
+        await pool.query("DELETE FROM blogs WHERE blog_id = $1 AND uid = $2 AND blog_title iLike $3", [id, uid, `%${code.trim()}%`])        
         // on success redirect to the same page with fresh data
         return res.redirect(`/dashboard/my-articles`)
     } 
@@ -462,6 +456,93 @@ async function dashboard__deleteArticle(req, res) {
         return res.redirect(`/dashboard/my-articles/${id}/delete`)
     }
 }
+
+
+
+// get the new article creation form/ edit existing article form
+// url : /dashboard/my-articles/new  
+// url : /dashboard/my-articles/:id/edit  
+async function dashboard__getArticleEditForm(req, res) {
+    const context = {
+        loggedIn : req.session.name,
+        activeDashboardLink: DASHBOARD_LINKS.articles,
+    }
+    try {
+        // check if blog with id exists for logged user
+        const {params: {id}, session : {uid}} = req;
+        const existingBlog = (await pool.query('SELECT b.*, u.name, md.metadata FROM blogs AS b INNER JOIN movies_detail AS md ON b.imdbid = md.imdbid INNER JOIN users AS u ON u.uid = b.uid  WHERE b.uid = $1 AND blog_id = $2 LIMIT 1', [uid, id])).rows
+
+        if (existingBlog.length === 0){
+            throw new Error("Blog doesn't exist or you don't have privilege to edit blog")
+        }
+
+        context.title = `Edit review #${id}`
+        context.actionURL = `/dashboard/my-articles/${id}/edit`
+        context.movie = existingBlog
+        context.pageError = ''
+        return res.render("pages/dashboard/create-edit-article", context)
+    
+        
+    } catch (error) {
+        console.log(error);
+        return res.json(error.message)
+    }
+}
+
+
+
+async function dashboard__submitArticleEditData(req, res) {
+    const context = {
+        loggedIn : req.session.name,
+        activeDashboardLink: DASHBOARD_LINKS.articles,
+    }
+    try {
+        const {
+            session : {uid}, 
+            params: {id}, 
+            body : {imdb, title, content, acting, acting_rating, direction, direction_rating, plot, plot_rating, conclusion}
+        } = req;
+        // get existingID
+        const existingBlog = (await pool.query('SELECT b.*, u.name, md.metadata FROM blogs AS b INNER JOIN movies_detail AS md ON b.imdbid = md.imdbid INNER JOIN users AS u ON u.uid = b.uid  WHERE b.uid = $1 AND blog_id = $2 LIMIT 1', [uid, id])).rows
+
+        // for postman/insomnia etc type post requests
+        if (existingBlog.length === 0) {
+            return res.redirect("/page-not-found")
+        }
+        // create context object for error handling
+        context.movie = existingBlog
+        context.title = `Edit review #${id}`
+        context.actionURL = `/dashboard/my-articles/${id}/edit`
+        context.movie = existingBlog
+
+        // validate title and content
+        const plainTextTitle = convert(title), plainTextContent = convert(content);
+        if (plainTextTitle.trim().length === 0) {
+            throw new Error("title cannot be empty")
+        }
+        if (plainTextContent.trim().length === 0) {
+            throw new Error("title cannot be empty")
+        }
+
+        // update blog with data. on failure the exception handler will catch error including db errors
+        await pool.query("UPDATE blogs SET blog_title = $1, blog_content = $2, plot = $3, plot_rating = $4, acting = $5, acting_rating = $6, direction = $7, direction_rating = $8, conclusion = $9 WHERE uid = $10 AND blog_id = $11 AND imdbid = $12", 
+        [title, content, plot, RATING_VALUES[plot_rating.toLowerCase()], acting, RATING_VALUES[acting_rating.toLowerCase()], direction, RATING_VALUES[direction_rating.toLowerCase()], conclusion, uid, id, imdb])
+        
+        return res.redirect(`/dashboard/my-articles/${id}`)
+    } catch (error) {
+        console.log(error);
+        context.pageError = error.message
+        return res.render("pages/dashboard/create-edit-article", context)
+    }
+}
+
+
+
+
+
+
+
+
 
 
 
@@ -1026,10 +1107,12 @@ async function dashboard__updateListItem(req, res) {
 
 module.exports = {
     dashboard__getAllArticles,
-    dashboard__getArticleCreateEditForm,
+    dashboard__getArticleCreateForm,
     dashboard__getArticleByID_RD,
-    dashboard__submitArticleCreateEditData,
+    dashboard__submitArticleCreateData,
     dashboard__deleteArticle,
+    dashboard__getArticleEditForm,
+    dashboard__submitArticleEditData,
 
     dashboard__getMyProfile,
     dashboard__submitProfileUpdate,

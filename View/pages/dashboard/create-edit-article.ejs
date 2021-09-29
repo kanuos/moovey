@@ -44,21 +44,40 @@
         <article class="w-full md:relative md:flex md:flex-row-reverse md:items-center md:gap-2">
             <section class="shadow-glass p-2 w-full h-auto rounded overflow-hidden md:w-2/5 md:ml-auto md:text-center">
                 <small class="text-xs font-special text-gray-500 font-semibold capitalize md:hidden">
-                    date
+                    <% if(movie[0]?.created) { %>
+                        date created
+                    <% } else { %>
+                        date
+                    <% }  %>
                 </small>
                 <p class="mt-0.5 font-regular block text-gray-700 w-full text-xs">
-                    <%= new Date().toDateString() %>
+                    <% if(movie[0]?.created) { %>
+                        <%= new Date(movie[0].created).toDateString() %>
+                    <% } else { %>
+                        <%= new Date().toDateString() %>
+                    <% }  %>
                 </p>
             </section>
             <h4 class="hidden md:block md:w-3/5 text-left border-b-2 border-current border-dashed capitalize font-semibold font-special">
-                date
+                <% if(movie[0]?.created) { %>
+                        date created
+                    <% } else { %>
+                        date
+                    <% }  %>
             </h4>
         </article>
         
     </header>
 
     <section class="h-auto md:w-11/12 max-w-4xl md:mx-auto pb-10 px-2.5">
-        <form method="POST" action="/dashboard/my-articles/new" class="w-full grid gap-y-8">
+        <form 
+            method="POST" 
+            <% if (locals.actionURL) { %>
+            action="<%= actionURL %>"
+            <% } else { %> 
+            action="/dashboard/my-articles/new" 
+            <% }  %> 
+            class="w-full grid gap-y-8">
             <input type="hidden" name="step" value="4">
             <input type="hidden" name="imdb" value="<%= movie[0].metadata.imdbid ?? movie[0].metadata.imdbID %>">
 
@@ -74,7 +93,9 @@
                         id="title" name="title"
                         data-placeholder="Your blog title"
                         data-return="true"
-                        class="richTextField resize-none ring-0 ring-offset-transparent outline-none focus:outline-none focus:ring-offset-transparent focus:ring-0 my-0.5 focus:border-black font-regular font-semibold block text-black w-full text-xs md:text-sm rounded placeholder-gray-500"></textarea>
+                        class="richTextField resize-none ring-0 ring-offset-transparent outline-none focus:outline-none focus:ring-offset-transparent focus:ring-0 my-0.5 focus:border-black font-regular font-semibold block text-black w-full text-xs md:text-sm rounded placeholder-gray-500"><% if(movie[0]?.blog_title) { %>
+                            <%= movie[0].blog_title %>
+                        <% } %></textarea>
                 </section>
             </div>
             <div class="h-auto min-h-screen shadow-glass p-2 pb-4 w-full rounded grid gap-y-8">
@@ -90,7 +111,9 @@
                         <textarea
                             id="content" name="content"
                             data-placeholder="Your blog content"
-                            class="richTextField h-full resize-none ring-0 ring-offset-transparent outline-none focus:outline-none focus:ring-offset-transparent focus:ring-0 my-0.5 focus:border-black font-regular block text-black w-full text-xs md:text-sm rounded placeholder-gray-500"></textarea>
+                            class="richTextField h-full resize-none ring-0 ring-offset-transparent outline-none focus:outline-none focus:ring-offset-transparent focus:ring-0 my-0.5 focus:border-black font-regular block text-black w-full text-xs md:text-sm rounded placeholder-gray-500"><% if(movie[0]?.blog_content) { %>
+                                <%= movie[0].blog_content %>
+                            <% } %></textarea>
                     </section>
                 </div>
                 <small class="text-xs font-special text-gray-500 font-semibold capitalize">
@@ -108,7 +131,9 @@
                             id="acting" name="acting"
                             data-placeholder="Your opinion about the acting of the <%= movie[0].metadata.type %>"
                             data-return="true"
-                            class="richTextField resize-none ring-0 ring-offset-transparent outline-none focus:outline-none focus:ring-offset-transparent focus:ring-0 my-0.5 focus:border-black font-regular block text-black w-full text-xs md:text-sm rounded placeholder-gray-500"></textarea>
+                            class="richTextField resize-none ring-0 ring-offset-transparent outline-none focus:outline-none focus:ring-offset-transparent focus:ring-0 my-0.5 focus:border-black font-regular block text-black w-full text-xs md:text-sm rounded placeholder-gray-500"><% if(movie[0]?.acting) { %>
+                                <%= movie[0].acting %>
+                            <% } %></textarea>
                     </section>
                     <section class="p-2 pb-4 w-full h-auto rounded overflow-hidden md:pb-4">
                         <label for="acting_rating">
@@ -116,13 +141,23 @@
                                 rate the acting
                             </small>
                         </label>
+                        <% if (movie[0].acting_rating) { %>
                         <select class="block my-2 w-full capitalize font-special font-semibold" name="acting_rating" id="acting_rating">
-                            <option value="bad"> bad </option>
-                            <option value="average"> average </option>
-                            <option value="decent" selected> decent </option>
-                            <option value="good"> good </option>
-                            <option value="great"> great </option>
+                            <option value="bad" <% if (movie[0].acting_rating === 1) { %> selected <% } %>> bad </option>
+                            <option value="average" <% if (movie[0].acting_rating === 2) { %> selected <% } %>> average </option>
+                            <option value="decent" <% if (movie[0].acting_rating === 3) { %> selected <% } %>> decent </option>
+                            <option value="good" <% if (movie[0].acting_rating === 4) { %> selected <% } %>> good </option>
+                            <option value="great" <% if (movie[0].acting_rating === 5) { %> selected <% } %>> great </option>
                         </select>
+                        <% } else { %>
+                            <select class="block my-2 w-full capitalize font-special font-semibold" name="acting_rating" id="acting_rating">
+                                <option value="bad"> bad </option>
+                                <option value="average"> average </option>
+                                <option value="decent" selected> decent </option>
+                                <option value="good"> good </option>
+                                <option value="great"> great </option>
+                            </select>
+                        <% } %>
                     </section>
                     <section class="p-2 pb-4 w-full h-auto rounded overflow-hidden md:pb-4">
                         <label for="direction">
@@ -134,7 +169,9 @@
                             id="direction" name="direction"
                             data-placeholder="Your opinion about the direction of the <%= movie[0].metadata.type %>"
                             data-return="true"
-                            class="richTextField resize-none ring-0 ring-offset-transparent outline-none focus:outline-none focus:ring-offset-transparent focus:ring-0 my-0.5 focus:border-black font-regular block text-black w-full text-xs md:text-sm rounded placeholder-gray-500"></textarea>
+                            class="richTextField resize-none ring-0 ring-offset-transparent outline-none focus:outline-none focus:ring-offset-transparent focus:ring-0 my-0.5 focus:border-black font-regular block text-black w-full text-xs md:text-sm rounded placeholder-gray-500"><% if(movie[0]?.direction) { %>
+                                <%= movie[0].direction %>
+                            <% } %></textarea>
                     </section>
                     <section class="p-2 pb-4 w-full h-auto rounded overflow-hidden md:pb-4">
                         <label for="direction_rating">
@@ -142,13 +179,23 @@
                                 rate the direction
                             </small>
                         </label>
-                        <select class="block my-2 w-full capitalize font-special font-semibold" name="direction_rating" id="direction_rating">
-                            <option value="bad"> bad </option>
-                            <option value="average"> average </option>
-                            <option value="decent" selected> decent </option>
-                            <option value="good"> good </option>
-                            <option value="great"> great </option>
-                        </select>
+                        <% if (movie[0].direction_rating) { %>
+                            <select class="block my-2 w-full capitalize font-special font-semibold" name="direction_rating" id="direction_rating">
+                                <option value="bad" <% if (movie[0].direction_rating === 1) { %> selected <% } %>> bad </option>
+                                <option value="average" <% if (movie[0].direction_rating === 2) { %> selected <% } %>> average </option>
+                                <option value="decent" <% if (movie[0].direction_rating === 3) { %> selected <% } %>> decent </option>
+                                <option value="good" <% if (movie[0].direction_rating === 4) { %> selected <% } %>> good </option>
+                                <option value="great" <% if (movie[0].direction_rating === 5) { %> selected <% } %>> great </option>
+                            </select>
+                            <% } else { %>
+                                <select class="block my-2 w-full capitalize font-special font-semibold" name="direction_rating" id="direction_rating">
+                                    <option value="bad"> bad </option>
+                                    <option value="average"> average </option>
+                                    <option value="decent" selected> decent </option>
+                                    <option value="good"> good </option>
+                                    <option value="great"> great </option>
+                                </select>
+                            <% } %>
                     </section>
                     <section class="p-2 pb-4 w-full h-auto rounded overflow-hidden md:pb-4">
                         <label for="plot">
@@ -160,7 +207,9 @@
                             id="plot" name="plot"
                             data-placeholder="Your opinion about the plot of the <%= movie[0].metadata.type %>"
                             data-return="true"
-                            class="richTextField resize-none ring-0 ring-offset-transparent outline-none focus:outline-none focus:ring-offset-transparent focus:ring-0 my-0.5 focus:border-black font-regular block text-black w-full text-xs md:text-sm rounded placeholder-gray-500"></textarea>
+                            class="richTextField resize-none ring-0 ring-offset-transparent outline-none focus:outline-none focus:ring-offset-transparent focus:ring-0 my-0.5 focus:border-black font-regular block text-black w-full text-xs md:text-sm rounded placeholder-gray-500"><% if(movie[0]?.plot) { %>
+                                <%= movie[0].plot %>
+                            <% } %></textarea>
                     </section>
                     <section class="p-2 pb-4 w-full h-auto rounded overflow-hidden md:pb-4">
                         <label for="plot_rating">
@@ -168,13 +217,23 @@
                                 rate the plot
                             </small>
                         </label>
-                        <select class="block my-2 w-full capitalize font-special font-semibold" name="plot_rating" id="plot_rating">
-                            <option value="bad"> bad </option>
-                            <option value="average"> average </option>
-                            <option value="decent" selected> decent </option>
-                            <option value="good"> good </option>
-                            <option value="great"> great </option>
-                        </select>
+                        <% if (movie[0].plot_rating) { %>
+                            <select class="block my-2 w-full capitalize font-special font-semibold" name="plot_rating" id="plot_rating">
+                                <option value="bad" <% if (movie[0].plot_rating === 1) { %> selected <% } %>> bad </option>
+                                <option value="average" <% if (movie[0].plot_rating === 2) { %> selected <% } %>> average </option>
+                                <option value="decent" <% if (movie[0].plot_rating === 3) { %> selected <% } %>> decent </option>
+                                <option value="good" <% if (movie[0].plot_rating === 4) { %> selected <% } %>> good </option>
+                                <option value="great" <% if (movie[0].plot_rating === 5) { %> selected <% } %>> great </option>
+                            </select>
+                            <% } else { %>
+                                <select class="block my-2 w-full capitalize font-special font-semibold" name="plot_rating" id="plot_rating">
+                                    <option value="bad"> bad </option>
+                                    <option value="average"> average </option>
+                                    <option value="decent" selected> decent </option>
+                                    <option value="good"> good </option>
+                                    <option value="great"> great </option>
+                                </select>
+                            <% } %>
                     </section>
 
                 </div>
@@ -191,7 +250,9 @@
                         id="conclusion" name="conclusion"
                         data-placeholder="Your conclusion"
                         data-return="true"
-                        class="richTextField resize-none ring-0 ring-offset-transparent outline-none focus:outline-none focus:ring-offset-transparent focus:ring-0 my-0.5 focus:border-black font-regular block text-black w-full text-xs md:text-sm rounded placeholder-gray-500"></textarea>
+                        class="richTextField resize-none ring-0 ring-offset-transparent outline-none focus:outline-none focus:ring-offset-transparent focus:ring-0 my-0.5 focus:border-black font-regular block text-black w-full text-xs md:text-sm rounded placeholder-gray-500"><% if(movie[0]?.conclusion) { %>
+                            <%= movie[0].conclusion %>
+                        <% } %></textarea>
                 </section>
             </div>
             <button type="submit" class="bg-black focus:outline-none hover:-translate-y-px hover:scale-105 mb-6 outline-none px-4 py-2 text-white text-xs transform transition-all block mx-auto w-max hover:shadow-lg">
